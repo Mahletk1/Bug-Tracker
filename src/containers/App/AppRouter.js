@@ -18,11 +18,11 @@ const routes = [
   },
   {
     path: 'projects',
-    component: asyncComponent(() => import('../Calendar/Calendar')),
+    component: asyncComponent(() => import('../Projects')),
   },
   {
     path: 'tickets',
-    component: asyncComponent(() => import('../Tables/antTables')),
+    component: asyncComponent(() => import('../Tickets')),
   },
   // {
   //   path: 'allFormComponent',
