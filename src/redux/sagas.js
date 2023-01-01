@@ -1,6 +1,6 @@
 import { all } from 'redux-saga/effects';
 import authSagas from './auth/saga';
-import contactSagas from './contacts/saga';
+import userSagas from './users/saga';
 import invoicesSagas from './invoice/saga';
 import mailSagas from './mail/saga';
 import notesSagas from './notes/saga';
@@ -16,7 +16,7 @@ import investors from './investors/sagas';
 export default function* rootSaga(getState) {
   yield all([
     authSagas(),
-    contactSagas(),
+    userSagas(),
     mailSagas(),
     notesSagas(),
     todosSagas(),

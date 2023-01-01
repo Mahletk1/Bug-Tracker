@@ -52,7 +52,7 @@ export default class ContactList extends Component {
       <ContactListWrapper className="isoContactListWrapper">
         <InputSearch
           placeholder={this.context.intl.formatMessage({
-            id: 'contactlist.searchContacts',
+            id: 'Search Users',
           })}
           value={search}
           onChange={this.onChange}

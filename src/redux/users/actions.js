@@ -32,14 +32,14 @@ const contactActions = {
     return (dispatch, getState) => {
       dispatch({
         type: contactActions.ADD_CONTACT,
-        contacts: [...getState().Contacts.contacts, newContact],
+        contacts: [...getState().Users.contacts, newContact],
         selectedId: newContact.id
       });
     };
   },
   editContact: newContact => {
     return (dispatch, getState) => {
-      const contacts = getState().Contacts.contacts;
+      const contacts = getState().Users.contacts;
       const newContacts = [];
       contacts.forEach(contact => {
         if (contact.id === newContact.id) {
@@ -56,8 +56,8 @@ const contactActions = {
   },
   deleteContact: id => {
     return (dispatch, getState) => {
-      const contacts = getState().Contacts.contacts;
-      const seectedId = getState().Contacts.seectedId;
+      const contacts = getState().Users.contacts;
+      const seectedId = getState().Users.seectedId;
       const newContacts = [];
       contacts.forEach(contact => {
         if (contact.id === id) {

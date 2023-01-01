@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: 'manage_role',
-    component: asyncComponent(() => import('../Mail')),
+    component: asyncComponent(() => import('../Users')),
   },
   {
     path: 'projects',

@@ -5,7 +5,7 @@ import Calendar from './calendar/reducer';
 import Box from './box/reducer';
 import Notes from './notes/reducer';
 import Todos from './todos/reducer';
-import Contacts from './contacts/reducer';
+import Users from './users/reducer';
 import Cards from './card/reducer';
 import Chat from './chat/reducers';
 import DynamicChartComponent from './dynamicEchart/reducer';
@@ -28,7 +28,7 @@ export default {
   Box,
   Notes,
   Todos,
-  Contacts,
+  Users,
   Cards,
   Chat,
   DynamicChartComponent,
