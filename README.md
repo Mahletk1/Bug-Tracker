@@ -1,1 +1,1 @@
-Bug Tracker
+Bug tracker
