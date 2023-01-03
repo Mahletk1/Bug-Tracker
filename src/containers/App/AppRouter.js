@@ -269,7 +269,7 @@ const routes = [
 
 class AppRouter extends Component {
   render() {
-    const { style } = this.props;
+    const { url, style } = this.props;
     return (
       <div style={style}>
         {routes.map(singleRoute => {
@@ -278,7 +278,7 @@ class AppRouter extends Component {
             <Route
               exact={exact === false ? false : true}
               key={singleRoute.path}
-              path={`/${singleRoute.path}`}
+              path={`${url}/${singleRoute.path}`}
               {...otherProps}
             />
           );

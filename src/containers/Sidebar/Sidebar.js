@@ -12,7 +12,7 @@ import appActions from "../../redux/app/actions";
 import Logo from "../../components/utility/logo";
 
 const SubMenu = Menu.SubMenu;
-// const MenuItemGroup = Menu.ItemGroup;
+const MenuItemGroup = Menu.ItemGroup;
 const { Sider } = Layout;
 
 const {
@@ -68,7 +68,7 @@ class Sidebar extends Component {
   };
   getMenuItem = ({ singleOption, submenuStyle, submenuColor }) => {
     const { key, label, leftIcon, children } = singleOption;
-    // const url = stripTrailingSlash(this.props.url);
+    const url = stripTrailingSlash(this.props.url);
     if (children) {
       return (
         <SubMenu
@@ -85,7 +85,7 @@ class Sidebar extends Component {
           {children.map(child => {
             const linkTo = child.withoutDashboard
               ? `/${child.key}`
-              : `/${child.key}`;
+              : `${url}/${child.key}`;
             return (
               <Menu.Item style={submenuStyle} key={child.key}>
                 <Link style={submenuColor} to={linkTo}>
@@ -99,7 +99,7 @@ class Sidebar extends Component {
     }
     return (
       <Menu.Item key={key}>
-        <Link to={key}>
+        <Link to={`${url}/${key}`}>
           <span className="isoMenuHolder" style={submenuColor}>
             <i className={leftIcon} />
             <span className="nav-text">

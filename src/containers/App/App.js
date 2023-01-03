@@ -47,7 +47,7 @@ export class App extends Component {
                 </Debounce>
                 <Topbar url={url} />
                 <Layout style={{ flexDirection: 'row', overflowX: 'hidden' }}>
-                  <Sidebar />
+                  <Sidebar url={url} />
                   <Layout
                     className="isoContentMainLayout"
                     style={{
@@ -63,7 +63,7 @@ export class App extends Component {
                         position: 'relative'
                       }}
                     >
-                      <AppRouter />
+                      <AppRouter url={url} />
                     </Content>
                     <Footer
                       style={{

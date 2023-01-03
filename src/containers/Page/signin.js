@@ -31,10 +31,10 @@ class SignIn extends Component {
     const { login, clearMenu } = this.props;
     login();
     clearMenu();
-    this.props.history.push("/dashboard");
+    this.props.history.push("/bug_tracker");
   };
   render() {
-    const from = { pathname: "/dashboard" };
+    const from = { pathname: "/bug_tracker" };
     const { redirectToReferrer } = this.state;
 
     if (redirectToReferrer) {
@@ -45,7 +45,7 @@ class SignIn extends Component {
         <div className="isoLoginContentWrapper">
           <div className="isoLoginContent">
             <div className="isoLogoWrapper">
-              <Link to="/dashboard">
+              <Link to="/bug_tracker">
                 <IntlMessages id="page.signInTitle" />
               </Link>
             </div>
@@ -68,7 +68,7 @@ class SignIn extends Component {
                 </Button>
               </div>
 
-              <p className="isoHelperText">
+              {/* <p className="isoHelperText">
                 <IntlMessages id="page.signInPreview" />
               </p>
 
@@ -100,7 +100,7 @@ class SignIn extends Component {
                 <Link to="/signup">
                   <IntlMessages id="page.signInCreateAccount" />
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

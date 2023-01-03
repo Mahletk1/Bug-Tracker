@@ -74,7 +74,7 @@ const PublicRoutes = ({ history, isLoggedIn }) => {
           }}
         />
         <RestrictedRoute
-          path=""
+          path="/bug_tracker"
           component={App}
           isLoggedIn={isLoggedIn}
         />
