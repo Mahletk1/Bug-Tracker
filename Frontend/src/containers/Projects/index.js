@@ -23,10 +23,26 @@ import {
   StatusTag,
 } from './articles.style';
 import clone from 'clone';
+import axios from 'axios'
 
 class Articles extends Component {
-  componentDidMount() {
-    this.props.loadFromFireStore();
+  state={
+    image:''
+  }
+  async componentDidMount() {
+
+    // this.props.loadFromFireStore(this.props.date.startDate, this.props.date.endDate);
+
+  //  await axios.get("http://127.0.0.1:8000/users/").then((response) => {
+  //     // for (let index = 0; index < response.data.results.length; index++) {
+  //       this.setState({image: response.data[0].profile_image})
+  //       // this.state.image=response.data[0].profile_image
+  //       console.log(response)
+      
+  //   });
+  //   console.log(this.state.image)
+    // console.log(this.props);
+
   }
   handleRecord = (actionName, article) => {
     if (article.key && actionName !== 'delete') actionName = 'update';
@@ -53,6 +69,7 @@ class Articles extends Component {
   };
 
   render() {
+    console.log(this.state.image)
     const { modalActive, articles } = this.props;
     const { article } = clone(this.props);
     const dataSource = [];
@@ -205,8 +222,11 @@ class Articles extends Component {
       <LayoutContentWrapper>
         <Box>
           <ContentHolder style={{ marginTop: 0, overflow: 'hidden' }}>
+            <p>helllo</p>
+          <img src={this.state.image}/>
             <TitleWrapper>
               <ComponentTitle>Articles</ComponentTitle>
+             
 
               <ButtonHolders>
                 <ActionBtn type="danger" onClick={this.resetRecords}>

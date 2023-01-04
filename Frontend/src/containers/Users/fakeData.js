@@ -1,9 +1,9 @@
 export const otherAttributes = [
-  { title: 'Mobile', value: 'mobile', type: 'phoneNumber' },
-  { title: 'Home', value: 'home', type: 'phoneNumber' },
-  { title: 'Company', value: 'company', type: 'company' },
-  { title: 'Work', value: 'work', type: 'phoneNumber' },
-  { title: 'Notes', value: 'note', type: 'paragraph' }
+  { title: 'Email', value: 'email', type: 'email' },
+  { title: 'Password', value: 'password', type: 'password' },
+  { title: 'Role', value: 'role', type: 'role' },
+  // { title: 'Work', value: 'work', type: 'phoneNumber' },
+  // { title: 'Notes', value: 'note', type: 'paragraph' }
 ];
 
 const contactList = JSON.parse(

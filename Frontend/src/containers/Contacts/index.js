@@ -38,6 +38,7 @@ class Contacts extends Component {
       : null;
     const onVIewChange = () => viewChange(!editView);
     return (
+      
       <ContactsWrapper
         className="isomorphicContacts"
         style={{ background: "none" }}
@@ -53,7 +54,11 @@ class Contacts extends Component {
         <Layout className="isoContactBoxWrapper">
           {selectedContact ? (
             <Content className="isoContactBox">
+              
+        
               <div className="isoContactControl">
+               
+              {/* <img src="C:\Users\mahku\Downloads\user.jfif"/> */}
                 <Button type="button" onClick={onVIewChange}>
                   {editView ? <Icon type="check" /> : <Icon type="edit" />}{" "}
                 </Button>
