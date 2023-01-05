@@ -23,40 +23,16 @@ function beforeUpload(file) {
 export default class extends Component {
   render() {
     const { contact, otherAttributes } = this.props;
+    console.log(Object.keys(contact).length > 1)
     const name = contact.name ? contact.name : 'No Name';
     const extraInfos = [];
-    const names = [
-      { value: 'firstName', title: 'First Name' },
-      // { value: 'lastName', title: 'Last Name' }
-    ];
-    [...names, ...otherAttributes].forEach(attribute => {
+    if(Object.keys(contact).length>1){   
+    [...otherAttributes].forEach(attribute => {
       const value = contact[attribute.value];
       const editContact = event => {
         contact[attribute.value] = event.target.value;
-        let name = '';
-        if (contact.firstName) {
-          name = `${contact.firstName} `;
-        }
-        if (contact.lastName) {
-          name = `${name}${contact.lastName}`;
-        }
-        contact.name = name;
         this.props.editContact(contact);
       };
-      if (attribute.value === 'note') {
-        extraInfos.push(
-          <div className="isoContactCardInfos" key={attribute.value}>
-            <p className="isoInfoLabel">{`${attribute.title}`}</p>
-            <Textarea
-              placeholder={`${attribute.title}`}
-              value={value}
-              type="textarea"
-              rows={5}
-              onChange={event => editContact(event)}
-            />
-          </div>
-        );
-      } else {
         extraInfos.push(
           <div className="isoContactCardInfos" key={attribute.value}>
             <p className="isoInfoLabel">{`${attribute.title}`}</p>
@@ -67,8 +43,30 @@ export default class extends Component {
             />
           </div>
         );
-      }
-    });
+      
+    });}
+    else{
+     
+      [...otherAttributes].forEach(attribute => {
+        const value = contact[attribute.value];
+        const createUser = event => {
+          contact[attribute.value] = event.target.value;
+          this.props.createUser(contact);
+        };
+          extraInfos.push(
+            <div className="isoContactCardInfos" key={attribute.value}>
+              <p className="isoInfoLabel">{`${attribute.title}`}</p>
+              <Input
+                placeholder={`${attribute.title}`}
+                value={value}
+                onChange={event => createUser(event)}
+              />
+            </div>
+          );
+        
+      });
+    }
+
     return (
       <ContactCardWrapper className="isoContactCard">
         <div className="isoContactCardHead">

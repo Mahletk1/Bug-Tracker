@@ -1,6 +1,6 @@
 import { all, takeEvery, fork, call,put } from 'redux-saga/effects';
 import actions from './actions';
-import { requestGetUsers} from '../../helpers/users/getUsers';
+import { requestGetUsers,requestPostUser } from '../../helpers/users/getUsers';
 
 function* getUsers() {
   try {
@@ -23,7 +23,7 @@ function* getUsers() {
   }
 }
 export function* addContact() {
-  yield takeEvery(actions.ADD_CONTACT, function*() {});
+  yield takeEvery(actions.CREATE_USER, function*() {});
 }
 export function* editContact() {
   yield takeEvery(actions.EDIT_CONTACT, function*() {});

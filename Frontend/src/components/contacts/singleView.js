@@ -21,7 +21,7 @@ export default class extends Component {
       <ContactCardWrapper className="isoContactCard">
         <div className="isoContactCardHead">
           <div className="isoPersonImage">
-            {contact.avatar ? <img alt="#" src={contact.avatar} /> : ''}
+            {contact.profile_image ? <img alt="#" src={contact.profile_image} /> : ''}
           </div>
           <h1 className="isoPersonName">{name}</h1>
         </div>

@@ -67,4 +67,4 @@ export default function contactReducer(state = initState, action) {
   }
 }
 
-// export { contacts };
+export { initState };

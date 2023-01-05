@@ -15,6 +15,7 @@ import Scrollbar from "../../components/utility/customScrollBar.js";
 const {
   changeContact,
   getUsers,
+  createUser,
   addContact,
   editContact,
   deleteContact,
@@ -32,10 +33,11 @@ class Contacts extends Component {
       changeContact,
       addContact,
       editContact,
+      createUser,
       deleteContact,
       viewChange
     } = this.props;
-    console.log(this.props)
+
     const selectedContact = seectedId
       ? contacts.filter(contact => contact.id === seectedId)[0]
       : null;
@@ -78,6 +80,7 @@ class Contacts extends Component {
                   <EditContactView
                     contact={selectedContact}
                     editContact={editContact}
+                    createUser={createUser}
                     otherAttributes={otherAttributes}
                   />
                 ) : (
@@ -119,5 +122,6 @@ export default connect(mapStateToProps, {
   editContact,
   deleteContact,
   getUsers,
+  createUser,
   viewChange
 })(Contacts);
