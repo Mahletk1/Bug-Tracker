@@ -5,6 +5,8 @@ import Upload from '../uielements/upload';
 import notification from '../notification';
 import { ContactCardWrapper } from './contactCard.style';
 import './upload.css';
+import IntlMessages from "../../components/utility/intlMessages";
+import Button from "../../components/uielements/button";
 
 function beforeUpload(file) {
   const isJPG = file.type === 'image/jpeg';
@@ -21,17 +23,39 @@ function beforeUpload(file) {
   return true;
 }
 export default class extends Component {
+
+  handleRecord = async (contact) => {
+    await this.props.createUser(contact);
+  };
   render() {
-    const { contact, otherAttributes } = this.props;
-    console.log(Object.keys(contact).length > 1)
+    const { contact, otherAttributes,createView,editView,editContact,createUser } = this.props;
+    console.log(this.props)
     const name = contact.name ? contact.name : 'No Name';
     const extraInfos = [];
-    if(Object.keys(contact).length>1){   
+
+    const onImageChange = event => {
+      console.log(event.fileList[0].originFileObj)
+      var reader = new FileReader();
+      let file =event.fileList[0].originFileObj;
+      reader.readAsDataURL(file);
+      reader.onload = function () { 
+        contact['profile_image'] = reader.result;
+        // editContact(contact);
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    };  
+
+   
+
+
+    if(createView){   
     [...otherAttributes].forEach(attribute => {
       const value = contact[attribute.value];
       const editContact = event => {
         contact[attribute.value] = event.target.value;
-        this.props.editContact(contact);
+        // this.props.editContact(contact);
       };
         extraInfos.push(
           <div className="isoContactCardInfos" key={attribute.value}>
@@ -44,7 +68,17 @@ export default class extends Component {
           </div>
         );
       
-    });}
+    });
+    extraInfos.push(
+      <Button
+          type="primary"
+          className="isoAddContactBtn"
+          onClick={this.props.createUser(contact)}
+      >
+          <IntlMessages id="Submit" />
+      </Button>
+    )
+  }
     else{
      
       [...otherAttributes].forEach(attribute => {
@@ -65,21 +99,24 @@ export default class extends Component {
           );
         
       });
+      
     }
 
     return (
       <ContactCardWrapper className="isoContactCard">
         <div className="isoContactCardHead">
           <div className="isoPersonImage">
+            
             <Upload
-              className="avatar-uploader"
-              name="avatar"
-              showUploadList={false}
-              beforeUpload={beforeUpload}
-              action=""
+                className="avatar-uploader"
+                name="avatar"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={onImageChange}
+                action=""
             >
-              {contact.avatar ? (
-                <img src={contact.avatar} alt="" className="avatar" />
+              {contact.profile_image ? (
+                <img src={contact.profile_image} alt="" className="avatar" />
               ) : (
                 ''
               )}
@@ -88,7 +125,9 @@ export default class extends Component {
           </div>
           <h1 className="isoPersonName">{name}</h1>
         </div>
-        <div className="isoContactInfoWrapper">{extraInfos}</div>
+        <div className="isoContactInfoWrapper">{extraInfos}
+        </div>
+       
       </ContactCardWrapper>
     );
   }

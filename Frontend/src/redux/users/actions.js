@@ -28,10 +28,10 @@ const contactActions = {
     type: contactActions.GET_USER_ERROR,
     payload: { error },
   }),
-  // createUser: (data) => ({
-  //   type: contactActions.CREATE_USER,
-  //   payload: { data },
-  // }),
+  createUser: (contact) => ({
+    type: contactActions.CREATE_USER,
+    payload: { contact },
+  }),
   changeContact: id => ({
     type: contactActions.CHANGE_CONTACT,
     id
@@ -49,24 +49,23 @@ const contactActions = {
       });
     };
   },
-   createUser: newContact => {
-    console.log(newContact)
-    return (dispatch, getState) => {
-      const contacts = getState().Users.contacts;
-      const newContacts = [];
-      contacts.forEach(contact => {
-        if (contact.id === newContact.id) {
-          newContacts.push(newContact);
-        } else {
-          newContacts.push(contact);
-        }
-      });
-      dispatch({
-        type: contactActions.CREATE_USER,
-        contacts: newContacts.sort(ascendingSort)
-      });
-    };
-  },
+//    createUser: newContact => {
+//     return (dispatch, getState) => {
+//       const contacts = getState().Users.contacts;
+//       const newContacts = [];
+//       contacts.forEach(contact => {
+//         if (contact.id === newContact.id) {
+//           newContacts.push(newContact);
+//         } else {
+//           newContacts.push(contact);
+//         }
+//       });
+//       dispatch({
+//     type: contactActions.CREATE_USER,
+//     payload: { newContact },
+//   });
+// };
+//   },
   editContact: newContact => {
     console.log(newContact)
     return (dispatch, getState) => {

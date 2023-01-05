@@ -23,8 +23,31 @@ function* getUsers() {
   }
 }
 export function* addContact() {
-  yield takeEvery(actions.CREATE_USER, function*() {});
+  yield takeEvery(actions.ADD_CONTACT, function*() {});
 }
+export function* createUser({ payload }) {
+
+  const { contact } = payload;
+  console.log(contact)
+    try {
+      // const date = new Date();
+      let form_data = new FormData();
+
+      form_data.append("name", contact.name);
+      form_data.append("role", contact.role);
+      // form_data.append("trip_count", 0);
+      // form_data.append("vehicletotal_generated_revenue", 0);
+
+
+      const response = yield call(requestPostUser, form_data);
+      console.log(response)
+      yield put({ type: actions.GET_USER });
+    }
+    catch (error) {
+      console.log(error);
+      yield put(actions.getUsers());
+    }
+  }
 export function* editContact() {
   yield takeEvery(actions.EDIT_CONTACT, function*() {});
 }
@@ -32,5 +55,5 @@ export function* deleteContact() {
   yield takeEvery(actions.DELETE__CONTACT, function*() {});
 }
 export default function* rootSaga() {
-  yield all([fork(addContact), fork(editContact), fork(deleteContact),fork(getUsers)]);
+  yield all([fork(addContact), fork(editContact), fork(deleteContact),fork(getUsers), takeEvery(actions.CREATE_USER,createUser)]);
 }

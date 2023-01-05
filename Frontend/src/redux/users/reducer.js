@@ -8,7 +8,8 @@ const initState = {
   errorMessage: false,
   contacts:{},
   // seectedId: contacts[0].id,
-  editView: false
+  editView: false,
+  createView: false,
 };
 
 export default function contactReducer(state = initState, action) {
@@ -44,7 +45,7 @@ export default function contactReducer(state = initState, action) {
         ...state,
         contacts: action.contacts,
         seectedId: action.selectedId,
-        editView: true
+        createView: true
       };
     case contactActions.EDIT_CONTACT:
       return {
@@ -67,4 +68,4 @@ export default function contactReducer(state = initState, action) {
   }
 }
 
-export { initState };
+// export { initState };

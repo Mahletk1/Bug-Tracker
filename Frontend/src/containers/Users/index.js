@@ -30,6 +30,7 @@ class Contacts extends Component {
       contacts,
       seectedId,
       editView,
+      createView,
       changeContact,
       addContact,
       editContact,
@@ -37,7 +38,7 @@ class Contacts extends Component {
       deleteContact,
       viewChange
     } = this.props;
-
+console.log(this.props)
     const selectedContact = seectedId
       ? contacts.filter(contact => contact.id === seectedId)[0]
       : null;
@@ -76,8 +77,10 @@ class Contacts extends Component {
               </div>
 
               <Scrollbar className="contactBoxScrollbar">
-                {editView ? (
+                {editView || createView ? (
                   <EditContactView
+                    editView={editView}
+                    createView={createView}
                     contact={selectedContact}
                     editContact={editContact}
                     createUser={createUser}
@@ -109,11 +112,12 @@ class Contacts extends Component {
 }
 
 function mapStateToProps(state) {
-  const { contacts, seectedId, editView } = state.Users;
+  const { contacts, seectedId, editView,createView } = state.Users;
   return {
     contacts,
     seectedId,
-    editView
+    editView,
+    createView
   };
 }
 export default connect(mapStateToProps, {
