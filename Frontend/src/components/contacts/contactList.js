@@ -33,7 +33,7 @@ export default class ContactList extends Component {
         onClick={onChange}
       >
         <div className="isoAvatar">
-          {contact.avatar ? <img alt="#" src={contact.avatar} /> : ''}
+          {contact.profile_image ? <img alt="#" src={contact.profile_image} /> : ''}
         </div>
         <div className="isoContactName">
           <h3>{contact.name ? contact.name : 'No Name'}</h3>

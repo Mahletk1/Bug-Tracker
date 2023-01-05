@@ -1,16 +1,38 @@
-import fakeData from "../../containers/Contacts/fakeData";
+// import fakeData from "../../containers/Contacts/fakeData";
 import contactActions from "./actions";
 
-const contacts = new fakeData(10).getAll();
+// const contacts = new fakeData(10).getAll();
 
 const initState = {
-  contacts,
-  seectedId: contacts[0].id,
+  isLoading: true,
+  errorMessage: false,
+  contacts:{},
+  // seectedId: contacts[0].id,
   editView: false
 };
 
 export default function contactReducer(state = initState, action) {
   switch (action.type) {
+    case contactActions.GET_USER:
+      return {
+        ...state,
+        isLoading: true,
+        errorMessage: false,
+        modalActive: false,
+      };
+    case contactActions.GET_USER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        contacts: action.payload.data,
+        errorMessage: false,
+      };
+    case contactActions.GET_USER_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        errorMessage: 'There is a loading problem',
+      };
     case contactActions.CHANGE_CONTACT:
       return {
         ...state,
@@ -45,4 +67,4 @@ export default function contactReducer(state = initState, action) {
   }
 }
 
-export { contacts };
+// export { contacts };
