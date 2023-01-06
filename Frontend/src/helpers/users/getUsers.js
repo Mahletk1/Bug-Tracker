@@ -11,6 +11,14 @@ export function requestPostUser(form_data) {
         },
     })
 }
+export function firebaseUser(form_data) {
+    console.log(form_data)
+    return axios.post("http://127.0.0.1:8000/createUsers/", form_data, {
+        headers: {
+            "content-type": "multipart/form-data",
+        },
+    })
+}
 export async function urlToObject(image) {
     const response = await fetch(image);
     // here image is url/location of image
