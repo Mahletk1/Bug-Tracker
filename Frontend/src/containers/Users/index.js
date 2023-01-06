@@ -11,6 +11,7 @@ import { otherAttributes } from "./fakeData";
 import IntlMessages from "../../components/utility/intlMessages";
 import { ContactsWrapper } from "./contacts.style";
 import Scrollbar from "../../components/utility/customScrollBar.js";
+import { update } from "lodash";
 
 const {
   changeContact,
@@ -24,25 +25,48 @@ const {
 
 const { Content } = Layout;
 class Contacts extends Component {
+  state = {
+    createView: false,
+    editView: false
+  }
+  async componentDidMount() {
+   await this.props.getUsers();
+  }
   render() {
     
     const {
       contacts,
-      seectedId,
-      editView,
       createView,
+      editView,
+      seectedId,
       changeContact,
       addContact,
       editContact,
       createUser,
       deleteContact,
-      viewChange
+      viewChange,
+      update,
+      newUser
     } = this.props;
-console.log(this.props)
+    const contactLength = Object.keys(contacts).length
+    const onPageLoad =()=> {
+      if (contactLength==0){
+         return <p>Loading...</p>
+      }
+      else{
+        return   <SingleContactView
+        contact={contacts[contactLength-1]}
+        otherAttributes={otherAttributes}
+      />
+      }
+    }
+    console.log(contactLength)
+
     const selectedContact = seectedId
       ? contacts.filter(contact => contact.id === seectedId)[0]
       : null;
     const onVIewChange = () => viewChange(!editView);
+    console.log(createView,editView,selectedContact)
     return (
       <ContactsWrapper
         className="isomorphicContacts"
@@ -82,8 +106,7 @@ console.log(this.props)
                     editView={editView}
                     createView={createView}
                     contact={selectedContact}
-                    editContact={editContact}
-                    createUser={createUser}
+                    // createUser={createUser} //Update user
                     otherAttributes={otherAttributes}
                   />
                 ) : (
@@ -95,7 +118,8 @@ console.log(this.props)
               </Scrollbar>
             </Content>
           ) : (
-            <div className="isoContactControl">
+            <Content className="isoContactBox">
+              <div className="isoContactControl">
               <Button
                 type="primary"
                 onClick={addContact}
@@ -103,29 +127,53 @@ console.log(this.props)
               >
                 <IntlMessages id="Add New User" />
               </Button>
-            </div>
+              </div>
+              <Scrollbar className="contactBoxScrollbar">
+                {editView || createView ? (
+                  <EditContactView
+                    editView={editView}
+                    createView={createView}
+                    contact={newUser}
+                    update={update}
+                    createUser={createUser}
+                    otherAttributes={otherAttributes}
+                  />
+                ) : (
+                  onPageLoad()
+                )}
+              </Scrollbar>
+           
+            </Content>
+            
+            
           )}
         </Layout>
       </ContactsWrapper>
     );
   }
 }
+export default connect(
 
-function mapStateToProps(state) {
-  const { contacts, seectedId, editView,createView } = state.Users;
-  return {
-    contacts,
-    seectedId,
-    editView,
-    createView
-  };
-}
-export default connect(mapStateToProps, {
-  changeContact,
-  addContact,
-  editContact,
-  deleteContact,
-  getUsers,
-  createUser,
-  viewChange
-})(Contacts);
+  state => ({
+    ...state.Users,
+  }),
+  contactAction
+)(Contacts);
+// function mapStateToProps(state) {
+//   const { contacts, seectedId, editView,createView } = state.Users;
+//   return {
+//     contacts,
+//     seectedId,
+//     editView,
+//     createView
+//   };
+// }
+// export default connect(mapStateToProps, {
+//   changeContact,
+//   addContact,
+//   editContact,
+//   deleteContact,
+//   getUsers,
+//   createUser,
+//   viewChange
+// })(Contacts);

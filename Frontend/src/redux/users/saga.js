@@ -1,6 +1,6 @@
 import { all, takeEvery, fork, call,put } from 'redux-saga/effects';
 import actions from './actions';
-import { requestGetUsers,requestPostUser } from '../../helpers/users/getUsers';
+import { requestGetUsers,requestPostUser,urlToObject } from '../../helpers/users/getUsers';
 
 function* getUsers() {
   try {
@@ -30,12 +30,13 @@ export function* createUser({ payload }) {
   const { contact } = payload;
   console.log(contact)
     try {
+      const file = yield call(urlToObject, contact.profile_image);
       // const date = new Date();
       let form_data = new FormData();
 
       form_data.append("name", contact.name);
       form_data.append("role", contact.role);
-      // form_data.append("trip_count", 0);
+      form_data.append("profile_image", file);
       // form_data.append("vehicletotal_generated_revenue", 0);
 
 
@@ -55,5 +56,5 @@ export function* deleteContact() {
   yield takeEvery(actions.DELETE__CONTACT, function*() {});
 }
 export default function* rootSaga() {
-  yield all([fork(addContact), fork(editContact), fork(deleteContact),fork(getUsers), takeEvery(actions.CREATE_USER,createUser)]);
+  yield all([fork(addContact), fork(editContact), fork(deleteContact),takeEvery(actions.GET_USER,getUsers), takeEvery(actions.CREATE_USER,createUser)]);
 }

@@ -11,6 +11,7 @@ const contactActions = {
   GET_USER_SUCCESS:"GET_USER_SUCCESS",
   GET_USER_ERROR:"GET_USER_ERROR",
   CREATE_USER:"CREATE_USER",
+  UPDATE:"UPDATE",
   ADD_CONTACT: "ADD_CONTACT",
   EDIT_CONTACT: "EDIT_CONTACT",
   DELETE__CONTACT: "DELETE__CONTACT",
@@ -32,23 +33,17 @@ const contactActions = {
     type: contactActions.CREATE_USER,
     payload: { contact },
   }),
+  update: data => ({
+    type: contactActions.UPDATE,
+    payload: { data },
+  }),
   changeContact: id => ({
     type: contactActions.CHANGE_CONTACT,
     id
   }),
-  addContact: () => {
-    const newContact = {
-      id: new Date(), 
-    };
-    return (dispatch, getState) => {
-      console.log(...getState().Users.contacts)
-      dispatch({
-        type: contactActions.ADD_CONTACT,
-        contacts: [...getState().Users.contacts, newContact],
-        selectedId: newContact.id
-      });
-    };
-  },
+  addContact: () =>({
+    type: contactActions.ADD_CONTACT,
+  }), 
 //    createUser: newContact => {
 //     return (dispatch, getState) => {
 //       const contacts = getState().Users.contacts;
@@ -66,24 +61,24 @@ const contactActions = {
 //   });
 // };
 //   },
-  editContact: newContact => {
-    console.log(newContact)
-    return (dispatch, getState) => {
-      const contacts = getState().Users.contacts;
-      const newContacts = [];
-      contacts.forEach(contact => {
-        if (contact.id === newContact.id) {
-          newContacts.push(newContact);
-        } else {
-          newContacts.push(contact);
-        }
-      });
-      dispatch({
-        type: contactActions.EDIT_CONTACT,
-        contacts: newContacts.sort(ascendingSort)
-      });
-    };
-  },
+  // editContact: newContact => {
+  //   console.log(newContact)
+  //   return (dispatch, getState) => {
+  //     const contacts = getState().Users.contacts;
+  //     const newContacts = [];
+  //     contacts.forEach(contact => {
+  //       if (contact.id === newContact.id) {
+  //         newContacts.push(newContact);
+  //       } else {
+  //         newContacts.push(contact);
+  //       }
+  //     });
+  //     dispatch({
+  //       type: contactActions.EDIT_CONTACT,
+  //       contacts: newContacts.sort(ascendingSort)
+  //     });
+  //   };
+  // },
   // deleteContact: id => {
   //   return (dispatch, getState) => {
   //     const contacts = getState().Users.contacts;

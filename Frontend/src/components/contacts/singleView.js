@@ -3,6 +3,7 @@ import { ContactCardWrapper } from './contactCard.style';
 
 export default class extends Component {
   render() {
+    console.log(this.props)
     const { contact, otherAttributes } = this.props;
     const name = contact.name ? contact.name : 'No Name';
     const extraInfos = [];

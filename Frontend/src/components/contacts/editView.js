@@ -7,6 +7,7 @@ import { ContactCardWrapper } from './contactCard.style';
 import './upload.css';
 import IntlMessages from "../../components/utility/intlMessages";
 import Button from "../../components/uielements/button";
+import clone from 'clone';
 
 function beforeUpload(file) {
   const isJPG = file.type === 'image/jpeg';
@@ -27,43 +28,45 @@ export default class extends Component {
   handleRecord = async (contact) => {
     await this.props.createUser(contact);
   };
+  onRecordChange = (key, event) => {
+    let { contact } = clone(this.props);
+
+    if (key) contact[key] = event.target.value;
+    this.props.update(contact);
+  };
+
+   onImageChange = (key,event) => {
+    console.log(event.fileList[0].originFileObj)
+    var reader = new FileReader();
+    let file =event.fileList[0].originFileObj;
+    reader.readAsDataURL(file);
+    let { contact } = clone(this.props);
+    const {update} = this.props
+    reader.onload = function () { 
+      contact[key] = reader.result;
+      update(contact);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  };  
   render() {
-    const { contact, otherAttributes,createView,editView,editContact,createUser } = this.props;
+    const { contact, otherAttributes,createView,editView,createUser } = this.props;
     console.log(this.props)
-    const name = contact.name ? contact.name : 'No Name';
     const extraInfos = [];
-
-    const onImageChange = event => {
-      console.log(event.fileList[0].originFileObj)
-      var reader = new FileReader();
-      let file =event.fileList[0].originFileObj;
-      reader.readAsDataURL(file);
-      reader.onload = function () { 
-        contact['profile_image'] = reader.result;
-        // editContact(contact);
-      };
-      reader.onerror = function (error) {
-        console.log('Error: ', error);
-      };
-    };  
-
-   
-
+  
 
     if(createView){   
     [...otherAttributes].forEach(attribute => {
-      const value = contact[attribute.value];
-      const editContact = event => {
-        contact[attribute.value] = event.target.value;
-        // this.props.editContact(contact);
-      };
+      // console.log(contact.attribute.value)
+      console.log(attribute)
         extraInfos.push(
           <div className="isoContactCardInfos" key={attribute.value}>
             <p className="isoInfoLabel">{`${attribute.title}`}</p>
             <Input
               placeholder={`${attribute.title}`}
-              value={value}
-              onChange={event => editContact(event)}
+              // value={contact.attribute.value}
+              onChange={this.onRecordChange.bind(this, `${attribute.value}`)}
             />
           </div>
         );
@@ -73,7 +76,7 @@ export default class extends Component {
       <Button
           type="primary"
           className="isoAddContactBtn"
-          onClick={this.props.createUser(contact)}
+          onClick={this.handleRecord.bind(this, contact)}
       >
           <IntlMessages id="Submit" />
       </Button>
@@ -82,23 +85,32 @@ export default class extends Component {
     else{
      
       [...otherAttributes].forEach(attribute => {
-        const value = contact[attribute.value];
-        const createUser = event => {
-          contact[attribute.value] = event.target.value;
-          this.props.createUser(contact);
-        };
+        // const value = contact[attribute.value];
+        // const createUser = event => {
+        //   contact[attribute.value] = event.target.value;
+        //   this.props.createUser(contact);
+        // };
           extraInfos.push(
             <div className="isoContactCardInfos" key={attribute.value}>
               <p className="isoInfoLabel">{`${attribute.title}`}</p>
               <Input
                 placeholder={`${attribute.title}`}
-                value={value}
-                onChange={event => createUser(event)}
+                // value={value}
+                onChange={this.onRecordChange.bind(this, `${attribute.value}`)}
               />
             </div>
           );
         
       });
+      extraInfos.push(
+        <Button
+            type="primary"
+            className="isoAddContactBtn"
+            // onClick={this.handleRecord.bind(this, contact)}//create a function to handle update
+        >
+            <IntlMessages id="Submit" />
+        </Button>
+      )
       
     }
 
@@ -112,7 +124,7 @@ export default class extends Component {
                 name="avatar"
                 showUploadList={false}
                 beforeUpload={() => false}
-                onChange={onImageChange}
+                onChange={this.onImageChange.bind(this, 'profile_image')}
                 action=""
             >
               {contact.profile_image ? (
@@ -123,7 +135,7 @@ export default class extends Component {
               <Icon type="plus" className="avatar-uploader-trigger" />
             </Upload>
           </div>
-          <h1 className="isoPersonName">{name}</h1>
+          <h1 className="isoPersonName">{contact.name}</h1>
         </div>
         <div className="isoContactInfoWrapper">{extraInfos}
         </div>

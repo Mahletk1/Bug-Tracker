@@ -7,6 +7,7 @@ const initState = {
   isLoading: true,
   errorMessage: false,
   contacts:{},
+  newUser:{},
   // seectedId: contacts[0].id,
   editView: false,
   createView: false,
@@ -14,6 +15,11 @@ const initState = {
 
 export default function contactReducer(state = initState, action) {
   switch (action.type) {
+    case contactActions.UPDATE:
+      return {
+        ...state,
+        newUser: action.payload.data,
+      };
     case contactActions.GET_USER:
       return {
         ...state,
@@ -40,10 +46,17 @@ export default function contactReducer(state = initState, action) {
         seectedId: action.id,
         editView: false
       };
+      case contactActions.CREATE_USER:
+      return {
+        ...state,
+        // contacts: action.contacts,
+        // seectedId: action.selectedId,
+        createView: false
+      };
     case contactActions.ADD_CONTACT:
       return {
         ...state,
-        contacts: action.contacts,
+        // contacts: action.contacts,
         seectedId: action.selectedId,
         createView: true
       };

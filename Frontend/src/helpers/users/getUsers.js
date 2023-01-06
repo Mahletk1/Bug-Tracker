@@ -11,3 +11,11 @@ export function requestPostUser(form_data) {
         },
     })
 }
+export async function urlToObject(image) {
+    const response = await fetch(image);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+    return file
+
+}
