@@ -29,17 +29,16 @@ export function* addContact() {
 export function* createUser({ payload }) {
 
   const { contact } = payload;
-  console.log(contact)
+
     try {
       const file = yield call(urlToObject, contact.profile_image);
-      // const date = new Date();
+
       let form_data = new FormData();
       form_data.append("password", contact.password);
       form_data.append("name", contact.name);
       form_data.append("email", contact.email);
       form_data.append("role", contact.role);
       form_data.append("profile_image", file);
-      // form_data.append("vehicletotal_generated_revenue", 0);
 
       const response1 = yield call(firebaseUser, form_data);
       const response = yield call(requestPostUser, form_data);

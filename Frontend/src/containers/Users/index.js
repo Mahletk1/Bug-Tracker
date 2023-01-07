@@ -81,16 +81,16 @@ class Contacts extends Component {
           />
         </div>
         <Layout className="isoContactBoxWrapper">
-          {selectedContact ? (
-            <Content className="isoContactBox">
+         
+            {/* <Content className="isoContactBox"> */}
               <div className="isoContactControl">
                 <Button type="button" onClick={onVIewChange}>
                   {editView ? <Icon type="check" /> : <Icon type="edit" />}{" "}
                 </Button>
-                <DeleteButton
+                {/* <DeleteButton
                   deleteContact={deleteContact}
                   contact={selectedContact}
-                />
+                /> */}
                 <Button
                   type="primary"
                   onClick={addContact}
@@ -99,7 +99,8 @@ class Contacts extends Component {
                   <IntlMessages id="Add New User" />
                 </Button>
               </div>
-
+          {/* </Content> */}
+              {selectedContact ? (
               <Scrollbar className="contactBoxScrollbar">
                 {editView || createView ? (
                   <EditContactView
@@ -116,10 +117,10 @@ class Contacts extends Component {
                   />
                 )}
               </Scrollbar>
-            </Content>
+    
           ) : (
             <Content className="isoContactBox">
-              <div className="isoContactControl">
+              {/* <div className="isoContactControl">
               <Button
                 type="primary"
                 onClick={addContact}
@@ -127,7 +128,7 @@ class Contacts extends Component {
               >
                 <IntlMessages id="Add New User" />
               </Button>
-              </div>
+              </div> */}
               <Scrollbar className="contactBoxScrollbar">
                 {editView || createView ? (
                   <EditContactView
