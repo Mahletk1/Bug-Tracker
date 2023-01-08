@@ -11,17 +11,7 @@ import { otherAttributes } from "./fakeData";
 import IntlMessages from "../../components/utility/intlMessages";
 import { ContactsWrapper } from "./contacts.style";
 import Scrollbar from "../../components/utility/customScrollBar.js";
-import { update } from "lodash";
 
-const {
-  changeContact,
-  getUsers,
-  createUser,
-  editCreateView,
-  editContact,
-  deleteContact,
-  viewChange
-} = contactAction;
 
 const { Content } = Layout;
 class Contacts extends Component {
@@ -50,23 +40,28 @@ class Contacts extends Component {
       newUser
     } = this.props;
 
-    
-    const selectedContact = seectedId
+   
+    let selectedContact = seectedId
       ? contacts.filter(contact => contact.id === seectedId)[0]
       : null;
-    if (selectedContact) {
-      if(Object.keys(newUser).length == 0){
-        let names = Object.keys(selectedContact)
-        names.forEach((attribute)=>
-        newUser[attribute]=selectedContact[attribute]
-          );
-          console.log(newUser);
+      if(createView){ 
+        selectedContact=null;
       }
-        
-      }    
+  
     const onVIewChange = () => viewChange(!editView);
     const onCreateVIewChange = () => editCreateView(!createView);
     console.log(createView,editView,selectedContact)
+    // const onPageLoad=()=>{
+    //   console.log(Object.keys(contacts).length);
+    //   const length=Object.keys(contacts).length-1;
+    //   if (length>=0){return <SingleContactView
+    //     contact={contacts[length]}
+    //     editCreateView={editCreateView}
+    //     createView={createView}
+    //     otherAttributes={otherAttributes}
+    //   />}
+      
+    // }
     return (
       <ContactsWrapper
         className="isomorphicContacts"
@@ -82,7 +77,7 @@ class Contacts extends Component {
         </div>
         <Layout className="isoContactBoxWrapper">
          
-            {/* <Content className="isoContactBox"> */}
+         
               <div className="isoContactControl">
                 <Button type="button" onClick={onVIewChange}>
                   {editView ? <Icon type="arrowleft" /> : createView? " ": <Icon type="edit" />}{" "}
@@ -100,7 +95,7 @@ class Contacts extends Component {
                 </Button>}
                
               </div>
-          {/* </Content> */}
+
               {selectedContact ? (
               
               <Scrollbar className="contactBoxScrollbar">
@@ -126,15 +121,7 @@ class Contacts extends Component {
     
           ) : (
             <Content className="isoContactBox">
-              {/* <div className="isoContactControl">
-              <Button
-                type="primary"
-                onClick={addContact}
-                className="isoAddContactBtn"
-              >
-                <IntlMessages id="Add New User" />
-              </Button>
-              </div> */}
+
               <Scrollbar className="contactBoxScrollbar">
                 {editView || createView ? (
                   <EditContactView
@@ -146,7 +133,7 @@ class Contacts extends Component {
                     otherAttributes={otherAttributes}
                   />
                 ) : (
-                  <p>No user selected</p>
+                  <p style={{"margin":"50px"}}>No User Selected</p>
                   // onPageLoad()
                 )}
               </Scrollbar>
@@ -167,21 +154,3 @@ export default connect(
   }),
   contactAction
 )(Contacts);
-// function mapStateToProps(state) {
-//   const { contacts, seectedId, editView,createView } = state.Users;
-//   return {
-//     contacts,
-//     seectedId,
-//     editView,
-//     createView
-//   };
-// }
-// export default connect(mapStateToProps, {
-//   changeContact,
-//   addContact,
-//   editContact,
-//   deleteContact,
-//   getUsers,
-//   createUser,
-//   viewChange
-// })(Contacts);

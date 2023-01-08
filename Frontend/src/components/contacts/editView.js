@@ -53,9 +53,9 @@ export default class extends Component {
   };
    onImageChange = (key,event) => {
     if(this.props.createView){
-    console.log(event.fileList[0].originFileObj)
+    const index = event.fileList.length-1;
     var reader = new FileReader();
-    let file =event.fileList[0].originFileObj;
+    let file =event.fileList[index].originFileObj;
     reader.readAsDataURL(file);
     let { contact } = clone(this.props);
     const {update} = this.props
@@ -69,8 +69,10 @@ export default class extends Component {
     };
   }
   else if(this.props.editView){
+    const index = event.fileList.length-1;
     var reader = new FileReader();
-    let file =event.fileList[0].originFileObj;
+    console.log(event.fileList[index])
+    let file =event.fileList[index].originFileObj;
     reader.readAsDataURL(file);
     let { editedContact } = clone(this.props);
     const {update} = this.props
@@ -89,7 +91,7 @@ export default class extends Component {
     const extraInfos = [];
   
 
-    if(createView){   
+    if(createView){  
     [...otherAttributes].forEach(attribute => {
       // console.log(contact.attribute.value)
         extraInfos.push(
@@ -116,7 +118,15 @@ export default class extends Component {
     )
   }
     else{
-     
+      console.log(editedContact);
+      if(Object.keys(editedContact).length == 0){
+        let names = Object.keys(contact)
+        names.forEach((attribute)=>
+        editedContact[attribute]=contact[attribute]
+          );
+          console.log(editedContact
+            );
+      }   
       [...otherAttributes].forEach(attribute => {
         const value = contact[attribute.value];
         // const createUser = event => {
@@ -151,22 +161,38 @@ export default class extends Component {
       <ContactCardWrapper className="isoContactCard">
         <div className="isoContactCardHead">
           <div className="isoPersonImage">
-            
-            <Upload
+            {createView?(<Upload
                 className="avatar-uploader"
-                name="avatar"
+                name="profile_image"
                 showUploadList={false}
                 beforeUpload={() => false}
-                onChange={this.onImageChange.bind(this, 'profile_image')}
+                onChange={
+                  this.onImageChange.bind(this, 'profile_image')}
                 action=""
             >
-              {/* {editView ? (
+              
+              {contact.profile_image ? (
                 <img src={contact.profile_image} alt="" className="avatar" />
-              ) : (
-                ''
-              )} */}
+              ) :('')}
+            
               <Icon type="plus" className="avatar-uploader-trigger" />
-            </Upload>
+            </Upload>):(<Upload
+                className="avatar-uploader"
+                name="profile_image"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={
+                  this.onImageChange.bind(this, 'profile_image')}
+                action=""
+            >
+              
+              {editedContact.profile_image ? (
+                <img src={editedContact.profile_image} alt="" className="avatar" />
+              ) :('')}
+             
+              <Icon type="plus" className="avatar-uploader-trigger" />
+            </Upload>)}
+            
           </div>
           <h1 className="isoPersonName">{contact.name}</h1>
         </div>
