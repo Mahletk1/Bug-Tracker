@@ -44,7 +44,8 @@ export default function contactReducer(state = initState, action) {
       return {
         ...state,
         seectedId: action.id,
-        editView: false
+        editView: false,
+        createView: false
       };
       case contactActions.CREATE_USER:
       return {
@@ -53,12 +54,21 @@ export default function contactReducer(state = initState, action) {
         // seectedId: action.selectedId,
         createView: false
       };
-    case contactActions.ADD_CONTACT:
+      case contactActions.EDIT_USER:
+        return {
+          ...state,
+          // contacts: action.contacts,
+          // seectedId: action.selectedId,
+          editView: false
+        };
+    case contactActions.EDIT_CREATE_VIEW:
       return {
         ...state,
-        // contacts: action.contacts,
-        seectedId: action.selectedId,
-        createView: true
+        createView: action.view
+        // ...state,
+        // // contacts: action.contacts,
+        // seectedId: action.selectedId,
+        // createView: !initState.createView
       };
     case contactActions.EDIT_CONTACT:
       return {

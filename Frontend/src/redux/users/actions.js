@@ -11,8 +11,9 @@ const contactActions = {
   GET_USER_SUCCESS:"GET_USER_SUCCESS",
   GET_USER_ERROR:"GET_USER_ERROR",
   CREATE_USER:"CREATE_USER",
+  EDIT_USER:"EDIT_USER",
   UPDATE:"UPDATE",
-  ADD_CONTACT: "ADD_CONTACT",
+  EDIT_CREATE_VIEW: "EDIT_CREATE_VIEW",
   EDIT_CONTACT: "EDIT_CONTACT",
   DELETE__CONTACT: "DELETE__CONTACT",
   CHANGE_CONTACT: "CHANGE_CONTACT",
@@ -33,6 +34,10 @@ const contactActions = {
     type: contactActions.CREATE_USER,
     payload: { contact },
   }),
+  editUser: (contact) => ({
+    type: contactActions.EDIT_USER,
+    payload: { contact },
+  }),
   update: data => ({
     type: contactActions.UPDATE,
     payload: { data },
@@ -41,9 +46,11 @@ const contactActions = {
     type: contactActions.CHANGE_CONTACT,
     id
   }),
-  addContact: () =>({
-    type: contactActions.ADD_CONTACT,
-  }), 
+  editCreateView: view =>
+    ({
+      type: contactActions.EDIT_CREATE_VIEW,
+      view
+    }), 
 //    createUser: newContact => {
 //     return (dispatch, getState) => {
 //       const contacts = getState().Users.contacts;

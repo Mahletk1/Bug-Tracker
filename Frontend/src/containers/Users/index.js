@@ -17,7 +17,7 @@ const {
   changeContact,
   getUsers,
   createUser,
-  addContact,
+  editCreateView,
   editContact,
   deleteContact,
   viewChange
@@ -40,32 +40,32 @@ class Contacts extends Component {
       editView,
       seectedId,
       changeContact,
-      addContact,
+      editCreateView,
       editContact,
       createUser,
+      editUser,
       deleteContact,
       viewChange,
       update,
       newUser
     } = this.props;
-    const contactLength = Object.keys(contacts).length
-    const onPageLoad =()=> {
-      if (contactLength==0){
-         return <p>Loading...</p>
-      }
-      else{
-        return   <SingleContactView
-        contact={contacts[contactLength-1]}
-        otherAttributes={otherAttributes}
-      />
-      }
-    }
-    console.log(contactLength)
 
+    
     const selectedContact = seectedId
       ? contacts.filter(contact => contact.id === seectedId)[0]
       : null;
+    if (selectedContact) {
+      if(Object.keys(newUser).length == 0){
+        let names = Object.keys(selectedContact)
+        names.forEach((attribute)=>
+        newUser[attribute]=selectedContact[attribute]
+          );
+          console.log(newUser);
+      }
+        
+      }    
     const onVIewChange = () => viewChange(!editView);
+    const onCreateVIewChange = () => editCreateView(!createView);
     console.log(createView,editView,selectedContact)
     return (
       <ContactsWrapper
@@ -85,34 +85,40 @@ class Contacts extends Component {
             {/* <Content className="isoContactBox"> */}
               <div className="isoContactControl">
                 <Button type="button" onClick={onVIewChange}>
-                  {editView ? <Icon type="check" /> : <Icon type="edit" />}{" "}
+                  {editView ? <Icon type="arrowleft" /> : createView? " ": <Icon type="edit" />}{" "}
                 </Button>
                 {/* <DeleteButton
                   deleteContact={deleteContact}
                   contact={selectedContact}
                 /> */}
-                <Button
+                {editView? " ":  <Button
                   type="primary"
-                  onClick={addContact}
+                  onClick={onCreateVIewChange}
                   className="isoAddContactBtn"
                 >
                   <IntlMessages id="Add New User" />
-                </Button>
+                </Button>}
+               
               </div>
           {/* </Content> */}
               {selectedContact ? (
+              
               <Scrollbar className="contactBoxScrollbar">
                 {editView || createView ? (
                   <EditContactView
                     editView={editView}
                     createView={createView}
                     contact={selectedContact}
-                    // createUser={createUser} //Update user
+                    editedContact={newUser}
+                    editUser={editUser} //Update user
+                    update={update}
                     otherAttributes={otherAttributes}
                   />
                 ) : (
                   <SingleContactView
                     contact={selectedContact}
+                    editCreateView={editCreateView}
+                    createView={createView}
                     otherAttributes={otherAttributes}
                   />
                 )}
@@ -140,7 +146,8 @@ class Contacts extends Component {
                     otherAttributes={otherAttributes}
                   />
                 ) : (
-                  onPageLoad()
+                  <p>No user selected</p>
+                  // onPageLoad()
                 )}
               </Scrollbar>
            

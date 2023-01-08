@@ -8,6 +8,7 @@ import './upload.css';
 import IntlMessages from "../../components/utility/intlMessages";
 import Button from "../../components/uielements/button";
 import clone from 'clone';
+import { add } from 'lodash';
 
 function beforeUpload(file) {
   const isJPG = file.type === 'image/jpeg';
@@ -26,16 +27,32 @@ function beforeUpload(file) {
 export default class extends Component {
 
   handleRecord = async (contact) => {
-    await this.props.createUser(contact);
+    if(this.props.createView){
+      await this.props.createUser(contact);
+    }
+    else if (this.props.editView){
+      await this.props.editUser(contact);
+    }
   };
   onRecordChange = (key, event) => {
-    let { contact } = clone(this.props);
+    if(this.props.createView){
+      let { contact } = clone(this.props);
+   
+      if (key) contact[key] = event.target.value;
+      this.props.update(contact);
+    }
+    else if(this.props.editView){
+      let { editedContact,contact } = clone(this.props);
+      
+      if (key) editedContact[key] = event.target.value;
+      this.props.update(editedContact);
 
-    if (key) contact[key] = event.target.value;
-    this.props.update(contact);
+      console.log(editedContact)
+    }  
+    // console.log(this.props.editedContact)
   };
-
    onImageChange = (key,event) => {
+    if(this.props.createView){
     console.log(event.fileList[0].originFileObj)
     var reader = new FileReader();
     let file =event.fileList[0].originFileObj;
@@ -45,21 +62,36 @@ export default class extends Component {
     reader.onload = function () { 
       contact[key] = reader.result;
       update(contact);
+      console.log(contact)
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
+  }
+  else if(this.props.editView){
+    var reader = new FileReader();
+    let file =event.fileList[0].originFileObj;
+    reader.readAsDataURL(file);
+    let { editedContact } = clone(this.props);
+    const {update} = this.props
+    reader.onload = function () { 
+      editedContact[key] = reader.result;
+      update(editedContact);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  }
   };  
   render() {
-    const { contact, otherAttributes,createView,editView,createUser } = this.props;
-    console.log(this.props)
+    const { contact, otherAttributes,createView,editView,editedContact } = this.props;
+    // console.log(this.props)
     const extraInfos = [];
   
 
     if(createView){   
     [...otherAttributes].forEach(attribute => {
       // console.log(contact.attribute.value)
-      console.log(attribute)
         extraInfos.push(
           <div className="isoContactCardInfos" key={attribute.value}>
             <p className="isoInfoLabel">{`${attribute.title}`}</p>
@@ -72,6 +104,7 @@ export default class extends Component {
         );
       
     });
+    
     extraInfos.push(
       <Button
           type="primary"
@@ -85,7 +118,7 @@ export default class extends Component {
     else{
      
       [...otherAttributes].forEach(attribute => {
-        // const value = contact[attribute.value];
+        const value = contact[attribute.value];
         // const createUser = event => {
         //   contact[attribute.value] = event.target.value;
         //   this.props.createUser(contact);
@@ -95,7 +128,7 @@ export default class extends Component {
               <p className="isoInfoLabel">{`${attribute.title}`}</p>
               <Input
                 placeholder={`${attribute.title}`}
-                // value={value}
+                defaultValue={value}
                 onChange={this.onRecordChange.bind(this, `${attribute.value}`)}
               />
             </div>
@@ -106,7 +139,7 @@ export default class extends Component {
         <Button
             type="primary"
             className="isoAddContactBtn"
-            // onClick={this.handleRecord.bind(this, contact)}//create a function to handle update
+            onClick={this.handleRecord.bind(this, editedContact)}//create a function to handle update
         >
             <IntlMessages id="Submit" />
         </Button>
@@ -127,11 +160,11 @@ export default class extends Component {
                 onChange={this.onImageChange.bind(this, 'profile_image')}
                 action=""
             >
-              {contact.profile_image ? (
+              {/* {editView ? (
                 <img src={contact.profile_image} alt="" className="avatar" />
               ) : (
                 ''
-              )}
+              )} */}
               <Icon type="plus" className="avatar-uploader-trigger" />
             </Upload>
           </div>
