@@ -10,7 +10,7 @@ import firebase_admin
 cred = credentials.Certificate("C:/Users/mahku/Bug-Tracker/Backend/privateKey.json")
 default_app = firebase_admin.initialize_app(cred)
 
-@api_view(['GET','POST'])
+@api_view(['GET','POST','PUT'])
 def get_users(request):
     if request.method == 'GET':
         users= User.objects.all()
@@ -25,6 +25,15 @@ def get_users(request):
         else:
             print(serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'PUT':
+        user = User.objects.get(pk=request.data['id'])
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','POST'])
 def create_users(request):
