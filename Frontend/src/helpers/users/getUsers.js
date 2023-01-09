@@ -21,6 +21,10 @@ export function firebaseUser(form_data) {
         },
     })
 }
+export function editFirebaseUser(form_data) {
+    console.log("was here")
+    return axios.put("http://127.0.0.1:8000/createUsers/", form_data)
+}
 export async function urlToObject(image) {
     const response = await fetch(image);
     // here image is url/location of image

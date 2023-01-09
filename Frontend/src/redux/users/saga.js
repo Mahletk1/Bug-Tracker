@@ -4,7 +4,8 @@ import { requestGetUsers,
         requestPostUser,
         firebaseUser,
         urlToObject,
-        requestPutUser } from '../../helpers/users/getUsers';
+        requestPutUser,
+        editFirebaseUser } from '../../helpers/users/getUsers';
 
 function* getUsers() {
   try {
@@ -43,8 +44,9 @@ export function* createUser({ payload }) {
       form_data.append("profile_image", file);
 
       const response1 = yield call(firebaseUser, form_data);
+      console.log(response1)
       const response = yield call(requestPostUser, form_data);
-      console.log(response)
+      
       yield put({ type: actions.GET_USER });
     }
     catch (error) {
@@ -74,7 +76,7 @@ export function* createUser({ payload }) {
         // console.log(`${attribute}`, contact[attribute])
         // )
 
-        // const response1 = yield call(firebaseUser, form_data);
+        const response1 = yield call(editFirebaseUser, form_data);
         const response = yield call(requestPutUser, form_data);
         console.log(response)
         yield put({ type: actions.GET_USER });
