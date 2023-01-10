@@ -6,7 +6,7 @@ import WithDirection from '../../settings/withDirection';
 const SidebarWrapper = styled.div`
   .isomorphicSidebar {
     z-index: 1000;
-    background: ${palette('secondary', 0)};
+    background: #CCDCEA;
     width: 280px;
     flex: 0 0 280px;
 
@@ -30,7 +30,7 @@ const SidebarWrapper = styled.div`
 
     .isoLogoWrapper {
       height: 70px;
-      background: rgba(0, 0, 0, 0.3);
+      background: #4F738E;
       margin: 0;
       padding: 0 10px;
       text-align: center;
@@ -114,7 +114,7 @@ const SidebarWrapper = styled.div`
       }
 
       .ant-menu-item-selected {
-        background-color: rgba(0, 0, 0, 0.4) !important;
+        background-color:#4F738E !important;
         .anticon {
           color: #fff;
         }

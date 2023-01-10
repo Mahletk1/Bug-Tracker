@@ -2,9 +2,8 @@ export default {
   apiUrl: 'http://yoursite.com/api/'
 };
 const siteConfig = {
-  siteName: 'ISOMORPHIC',
+  siteName: 'Bug Tracker',
   siteIcon: 'ion-flash',
-  footerText: 'Isomorphic ©2017 Created by RedQ, Inc'
 };
 
 const themeConfig = {

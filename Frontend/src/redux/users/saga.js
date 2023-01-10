@@ -20,7 +20,8 @@ function* getUsers() {
         uid: response.data[index].uid
       });
     }
-    yield put(actions.getUsersSuccess(data))
+    
+    yield put(actions.getUsersSuccess(data.reverse()))
   } catch (error) {
     console.log(error);
     yield put(actions.getUsersError(error));

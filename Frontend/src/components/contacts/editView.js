@@ -8,7 +8,8 @@ import './upload.css';
 import IntlMessages from "../../components/utility/intlMessages";
 import Button from "../../components/uielements/button";
 import clone from 'clone';
-import { add } from 'lodash';
+import Select, { SelectOption } from '../../components/uielements/select';
+const Option = SelectOption;
 
 function beforeUpload(file) {
   const isJPG = file.type === 'image/jpeg';
@@ -42,7 +43,7 @@ export default class extends Component {
       this.props.update(contact);
     }
     else if(this.props.editView){
-      let { editedContact,contact } = clone(this.props);
+      let { editedContact } = clone(this.props);
       
       if (key) editedContact[key] = event.target.value;
       this.props.update(editedContact);
@@ -94,6 +95,7 @@ export default class extends Component {
     if(createView){  
     [...otherAttributes].forEach(attribute => {
       // console.log(contact.attribute.value)
+      if(attribute.title!='Role'){
         extraInfos.push(
           <div className="isoContactCardInfos" key={attribute.value}>
             <p className="isoInfoLabel">{`${attribute.title}`}</p>
@@ -104,6 +106,25 @@ export default class extends Component {
             />
           </div>
         );
+      }
+      else{
+        extraInfos.push(
+          <div className="isoContactCardInfos" key={attribute.value}>
+          <p className="isoInfoLabel">{`${attribute.title}`}</p>
+              <Select
+              placeholder={attribute.title}
+              onChange={(e)=>{ 
+                let { contact } = clone(this.props);
+                contact['role'] = e;
+                this.props.update(contact);}}
+              style={{ width: '100%' }}
+            >  
+              <Option value='admin' >Admin</Option>
+              <Option value='developer'>Developer</Option>
+            </Select>
+        </div>
+        );
+      }
       
     });
     
@@ -133,6 +154,7 @@ export default class extends Component {
         //   contact[attribute.value] = event.target.value;
         //   this.props.createUser(contact);
         // };
+        if(attribute.title!='Role'){
           extraInfos.push(
             <div className="isoContactCardInfos" key={attribute.value}>
               <p className="isoInfoLabel">{`${attribute.title}`}</p>
@@ -143,6 +165,29 @@ export default class extends Component {
               />
             </div>
           );
+        }
+        else{
+          extraInfos.push(
+            <div className="isoContactCardInfos" key={attribute.value}>
+            <p className="isoInfoLabel">{`${attribute.title}`}</p>
+                <Select
+                placeholder={attribute.title}
+                defaultValue={value}
+                onChange={(e)=>{ 
+                  let { editedContact } = clone(this.props);
+                  editedContact['role'] = e;
+                  this.props.update(editedContact);
+                  console.log(editedContact)
+                }}
+                style={{ width: '100%' }}
+              >  
+                <Option value='admin' >Admin</Option>
+                <Option value='developer'>Developer</Option>
+              </Select>
+          </div>
+          );
+        }
+        
         
       });
       extraInfos.push(
