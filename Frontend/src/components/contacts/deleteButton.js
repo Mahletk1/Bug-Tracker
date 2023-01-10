@@ -6,24 +6,24 @@ import notification from '../notification';
 export default class extends Component {
   render() {
     const { contact, deleteContact } = this.props;
-    let name = '';
-    if (contact.firstName) {
-      name = `${contact.firstName} `;
-    }
-    if (contact.lastName) {
-      name = `${name}${contact.lastName}`;
-    }
-    if (!name) {
-      name = 'No Name';
-    }
+    // let name = '';
+    // if (contact.firstName) {
+    //   name = `${contact.firstName} `;
+    // }
+    // if (contact.lastName) {
+    //   name = `${name}${contact.lastName}`;
+    // }
+    // if (!name) {
+    //   name = 'No Name';
+    // }
     return (
       <Popconfirm
-        title={`Sure to delete ${name}?`}
+        title={`Sure to delete ${contact.name}?`}
         okText="DELETE"
         cancelText="No"
         onConfirm={() => {
-          notification('error', `${name} Deleted`, '');
-          deleteContact(contact.id);
+          notification('error', `${contact.name} Deleted`, '');
+          deleteContact(contact);
         }}
       >
         <Button icon="close" type="button" className="isoDeleteBtn" />

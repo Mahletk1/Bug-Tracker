@@ -86,6 +86,10 @@ const contactActions = {
   //     });
   //   };
   // },
+  deleteContact: contact => ({
+    type: contactActions.DELETE__CONTACT,
+    payload:{contact}
+  }),
   // deleteContact: id => {
   //   return (dispatch, getState) => {
   //     const contacts = getState().Users.contacts;

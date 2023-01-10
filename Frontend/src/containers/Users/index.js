@@ -11,6 +11,8 @@ import { otherAttributes } from "./fakeData";
 import IntlMessages from "../../components/utility/intlMessages";
 import { ContactsWrapper } from "./contacts.style";
 import Scrollbar from "../../components/utility/customScrollBar.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 
 
 const { Content } = Layout;
@@ -79,13 +81,18 @@ class Contacts extends Component {
          
          
               <div className="isoContactControl">
+              
+              {/* <FontAwesomeIcon icon={faCoffee} /> */}
+                {createView||!selectedContact?"":( 
                 <Button type="button" onClick={onVIewChange}>
-                  {editView ? <Icon type="arrowleft" /> : createView? " ": <Icon type="edit" />}{" "}
-                </Button>
-                {/* <DeleteButton
+                  {/* <DownOutlined /> */}
+                  {editView ? <Icon type="left" /> :  <Icon type="edit" />}{" "}
+                </Button>)}
+  
+              { selectedContact? <DeleteButton
                   deleteContact={deleteContact}
                   contact={selectedContact}
-                /> */}
+                />:("")}
                 {editView? " ":  <Button
                   type="primary"
                   onClick={onCreateVIewChange}

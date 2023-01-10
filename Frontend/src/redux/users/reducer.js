@@ -77,12 +77,12 @@ export default function contactReducer(state = initState, action) {
         ...state,
         contacts: action.contacts
       };
-    case contactActions.DELETE__CONTACT:
-      return {
-        ...state,
-        contacts: action.contacts,
-        seectedId: action.seectedId
-      };
+    // case contactActions.DELETE__CONTACT:
+    //   return {
+    //     ...state,
+    //     contacts: action.contacts,
+    //     seectedId: action.seectedId
+    //   };
     case contactActions.EDIT_VIEW:
       return {
         ...state,

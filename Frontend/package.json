@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@babel/helper-regex": "^7.10.5",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@react-google-maps/api": "^2.13.1",
     "@react-icons/all-files": "^4.1.0",
     "animate.css-react": "^1.1.0",

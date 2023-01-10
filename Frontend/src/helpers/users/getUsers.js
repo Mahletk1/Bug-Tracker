@@ -13,18 +13,10 @@ export function requestPostUser(form_data) {
 export function requestPutUser(form_data) {
     return axios.put("http://127.0.0.1:8000/users/", form_data)
 }
-export function firebaseUser(form_data) {
-    console.log(form_data)
-    return axios.post("http://127.0.0.1:8000/createUsers/", form_data, {
-        headers: {
-            "content-type": "multipart/form-data",
-        },
-    })
+export function deleteUser(id,uid) {
+    return axios.delete(`http://127.0.0.1:8000/users/?id=${id}&uid=${uid}`)
 }
-export function editFirebaseUser(form_data) {
-    console.log("was here")
-    return axios.put("http://127.0.0.1:8000/createUsers/", form_data)
-}
+
 export async function urlToObject(image) {
     const response = await fetch(image);
     // here image is url/location of image
