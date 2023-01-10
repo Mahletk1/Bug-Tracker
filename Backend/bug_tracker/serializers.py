@@ -3,8 +3,7 @@ from .models import User
 
 class FirebaseUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['uid']
+        fields = ['error']
    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
