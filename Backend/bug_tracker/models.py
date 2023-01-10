@@ -7,3 +7,4 @@ class User(models.Model):
     profile_image= models.ImageField(upload_to=upload_to, blank=True, null=True)
     role = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
+    uid =  models.CharField(max_length=200,blank=True, null=True)

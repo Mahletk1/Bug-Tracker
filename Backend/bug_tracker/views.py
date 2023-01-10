@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer,FirebaseUserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,7 +18,19 @@ def get_users(request):
         return Response(serializer.data)
 
     if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
+        user = auth.create_user(
+        email=request.data['email'],
+        email_verified=False,
+        password=request.data['password'],
+        disabled=False)
+        userData = {
+            'uid':user.uid,
+            'name':request.data['name'],
+            'email':request.data['email'],
+            'profile_image':request.data['profile_image'],
+            'role':request.data['role']
+        }
+        serializer = UserSerializer(data=userData)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -28,6 +40,11 @@ def get_users(request):
     
     if request.method == 'PUT':
         user = User.objects.get(pk=request.data['id'])
+        auth.update_user(
+        request.data['uid'],
+        email=request.data['email'],
+        password=request.data['password'])
+
         serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -35,13 +52,13 @@ def get_users(request):
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET','POST'])
-def create_users(request):
-    if request.method == 'POST':
-        user = auth.create_user(
-        email=request.data['email'],
-        email_verified=False,
-        password=request.data['password'],
-        disabled=False)
-        return Response("Successfully created new user", status=status.HTTP_201_CREATED)
-        # print('Sucessfully created new user: {0}'.format(user.uid))
+# @api_view(['GET','POST','PUT'])
+# def create_users(request):
+
+    # if request.method == 'PUT':
+    #     user = auth.update_user(
+    #     request.data['uid'],
+    #     email=request.data['email'],
+    #     password=request.data['password'])
+    #     return Response("User successfully updated")
+    
