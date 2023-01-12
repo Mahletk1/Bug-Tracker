@@ -109,56 +109,56 @@ class Articles extends Component {
           return trimByWord(row.title);
         },
       },
-      {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-        width: '360px',
-        sorter: (a, b) => {
-          if (a.description < b.description) return -1;
-          if (a.description > b.description) return 1;
-          return 0;
-        },
-        render: (text, row) => {
-          const trimByWord = sentence => {
-            let result = sentence;
-            let resultArray = result.split(' ');
-            if (resultArray.length > 20) {
-              resultArray = resultArray.slice(0, 20);
-              result = resultArray.join(' ') + '...';
-            }
-            return result;
-          };
+      // {
+      //   title: 'Description',
+      //   dataIndex: 'description',
+      //   key: 'description',
+      //   width: '360px',
+      //   sorter: (a, b) => {
+      //     if (a.description < b.description) return -1;
+      //     if (a.description > b.description) return 1;
+      //     return 0;
+      //   },
+      //   render: (text, row) => {
+      //     const trimByWord = sentence => {
+      //       let result = sentence;
+      //       let resultArray = result.split(' ');
+      //       if (resultArray.length > 20) {
+      //         resultArray = resultArray.slice(0, 20);
+      //         result = resultArray.join(' ') + '...';
+      //       }
+      //       return result;
+      //     };
 
-          return trimByWord(row.description);
-        },
-      },
-      {
-        title: 'Excerpt',
-        dataIndex: 'excerpt',
-        key: 'excerpt',
-        width: '220px',
-        sorter: (a, b) => {
-          if (a.excerpt < b.excerpt) return -1;
-          if (a.excerpt > b.excerpt) return 1;
-          return 0;
-        },
-        render: (text, row) => {
-          const trimByWord = sentence => {
-            let result = sentence;
-            let resultArray = result.split(' ');
-            if (resultArray.length > 8) {
-              resultArray = resultArray.slice(0, 8);
-              result = resultArray.join(' ') + '...';
-            }
-            return result;
-          };
+      //     return trimByWord(row.description);
+      //   },
+      // },
+      // {
+      //   title: 'Excerpt',
+      //   dataIndex: 'excerpt',
+      //   key: 'excerpt',
+      //   width: '220px',
+      //   sorter: (a, b) => {
+      //     if (a.excerpt < b.excerpt) return -1;
+      //     if (a.excerpt > b.excerpt) return 1;
+      //     return 0;
+      //   },
+      //   render: (text, row) => {
+      //     const trimByWord = sentence => {
+      //       let result = sentence;
+      //       let resultArray = result.split(' ');
+      //       if (resultArray.length > 8) {
+      //         resultArray = resultArray.slice(0, 8);
+      //         result = resultArray.join(' ') + '...';
+      //       }
+      //       return result;
+      //     };
 
-          return trimByWord(row.excerpt);
-        },
-      },
+      //     return trimByWord(row.excerpt);
+      //   },
+      // },
       {
-        title: 'Slugs',
+        title: 'Progress Bar',
         dataIndex: 'slug',
         width: '170px',
         key: 'slug',
@@ -169,7 +169,7 @@ class Articles extends Component {
         },
       },
       {
-        title: 'Status',
+        title: 'Priority',
         dataIndex: 'status',
         className: 'noWrapCell',
         key: 'status',
@@ -224,7 +224,7 @@ class Articles extends Component {
           <ContentHolder style={{ marginTop: 0, overflow: 'hidden' }}>
           <img src={this.state.image}/>
             <TitleWrapper>
-              <ComponentTitle>Articles</ComponentTitle>
+              <ComponentTitle>Projects</ComponentTitle>
              
 
               <ButtonHolders>
