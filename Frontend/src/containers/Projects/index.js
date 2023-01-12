@@ -222,7 +222,6 @@ class Articles extends Component {
       <LayoutContentWrapper>
         <Box>
           <ContentHolder style={{ marginTop: 0, overflow: 'hidden' }}>
-            <p>helllo</p>
           <img src={this.state.image}/>
             <TitleWrapper>
               <ComponentTitle>Articles</ComponentTitle>
