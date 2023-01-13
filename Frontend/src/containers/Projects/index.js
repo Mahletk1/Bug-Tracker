@@ -25,7 +25,7 @@ import {
 import clone from 'clone';
 import axios from 'axios'
 
-class Articles extends Component {
+class Projects extends Component {
   state={
     image:''
   }
@@ -160,7 +160,7 @@ class Articles extends Component {
       {
         title: 'Progress Bar',
         dataIndex: 'slug',
-        width: '170px',
+     
         key: 'slug',
         sorter: (a, b) => {
           if (a.slug < b.slug) return -1;
@@ -228,9 +228,9 @@ class Articles extends Component {
              
 
               <ButtonHolders>
-                <ActionBtn type="danger" onClick={this.resetRecords}>
+                {/* <ActionBtn type="danger" onClick={this.resetRecords}>
                   Reset record
-                </ActionBtn>
+                </ActionBtn> */}
 
                 <ActionBtn
                   type="primary"
@@ -334,7 +334,7 @@ class Articles extends Component {
 
 export default connect(
   state => ({
-    ...state.Articles,
+    ...state.Projects,
   }),
   actions
-)(Articles);
+)(Projects);
