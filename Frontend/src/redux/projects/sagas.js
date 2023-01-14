@@ -32,8 +32,8 @@ function* getProjects() {
         id: response.data[index].id,
         title: response.data[index].title,
         priority: response.data[index].priority,
-        // role: response.data[index].role,
-        // email: response.data[index].email,
+        description: response.data[index].description,
+        assignedUser: response.data[index].assignedUser,
         // uid: response.data[index].uid
       });
     }

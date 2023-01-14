@@ -34,6 +34,7 @@ const Tag = props => (
 );
 
 
+
 class Projects extends Component {
   state={
     image:''
@@ -42,13 +43,13 @@ class Projects extends Component {
     console.log(this.props)
     await this.props.getProjects();
 
-  //  await axios.get("http://127.0.0.1:8000/users/").then((response) => {
-  //     // for (let index = 0; index < response.data.results.length; index++) {
-  //       this.setState({image: response.data[0].profile_image})
-  //       // this.state.image=response.data[0].profile_image
-  //       console.log(response)
+   await axios.get("http://127.0.0.1:8000/users/").then((response) => {
+      // for (let index = 0; index < response.data.results.length; index++) {
+        this.setState({image: response.data[0].profile_image})
+        // this.state.image=response.data[0].profile_image
+        console.log(response)
       
-  //   });
+    });
   //   console.log(this.state.image)
     // console.log(this.props);
 
@@ -78,7 +79,6 @@ class Projects extends Component {
   };
 
   render() {
-    // console.log(this.state.image)
     const { modalActive, projects } = this.props;
     const { project } = clone(this.props);
     const dataSource = [];
@@ -172,6 +172,7 @@ class Projects extends Component {
                   <i className="ion-android-delete" />
                 </a>
               </Popconfirms>
+              <a>detail</a>
             </ActionWrapper>
           );
         },
@@ -182,7 +183,6 @@ class Projects extends Component {
       <LayoutContentWrapper>
         <Box>
           <ContentHolder style={{ marginTop: 0, overflow: 'hidden' }}>
-          <img src={this.state.image}/>
             <TitleWrapper>
               <ComponentTitle>Projects</ComponentTitle>
              
@@ -244,13 +244,18 @@ class Projects extends Component {
 
                 <Fieldset>
                   <Label>Priority</Label>
-
-                  <Input
-                    label="Slug"
-                    placeholder="Enter Slugs"
-                    value={project.slug}
-                    onChange={this.onRecordChange.bind(this, 'slug')}
-                  />
+                      <Select
+                      placeholder="Priority"
+                      // onChange={(e)=>{ 
+                      //   let { contact } = clone(this.props);
+                      //   contact['role'] = e;
+                      //   this.props.update(contact);}}
+                      style={{ width: '100%' }}
+                    >  
+                      <Option value='low' >Low</Option>
+                      <Option value='medium'>Meidum</Option>
+                      <Option value='high'>High</Option>
+                    </Select>
                 </Fieldset>
 
                 {/* <Fieldset>
