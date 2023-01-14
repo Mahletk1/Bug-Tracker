@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .models import User
-from .serializers import UserSerializer,FirebaseUserSerializer
+from .models import User,Project
+from .serializers import UserSerializer,FirebaseUserSerializer,ProjectSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -74,14 +74,10 @@ def get_users(request):
             print(e)
             return Response(str(e),status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['GET','DELETE','PUT'])
-# def delete_user(request, id):
-#     if request.method == 'DELETE':
-#         user = User.objects.get(pk=id)
-#         user.delete()
-#         # user = auth.update_user(
-#         # request.data['uid'],
-#         # email=request.data['email'],
-#         # password=request.data['password'])
-#         return Response("User successfully updated")
-    
+@api_view(['GET','DELETE','PUT','POST'])
+def project(request):
+    if request.method == 'GET':
+        projects= Project.objects.all()
+        serializer = ProjectSerializer(projects, many=True, context={'request': request})
+        return Response(serializer.data)
+       

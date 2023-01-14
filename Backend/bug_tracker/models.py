@@ -8,3 +8,10 @@ class User(models.Model):
     role = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     uid =  models.CharField(max_length=200,blank=True, null=True)
+
+class Project(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    assignedUser= models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    priority= models.CharField(max_length=200, null=True)
+    
