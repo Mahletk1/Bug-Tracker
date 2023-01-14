@@ -37,7 +37,7 @@ const Tag = props => (
 
 class Projects extends Component {
   state={
-    image:''
+    users:[]
   }
   async componentDidMount() {
     console.log(this.props)
@@ -45,12 +45,12 @@ class Projects extends Component {
 
    await axios.get("http://127.0.0.1:8000/users/").then((response) => {
       // for (let index = 0; index < response.data.results.length; index++) {
-        this.setState({image: response.data[0].profile_image})
+        this.setState({users: response.data})
         // this.state.image=response.data[0].profile_image
-        console.log(response)
+        // console.log(response)
       
     });
-  //   console.log(this.state.image)
+  console.log(this.state.users)
     // console.log(this.props);
 
   }
@@ -178,7 +178,9 @@ class Projects extends Component {
         },
       },
     ];
-
+    function onSearch(val) {
+      console.log('search:', val);
+    }
     return (
       <LayoutContentWrapper>
         <Box>
@@ -230,7 +232,7 @@ class Projects extends Component {
                     onChange={this.onRecordChange.bind(this, 'description')}
                   />
                 </Fieldset>
-
+{/* 
                 <Fieldset>
                   <Label>Assigned Person</Label>
                   <Textarea
@@ -240,11 +242,34 @@ class Projects extends Component {
                     value={project.excerpt}
                     onChange={this.onRecordChange.bind(this, 'excerpt')}
                   />
+                </Fieldset> */}
+                <Fieldset>
+                  <Label>Assigned Person</Label>
+                      <Select
+                      showSearch='true'
+                      onSearch={onSearch}
+
+                      placeholder="Assigned Person"
+                      // onChange={(e)=>{ 
+                      //   let { contact } = clone(this.props);
+                      //   contact['role'] = e;
+                      //   this.props.update(contact);}}
+                      style={{ width: '100%' }}
+                    > 
+                    {
+                      this.state.users.map((user,i)=>{
+                        return <Option key={user.id+i} value={user.name} >{user.name}</Option>
+                      })
+                    } 
+  
+                    </Select>
                 </Fieldset>
 
                 <Fieldset>
                   <Label>Priority</Label>
                       <Select
+                      showSearch='true'
+                      searchValue=""
                       placeholder="Priority"
                       // onChange={(e)=>{ 
                       //   let { contact } = clone(this.props);
@@ -252,7 +277,7 @@ class Projects extends Component {
                       //   this.props.update(contact);}}
                       style={{ width: '100%' }}
                     >  
-                      <Option value='low' >Low</Option>
+                      <Option value='low'  >Low</Option>
                       <Option value='medium'>Meidum</Option>
                       <Option value='high'>High</Option>
                     </Select>
@@ -274,7 +299,7 @@ class Projects extends Component {
             </Modal>
             <TableWrapper
               rowKey="key"
-              rowSelection={rowSelection}
+              // rowSelection={rowSelection}
               columns={columns}
               bordered={true}
               dataSource={dataSource}
