@@ -15,5 +15,5 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id','title','description', 'assignedUser','priority']
 
-        # depth = 1
+        depth = 1
 

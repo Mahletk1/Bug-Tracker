@@ -80,4 +80,18 @@ def project(request):
         projects= Project.objects.all()
         serializer = ProjectSerializer(projects, many=True, context={'request': request})
         return Response(serializer.data)
+    if request.method == 'POST':
+        projectData={
+            'title': request.data['title'],
+            'description': request.data['description'],
+            'assignedUser': Project.objects.get(pk=request.data['assignedUser']),
+            'priority': request.data['priority']
+        }
+        serializer = ProjectSerializer(data=projectData)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
        
