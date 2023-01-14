@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from '../../redux/articles/actions';
+import actions from '../../redux/projects/actions';
 import Input, { Textarea } from '../../components/uielements/input';
 import Select, {
   SelectOption as Option,
@@ -10,6 +10,9 @@ import LayoutContentWrapper from '../../components/utility/layoutWrapper.js';
 import Box from '../../components/utility/box';
 import ContentHolder from '../../components/utility/contentHolder';
 import Popconfirms from '../../components/feedback/popconfirm';
+import Tags from '../../components/uielements/tag';
+import TagWrapper from './tag.style';
+import Progress from '../../components/uielements/progress';
 import {
   ActionBtn,
   Fieldset,
@@ -23,15 +26,21 @@ import {
   StatusTag,
 } from './articles.style';
 import clone from 'clone';
-import axios from 'axios'
+import axios from 'axios';
+const Tag = props => (
+  <TagWrapper>
+    <Tags {...props}>{props.children}</Tags>
+  </TagWrapper>
+);
+
 
 class Projects extends Component {
   state={
     image:''
   }
   async componentDidMount() {
-
-    // this.props.loadFromFireStore(this.props.date.startDate, this.props.date.endDate);
+    console.log(this.props)
+    await this.props.getProjects();
 
   //  await axios.get("http://127.0.0.1:8000/users/").then((response) => {
   //     // for (let index = 0; index < response.data.results.length; index++) {
@@ -44,39 +53,39 @@ class Projects extends Component {
     // console.log(this.props);
 
   }
-  handleRecord = (actionName, article) => {
-    if (article.key && actionName !== 'delete') actionName = 'update';
-    this.props.saveIntoFireStore(article, actionName);
+  handleRecord = (actionName, project) => {
+    if (project.key && actionName !== 'delete') actionName = 'update';
+    this.props.saveIntoFireStore(project, actionName);
   };
   resetRecords = () => {
     this.props.resetFireStoreDocuments();
   };
 
-  handleModal = (article = null) => {
-    this.props.toggleModal(article);
+  handleModal = (project = null) => {
+    this.props.toggleModal(project);
   };
 
   onRecordChange = (key, event) => {
-    let { article } = clone(this.props);
-    if (key) article[key] = event.target.value;
-    this.props.update(article);
+    let { project } = clone(this.props);
+    if (key) project[key] = event.target.value;
+    this.props.update(project);
   };
 
   onSelectChange = (key, value) => {
-    let { article } = clone(this.props);
-    if (key) article[key] = value;
-    this.props.update(article);
+    let { project } = clone(this.props);
+    if (key) project[key] = value;
+    this.props.update(project);
   };
 
   render() {
-    console.log(this.state.image)
-    const { modalActive, articles } = this.props;
-    const { article } = clone(this.props);
+    // console.log(this.state.image)
+    const { modalActive, projects } = this.props;
+    const { project } = clone(this.props);
     const dataSource = [];
-    Object.keys(articles).map((article, index) => {
+    Object.keys(projects).map((project, index) => {
       return dataSource.push({
-        ...articles[article],
-        key: article,
+        ...projects[project],
+        key: project,
       });
     });
 
@@ -105,94 +114,45 @@ class Projects extends Component {
             }
             return result;
           };
-
           return trimByWord(row.title);
         },
       },
-      // {
-      //   title: 'Description',
-      //   dataIndex: 'description',
-      //   key: 'description',
-      //   width: '360px',
-      //   sorter: (a, b) => {
-      //     if (a.description < b.description) return -1;
-      //     if (a.description > b.description) return 1;
-      //     return 0;
-      //   },
-      //   render: (text, row) => {
-      //     const trimByWord = sentence => {
-      //       let result = sentence;
-      //       let resultArray = result.split(' ');
-      //       if (resultArray.length > 20) {
-      //         resultArray = resultArray.slice(0, 20);
-      //         result = resultArray.join(' ') + '...';
-      //       }
-      //       return result;
-      //     };
-
-      //     return trimByWord(row.description);
-      //   },
-      // },
-      // {
-      //   title: 'Excerpt',
-      //   dataIndex: 'excerpt',
-      //   key: 'excerpt',
-      //   width: '220px',
-      //   sorter: (a, b) => {
-      //     if (a.excerpt < b.excerpt) return -1;
-      //     if (a.excerpt > b.excerpt) return 1;
-      //     return 0;
-      //   },
-      //   render: (text, row) => {
-      //     const trimByWord = sentence => {
-      //       let result = sentence;
-      //       let resultArray = result.split(' ');
-      //       if (resultArray.length > 8) {
-      //         resultArray = resultArray.slice(0, 8);
-      //         result = resultArray.join(' ') + '...';
-      //       }
-      //       return result;
-      //     };
-
-      //     return trimByWord(row.excerpt);
-      //   },
-      // },
       {
         title: 'Progress Bar',
-        dataIndex: 'slug',
+        dataIndex: 'progress_bar',
      
         key: 'slug',
-        sorter: (a, b) => {
-          if (a.slug < b.slug) return -1;
-          if (a.slug > b.slug) return 1;
-          return 0;
+        render: (text, row) => {
+          return (
+            <Progress
+          percent={25}
+          strokeWidth={7}
+          status='active'
+          showInfo={true}
+        />
+          )
         },
       },
       {
         title: 'Priority',
-        dataIndex: 'status',
-        className: 'noWrapCell',
-        key: 'status',
-        sorter: (a, b) => {
-          if (a.status < b.status) return -1;
-          if (a.status > b.status) return 1;
-          return 0;
-        },
-
+        dataIndex: 'priority',
+        key: 'priority',
+        width: '100px',
         render: (text, row) => {
-          let className;
-          if (row.status === ('draft' || 'Draft' || 'DRAFT')) {
-            className = 'draft';
-          } else if (row.status === ('publish' || 'Publish' || 'PUBLISH')) {
-            className = 'publish';
-          }
-          return <StatusTag className={className}>{row.status}</StatusTag>;
+          return (
+            row.priority == "high" ? (
+              <Tag className="mr-5" color="#f50">{row.priority}</Tag>
+            ) :row.priority == "medium" ? (
+              <Tag className="mr-5" color="#90EE90">{row.priority}</Tag>
+              ): (<Tag className="mr-5" color="#808080">{row.priority}</Tag>
+            )
+          );
         },
       },
       {
         title: 'Actions',
         key: 'action',
-        width: '60px',
+        // width: '60px',
         className: 'noWrapCell',
         render: (text, row) => {
           return (
@@ -202,7 +162,7 @@ class Projects extends Component {
               </a>
 
               <Popconfirms
-                title="Are you sure to delete this article？"
+                title="Are you sure to delete this project？"
                 okText="Yes"
                 cancelText="No"
                 placement="topRight"
@@ -244,9 +204,9 @@ class Projects extends Component {
             <Modal
               visible={modalActive}
               onClose={this.props.toggleModal.bind(this, null)}
-              title={article.key ? 'Update Article' : 'Add New Article'}
-              okText={article.key ? 'Update Article' : 'Add Article'}
-              onOk={this.handleRecord.bind(this, 'insert', article)}
+              title={project.key ? 'Update project' : 'Add New Project'}
+              okText={project.key ? 'Update project' : 'Add Project'}
+              onOk={this.handleRecord.bind(this, 'insert', project)}
               onCancel={this.props.toggleModal.bind(this, null)}
             >
               <Form>
@@ -255,7 +215,7 @@ class Projects extends Component {
                   <Input
                     label="Title"
                     placeholder="Enter Title"
-                    value={article.title}
+                    value={project.title}
                     onChange={this.onRecordChange.bind(this, 'title')}
                   />
                 </Fieldset>
@@ -266,37 +226,37 @@ class Projects extends Component {
                     label="Description"
                     placeholder="Enter Description"
                     rows={5}
-                    value={article.description}
+                    value={project.description}
                     onChange={this.onRecordChange.bind(this, 'description')}
                   />
                 </Fieldset>
 
                 <Fieldset>
-                  <Label>Excerpt</Label>
+                  <Label>Assigned Person</Label>
                   <Textarea
                     label="Excerpt"
                     rows={5}
                     placeholder="Enter excerpt"
-                    value={article.excerpt}
+                    value={project.excerpt}
                     onChange={this.onRecordChange.bind(this, 'excerpt')}
                   />
                 </Fieldset>
 
                 <Fieldset>
-                  <Label>Slug</Label>
+                  <Label>Priority</Label>
 
                   <Input
                     label="Slug"
                     placeholder="Enter Slugs"
-                    value={article.slug}
+                    value={project.slug}
                     onChange={this.onRecordChange.bind(this, 'slug')}
                   />
                 </Fieldset>
 
-                <Fieldset>
+                {/* <Fieldset>
                   <Label>Status</Label>
                   <Select
-                    defaultValue={article.status}
+                    defaultValue={project.status}
                     placeholder="Enter Status"
                     onChange={this.onSelectChange.bind(this, 'status')}
                     style={{ width: '170px' }}
@@ -304,7 +264,7 @@ class Projects extends Component {
                     <Option value="draft">Draft</Option>
                     <Option value="publish">Publish</Option>
                   </Select>
-                </Fieldset>
+                </Fieldset> */}
               </Form>
             </Modal>
             <TableWrapper

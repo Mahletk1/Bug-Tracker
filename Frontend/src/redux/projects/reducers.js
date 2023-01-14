@@ -3,9 +3,9 @@ import actions from './actions';
 const initState = {
   isLoading: false,
   errorMessage: false,
-  articles: {},
+  projects: {},
   modalActive: false,
-  article: {
+  project: {
     key: null,
     id: new Date().getTime(),
     title: '',
@@ -23,21 +23,21 @@ export default function reducer(
   { type, payload, newRecord }
 ) {
   switch (type) {
-    case actions.LOAD_FROM_FIRESTORE:
+    case actions.GET_PROJECTS:
       return {
         ...state,
         isLoading: true,
         errorMessage: false,
         modalActive: false,
       };
-    case actions.LOAD_FROM_FIRESTORE_SUCCESS:
+    case actions.GET_PROJECTS_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        articles: payload.data,
+        projects: payload.data,
         errorMessage: false,
       };
-    case actions.LOAD_FROM_FIRESTORE_ERROR:
+    case actions.GET_PROJECTS_ERROR:
       return {
         ...state,
         isLoading: false,
@@ -47,12 +47,12 @@ export default function reducer(
       return {
         ...state,
         modalActive: !state.modalActive,
-        article: payload.data == null ? initState.article : payload.data,
+        project: payload.data == null ? initState.project : payload.data,
       };
     case actions.FIRESTORE_UPDATE:
       return {
         ...state,
-        article: payload.data,
+        project: payload.data,
       };
     default:
       return state;
