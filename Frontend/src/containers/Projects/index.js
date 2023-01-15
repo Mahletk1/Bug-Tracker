@@ -44,19 +44,12 @@ class Projects extends Component {
     await this.props.getProjects();
 
    await axios.get("http://127.0.0.1:8000/users/").then((response) => {
-      // for (let index = 0; index < response.data.results.length; index++) {
-        this.setState({users: response.data})
-        // this.state.image=response.data[0].profile_image
-        // console.log(response)
-      
+        this.setState({users: response.data})     
     });
-  console.log(this.state.users)
-    // console.log(this.props);
-
   }
   handleRecord = (actionName, project) => {
     if (project.key && actionName !== 'delete') actionName = 'update';
-    this.props.saveIntoFireStore(project, actionName);
+    this.props.createProject(project, actionName);
   };
   resetRecords = () => {
     this.props.resetFireStoreDocuments();
@@ -68,8 +61,9 @@ class Projects extends Component {
 
   onRecordChange = (key, event) => {
     let { project } = clone(this.props);
-    if (key) project[key] = event.target.value;
+    if (key)project[key] = event.target.value;
     this.props.update(project);
+   
   };
 
   onSelectChange = (key, value) => {
@@ -77,10 +71,21 @@ class Projects extends Component {
     if (key) project[key] = value;
     this.props.update(project);
   };
-
+  checkValue = ()=>{
+    const { project } = clone(this.props);
+    if (project.assignedUser != null && project.assignedUser['name']){
+      return project.assignedUser['name']
+    }
+    else{
+      return project.assignedUser
+    }
+  }
   render() {
     const { modalActive, projects } = this.props;
     const { project } = clone(this.props);
+    console.log(project.assignedUser)
+    if (project.assignedUser){console.log(project.assignedUser['name'])}
+    
     const dataSource = [];
     Object.keys(projects).map((project, index) => {
       return dataSource.push({
@@ -178,9 +183,6 @@ class Projects extends Component {
         },
       },
     ];
-    function onSearch(val) {
-      console.log('search:', val);
-    }
     return (
       <LayoutContentWrapper>
         <Box>
@@ -237,10 +239,9 @@ class Projects extends Component {
                   <Label>Assigned Person</Label>
                       <Select
                       showSearch={true}
-                      onSearch={onSearch}
-
                       placeholder="Assigned Person"
-                      onChange={(e)=>{this.onRecordChange.bind(this, 'assignedUser')}}
+                      onChange={this.onSelectChange.bind(this, 'assignedUser')}
+                      value={this.checkValue()}
                       filterOption={(inputValue, option) =>
                         // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
                         option.props.children.toLowerCase().includes(inputValue.toLowerCase())
@@ -249,7 +250,7 @@ class Projects extends Component {
                     > 
                     {
                       this.state.users.map((user,i)=>{
-                        return <Option key={user.id} value={user.id} >{user.name}</Option>
+                        return <Option key={user.id} value={[user.name, user.id]} >{user.name}</Option>
                       })
                     } 
   
@@ -262,7 +263,8 @@ class Projects extends Component {
                       showSearch='true'
                       searchValue=""
                       placeholder="Priority"
-                      onChange={(e)=>{this.onRecordChange.bind(this, 'priority')}}
+                      value={project.priority}
+                      onChange={this.onSelectChange.bind(this, 'priority')}
                       style={{ width: '100%' }}
                     >  
                       <Option value='low'  >Low</Option>

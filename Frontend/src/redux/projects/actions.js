@@ -5,8 +5,8 @@ const actions = {
   GET_PROJECTS_SUCCESS:'GET_PROJECTS_SUCCESS',
   GET_PROJECTS_ERROR:'GET_PROJECTS_ERROR',
 
-  SAVE_INTO_FIRESTORE: DOCUMENT + 'SAVE_INTO_FIRESTORE',
-  SAVE_INTO_FIRESTORE_ERROR: DOCUMENT + 'SAVE_INTO_FIRESTORE_ERROR',
+  CREATE_PROJECT: 'CREATE_PROJECT',
+  CREATE_PROJECT_ERROR: 'CREATE_PROJECT_ERROR',
 
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
@@ -28,8 +28,8 @@ const actions = {
     payload: { error },
   }),
 
-  saveIntoFireStore: (data, actionName = 'insert') => ({
-    type: actions.SAVE_INTO_FIRESTORE,
+  createProject: (data, actionName = 'insert') => ({
+    type: actions.CREATE_PROJECT,
     payload: { data, actionName },
   }),
 
@@ -43,8 +43,8 @@ const actions = {
     payload: { data },
   }),
 
-  saveIntoFireStoreError: error => ({
-    type: actions.SAVE_INTO_FIRESTORE_ERROR,
+  createProjectError: error => ({
+    type: actions.CREATE_PROJECT_ERROR,
     payload: { error },
   }),
 

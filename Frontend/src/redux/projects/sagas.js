@@ -3,7 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetProjects} from'../../helpers/projects/projects';
+import {requestGetProjects,postProject} from'../../helpers/projects/projects';
 
 const {
   database,
@@ -45,7 +45,7 @@ function* getProjects() {
   }
 }
 
-function* storeIntoFirestore({ payload }) {
+function* createProject({ payload }) {
   const { data, actionName } = payload;
   try {
     switch (actionName) {
@@ -60,13 +60,19 @@ function* storeIntoFirestore({ payload }) {
         });
         break;
       default:
-        yield call(rsfFirestore.addDocument, COLLECTION_NAME, data);
-        break;
+        console.log(data.assignedUser[1])
+        let form_data = new FormData();
+        form_data.append("title", data.title);
+        form_data.append("description", data.description);
+        form_data.append("assignedUser", data.assignedUser[1]);
+        form_data.append("priority", data.priority);
+
+        const response = yield call(postProject, form_data);
     }
     yield put({ type: actions.GET_PROJECTS });
   } catch (error) {
     console.log(error);
-    yield put(actions.saveIntoFireStoreError(error));
+    yield put(actions.createProjectError(error));
   }
 }
 
@@ -111,7 +117,7 @@ function* resetFireStoreDocuments() {
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.GET_PROJECTS, getProjects),
-    takeEvery(actions.SAVE_INTO_FIRESTORE, storeIntoFirestore),
+    takeEvery(actions.CREATE_PROJECT, createProject),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }
