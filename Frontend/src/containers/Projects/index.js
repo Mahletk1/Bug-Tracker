@@ -232,33 +232,24 @@ class Projects extends Component {
                     onChange={this.onRecordChange.bind(this, 'description')}
                   />
                 </Fieldset>
-{/* 
-                <Fieldset>
-                  <Label>Assigned Person</Label>
-                  <Textarea
-                    label="Excerpt"
-                    rows={5}
-                    placeholder="Enter excerpt"
-                    value={project.excerpt}
-                    onChange={this.onRecordChange.bind(this, 'excerpt')}
-                  />
-                </Fieldset> */}
+
                 <Fieldset>
                   <Label>Assigned Person</Label>
                       <Select
-                      showSearch='true'
+                      showSearch={true}
                       onSearch={onSearch}
 
                       placeholder="Assigned Person"
-                      // onChange={(e)=>{ 
-                      //   let { contact } = clone(this.props);
-                      //   contact['role'] = e;
-                      //   this.props.update(contact);}}
+                      onChange={(e)=>{this.onRecordChange.bind(this, 'assignedUser')}}
+                      filterOption={(inputValue, option) =>
+                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
+                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
+                      }
                       style={{ width: '100%' }}
                     > 
                     {
                       this.state.users.map((user,i)=>{
-                        return <Option key={user.id+i} value={user.name} >{user.name}</Option>
+                        return <Option key={user.id} value={user.id} >{user.name}</Option>
                       })
                     } 
   
@@ -271,10 +262,7 @@ class Projects extends Component {
                       showSearch='true'
                       searchValue=""
                       placeholder="Priority"
-                      // onChange={(e)=>{ 
-                      //   let { contact } = clone(this.props);
-                      //   contact['role'] = e;
-                      //   this.props.update(contact);}}
+                      onChange={(e)=>{this.onRecordChange.bind(this, 'priority')}}
                       style={{ width: '100%' }}
                     >  
                       <Option value='low'  >Low</Option>
@@ -283,18 +271,6 @@ class Projects extends Component {
                     </Select>
                 </Fieldset>
 
-                {/* <Fieldset>
-                  <Label>Status</Label>
-                  <Select
-                    defaultValue={project.status}
-                    placeholder="Enter Status"
-                    onChange={this.onSelectChange.bind(this, 'status')}
-                    style={{ width: '170px' }}
-                  >
-                    <Option value="draft">Draft</Option>
-                    <Option value="publish">Publish</Option>
-                  </Select>
-                </Fieldset> */}
               </Form>
             </Modal>
             <TableWrapper
