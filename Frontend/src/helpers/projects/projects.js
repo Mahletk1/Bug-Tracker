@@ -10,3 +10,6 @@ export function postProject(form_data) {
         },
     })
 }
+export function updateProject(form_data) {
+    return axios.put("http://127.0.0.1:8000/projects/", form_data)
+}

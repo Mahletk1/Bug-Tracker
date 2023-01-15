@@ -3,7 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetProjects,postProject} from'../../helpers/projects/projects';
+import {requestGetProjects,postProject,updateProject} from'../../helpers/projects/projects';
 
 const {
   database,
@@ -55,17 +55,26 @@ function* createProject({ payload }) {
         });
         break;
       case 'update':
-        yield call(rsfFirestore.setDocument, `${COLLECTION_NAME}/${data.key}`, {
-          ...omit(data, ['key']),
-        });
+        console.log(data)
+        let form_data1 = new FormData();
+        form_data1.append("id", data.id);
+        form_data1.append("title", data.title);
+        form_data1.append("description", data.description);
+        form_data1.append("priority", data.priority);
+        if(data.assignedUser != null){
+          form_data1.append("assignedUser", data.assignedUser[1]);
+        }
+
+        const response1 = yield call(updateProject, form_data1);
         break;
       default:
-        console.log(data.assignedUser[1])
         let form_data = new FormData();
         form_data.append("title", data.title);
         form_data.append("description", data.description);
-        form_data.append("assignedUser", data.assignedUser[1]);
         form_data.append("priority", data.priority);
+        if(data.assignedUser != null){
+          form_data1.append("assignedUser", data.assignedUser[1]);
+        }
 
         const response = yield call(postProject, form_data);
     }
