@@ -95,9 +95,17 @@ def project(request):
         #     return Response(status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'PUT':
         print(request.data)
-        project = Project.objects.get(pk=request.data['id'])
-        # assignedUser = User.objects.get(pk=request.data['assignedUser'])
-        serializer = ProjectSerializer(project, data=request.data)
+        project = Project.objects.get(id=request.data['id'])
+        user = User.objects.get(pk=request.data['assignedUser'])
+        project.assignedUser=user
+        project.save()
+        projectData={
+            'title':request.data['title'],
+            'description':request.data['description'],
+            'priority':request.data['priority'],
+            'assignedUser':request.data['assignedUser']
+        }
+        serializer = ProjectSerializer(project, data=projectData)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
