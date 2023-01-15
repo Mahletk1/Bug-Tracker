@@ -81,17 +81,22 @@ def project(request):
         serializer = ProjectSerializer(projects, many=True, context={'request': request})
         return Response(serializer.data)
     if request.method == 'POST':
-        projectData={
-            'title': request.data['title'],
-            'description': request.data['description'],
-            'assignedUser': Project.objects.get(pk=request.data['assignedUser']),
-            'priority': request.data['priority']
-        }
-        serializer = ProjectSerializer(data=projectData)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        print(User.objects.get(pk =  request.data['assignedUser']))
+        new_project = Project.objects.create(
+            assignedUser= User.objects.get(pk=request.data['assignedUser'] ),
+            title= request.data['title'],
+            description= request.data['description'],
+            priority = request.data['priority'] )
+        new_project.save()
+        # projectData={
+        #     'title': request.data['title'],
+        #     'description': request.data['description'],
+        #     'assignedUser': User.objects.get(pk =  request.data['assignedUser'] ),
+        #     'priority': request.data['priority']
+        # }
+        serializer = ProjectSerializer(new_project)    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # else:
+        #     print(serializer.errors)
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
        
