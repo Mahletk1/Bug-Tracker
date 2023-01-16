@@ -3,7 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetProjects,postProject,updateProject} from'../../helpers/projects/projects';
+import {requestGetProjects,postProject,updateProject,deleteProject} from'../../helpers/projects/projects';
 
 const {
   database,
@@ -50,9 +50,7 @@ function* createProject({ payload }) {
   try {
     switch (actionName) {
       case 'delete':
-        yield call(rsfFirestore.setDocument, `${COLLECTION_NAME}/${data.key}`, {
-          deleted_at: new Date().getTime(),
-        });
+        yield call(deleteProject, data.id);
         break;
       case 'update':
         console.log(data)

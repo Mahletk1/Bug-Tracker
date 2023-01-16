@@ -13,3 +13,6 @@ export function postProject(form_data) {
 export function updateProject(form_data) {
     return axios.put("http://127.0.0.1:8000/projects/", form_data)
 }
+export function deleteProject(id) {
+    return axios.delete(`http://127.0.0.1:8000/projects/?id=${id}`)
+}
