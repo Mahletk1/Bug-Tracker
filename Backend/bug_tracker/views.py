@@ -111,4 +111,7 @@ def project(request):
             return Response(serializer.data)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-       
+    if request.method == 'DELETE':
+        project = Project.objects.get(pk=request.query_params['id'])
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
