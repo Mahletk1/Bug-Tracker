@@ -11,6 +11,7 @@ import chatSagas from './chat/sagas';
 import youtubeSearchSagas from './youtubeSearch/sagas';
 import devSagas from '../customApp/redux/sagas';
 import articles from './articles/sagas';
+import tickets from './tickets/sagas';
 import projects from './projects/sagas';
 import investors from './investors/sagas';
 
@@ -30,5 +31,6 @@ export default function* rootSaga(getState) {
     articles(),
     investors(),
     projects(),
+    tickets(),
   ]);
 }

@@ -16,6 +16,7 @@ import LanguageSwitcher from './languageSwitcher/reducer';
 import YoutubeSearch from './youtubeSearch/reducers';
 import DevReducers from '../customApp/redux/reducers';
 import Articles from './articles/reducers';
+import Tickets from './tickets/reducers';
 import Projects from './projects/reducers';
 import Investors from './investors/reducers';
 
@@ -39,5 +40,6 @@ export default {
   Articles,
   Investors,
   Projects,
+  Tickets,
   ...DevReducers,
 };

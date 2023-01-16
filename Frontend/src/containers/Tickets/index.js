@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from '../../redux/articles/actions';
+import actions from '../../redux/tickets/actions';
 import Input, { Textarea } from '../../components/uielements/input';
 import Select, {
   SelectOption as Option,
@@ -24,42 +24,42 @@ import {
 } from './articles.style';
 import clone from 'clone';
 
-class Articles extends Component {
+class Tickets extends Component {
   componentDidMount() {
     this.props.loadFromFireStore();
   }
-  handleRecord = (actionName, article) => {
-    if (article.key && actionName !== 'delete') actionName = 'update';
-    this.props.saveIntoFireStore(article, actionName);
+  handleRecord = (actionName, ticket) => {
+    if (ticket.key && actionName !== 'delete') actionName = 'update';
+    this.props.saveIntoFireStore(ticket, actionName);
   };
   resetRecords = () => {
     this.props.resetFireStoreDocuments();
   };
 
-  handleModal = (article = null) => {
-    this.props.toggleModal(article);
+  handleModal = (ticket = null) => {
+    this.props.toggleModal(ticket);
   };
 
   onRecordChange = (key, event) => {
-    let { article } = clone(this.props);
-    if (key) article[key] = event.target.value;
-    this.props.update(article);
+    let { ticket } = clone(this.props);
+    if (key) ticket[key] = event.target.value;
+    this.props.update(ticket);
   };
 
   onSelectChange = (key, value) => {
-    let { article } = clone(this.props);
-    if (key) article[key] = value;
-    this.props.update(article);
+    let { ticket } = clone(this.props);
+    if (key) ticket[key] = value;
+    this.props.update(ticket);
   };
 
   render() {
-    const { modalActive, articles } = this.props;
-    const { article } = clone(this.props);
+    const { modalActive, tickets } = this.props;
+    const { ticket } = clone(this.props);
     const dataSource = [];
-    Object.keys(articles).map((article, index) => {
+    Object.keys(tickets).map((ticket, index) => {
       return dataSource.push({
-        ...articles[article],
-        key: article,
+        ...tickets[ticket],
+        key: ticket,
       });
     });
 
@@ -185,7 +185,7 @@ class Articles extends Component {
               </a>
 
               <Popconfirms
-                title="Are you sure to delete this article？"
+                title="Are you sure to delete this ticket？"
                 okText="Yes"
                 cancelText="No"
                 placement="topRight"
@@ -206,7 +206,7 @@ class Articles extends Component {
         <Box>
           <ContentHolder style={{ marginTop: 0, overflow: 'hidden' }}>
             <TitleWrapper>
-              <ComponentTitle>Articles</ComponentTitle>
+              <ComponentTitle>Tickets</ComponentTitle>
 
               <ButtonHolders>
                 <ActionBtn type="danger" onClick={this.resetRecords}>
@@ -225,9 +225,9 @@ class Articles extends Component {
             <Modal
               visible={modalActive}
               onClose={this.props.toggleModal.bind(this, null)}
-              title={article.key ? 'Update Article' : 'Add New Article'}
-              okText={article.key ? 'Update Article' : 'Add Article'}
-              onOk={this.handleRecord.bind(this, 'insert', article)}
+              title={ticket.key ? 'Update Ticket' : 'Add New Ticket'}
+              okText={ticket.key ? 'Update Ticket' : 'Add Ticket'}
+              onOk={this.handleRecord.bind(this, 'insert', ticket)}
               onCancel={this.props.toggleModal.bind(this, null)}
             >
               <Form>
@@ -236,7 +236,7 @@ class Articles extends Component {
                   <Input
                     label="Title"
                     placeholder="Enter Title"
-                    value={article.title}
+                    value={ticket.title}
                     onChange={this.onRecordChange.bind(this, 'title')}
                   />
                 </Fieldset>
@@ -247,7 +247,7 @@ class Articles extends Component {
                     label="Description"
                     placeholder="Enter Description"
                     rows={5}
-                    value={article.description}
+                    value={ticket.description}
                     onChange={this.onRecordChange.bind(this, 'description')}
                   />
                 </Fieldset>
@@ -258,7 +258,7 @@ class Articles extends Component {
                     label="Excerpt"
                     rows={5}
                     placeholder="Enter excerpt"
-                    value={article.excerpt}
+                    value={ticket.excerpt}
                     onChange={this.onRecordChange.bind(this, 'excerpt')}
                   />
                 </Fieldset>
@@ -269,7 +269,7 @@ class Articles extends Component {
                   <Input
                     label="Slug"
                     placeholder="Enter Slugs"
-                    value={article.slug}
+                    value={ticket.slug}
                     onChange={this.onRecordChange.bind(this, 'slug')}
                   />
                 </Fieldset>
@@ -277,7 +277,7 @@ class Articles extends Component {
                 <Fieldset>
                   <Label>Status</Label>
                   <Select
-                    defaultValue={article.status}
+                    defaultValue={ticket.status}
                     placeholder="Enter Status"
                     onChange={this.onSelectChange.bind(this, 'status')}
                     style={{ width: '170px' }}
@@ -315,7 +315,7 @@ class Articles extends Component {
 
 export default connect(
   state => ({
-    ...state.Articles,
+    ...state.Tickets,
   }),
   actions
-)(Articles);
+)(Tickets);
