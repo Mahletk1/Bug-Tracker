@@ -126,7 +126,7 @@ class Projects extends Component {
         title: 'Progress Bar',
         dataIndex: 'progress_bar',
      
-        key: 'slug',
+        key: 'progress_bar',
         render: (text, row) => {
           return (
             <Progress

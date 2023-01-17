@@ -72,7 +72,7 @@ class Tickets extends Component {
         title: 'Title',
         dataIndex: 'title',
         key: 'title',
-        width: '200px',
+        // width: '200px',
         sorter: (a, b) => {
           if (a.title < b.title) return -1;
           if (a.title > b.title) return 1;
@@ -93,10 +93,10 @@ class Tickets extends Component {
         },
       },
       {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-        width: '360px',
+        title: 'Assigned Person',
+        dataIndex: 'assignedPerson',
+        key: 'assignedPerson',
+        // width: '360px',
         sorter: (a, b) => {
           if (a.description < b.description) return -1;
           if (a.description > b.description) return 1;
@@ -117,10 +117,10 @@ class Tickets extends Component {
         },
       },
       {
-        title: 'Excerpt',
-        dataIndex: 'excerpt',
-        key: 'excerpt',
-        width: '220px',
+        title: 'Project',
+        dataIndex: 'project',
+        key: 'project',
+        // width: '220px',
         sorter: (a, b) => {
           if (a.excerpt < b.excerpt) return -1;
           if (a.excerpt > b.excerpt) return 1;
@@ -141,10 +141,10 @@ class Tickets extends Component {
         },
       },
       {
-        title: 'Slugs',
-        dataIndex: 'slug',
-        width: '170px',
-        key: 'slug',
+        title: 'Priority',
+        dataIndex: 'priority',
+        // width: '170px',
+        key: 'priority',
         sorter: (a, b) => {
           if (a.slug < b.slug) return -1;
           if (a.slug > b.slug) return 1;
@@ -209,9 +209,9 @@ class Tickets extends Component {
               <ComponentTitle>Tickets</ComponentTitle>
 
               <ButtonHolders>
-                <ActionBtn type="danger" onClick={this.resetRecords}>
+                {/* <ActionBtn type="danger" onClick={this.resetRecords}>
                   Reset record
-                </ActionBtn>
+                </ActionBtn> */}
 
                 <ActionBtn
                   type="primary"
@@ -253,13 +253,13 @@ class Tickets extends Component {
                 </Fieldset>
 
                 <Fieldset>
-                  <Label>Excerpt</Label>
+                  <Label>Assigned Person</Label>
                   <Textarea
-                    label="Excerpt"
+                    label="assignedPerson"
                     rows={5}
                     placeholder="Enter excerpt"
                     value={ticket.excerpt}
-                    onChange={this.onRecordChange.bind(this, 'excerpt')}
+                    onChange={this.onRecordChange.bind(this, 'assignedPerson')}
                   />
                 </Fieldset>
 
@@ -290,7 +290,7 @@ class Tickets extends Component {
             </Modal>
             <TableWrapper
               rowKey="key"
-              rowSelection={rowSelection}
+              // rowSelection={rowSelection}
               columns={columns}
               bordered={true}
               dataSource={dataSource}
