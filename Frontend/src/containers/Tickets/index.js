@@ -297,7 +297,7 @@ class Tickets extends Component {
               loading={this.props.isLoading}
               className="isoSimpleTable"
               pagination={{
-                // defaultPageSize: 1,
+                defaultPageSize: 1,
                 hideOnSinglePage: true,
                 total: dataSource.length,
                 showTotal: (total, range) => {
