@@ -71,7 +71,7 @@ function* createProject({ payload }) {
         form_data.append("description", data.description);
         form_data.append("priority", data.priority);
         if(data.assignedUser != null){
-          form_data1.append("assignedUser", data.assignedUser[1]);
+          form_data.append("assignedUser", data.assignedUser[1]);
         }
 
         const response = yield call(postProject, form_data);

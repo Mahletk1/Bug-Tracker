@@ -7,14 +7,8 @@ const initState = {
   modalActive: false,
   ticket: {
     key: null,
-    id: new Date().getTime(),
-    title: '',
-    slug: '',
-    excerpt: '',
     status: 'draft', // publish
     description: '',
-    created_at: new Date().getTime(),
-    deleted_at: null, // soft delete
   },
 };
 

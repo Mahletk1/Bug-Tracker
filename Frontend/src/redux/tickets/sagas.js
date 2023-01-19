@@ -3,7 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetTickets} from '../../helpers/tickets/tickets';
+import {requestGetTickets,postTicket,deleteTicket,updateTicket} from '../../helpers/tickets/tickets';
 
 const {
   database,
@@ -48,28 +48,43 @@ function* getTickets() {
   }
 }
 
-function* storeIntoFirestore({ payload }) {
+function* createTicket({ payload }) {
   const { data, actionName } = payload;
   try {
     switch (actionName) {
       case 'delete':
-        yield call(rsfFirestore.setDocument, `${COLLECTION_NAME}/${data.key}`, {
-          deleted_at: new Date().getTime(),
-        });
+        yield call(deleteTicket, data.id);
         break;
       case 'update':
-        yield call(rsfFirestore.setDocument, `${COLLECTION_NAME}/${data.key}`, {
-          ...omit(data, ['key']),
-        });
+        console.log(data)
+        let form_data1 = new FormData();
+        form_data1.append("title", data.title);
+        form_data1.append("description", data.description);
+        form_data1.append("priority", data.priority);
+        form_data1.append("project", data.project[1]);
+        form_data1.append("status", data.status)
+        if(data.assignedUser != null){
+          form_data1.append("assignedUser", data.assignedUser[1]);
+        }
+        const response1 = yield call(updateTicket, form_data1);
         break;
       default:
-        yield call(rsfFirestore.addDocument, COLLECTION_NAME, data);
+        let form_data = new FormData();
+        form_data.append("title", data.title);
+        form_data.append("description", data.description);
+        form_data.append("priority", data.priority);
+        form_data.append("project", data.project[1]);
+        form_data.append("status", data.status)
+        if(data.assignedUser != null){
+          form_data.append("assignedUser", data.assignedUser[1]);
+        }
+        const response = yield call(postTicket, form_data);
         break;
     }
     yield put({ type: actions.GET_TICKETS });
   } catch (error) {
     console.log(error);
-    yield put(actions.saveIntoFireStoreError(error));
+    yield put(actions.createTicketError(error));
   }
 }
 
@@ -114,7 +129,7 @@ function* resetFireStoreDocuments() {
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.GET_TICKETS, getTickets),
-    takeEvery(actions.SAVE_INTO_FIRESTORE, storeIntoFirestore),
+    takeEvery(actions.CREATE_TICKET, createTicket),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }

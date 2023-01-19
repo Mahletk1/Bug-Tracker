@@ -5,8 +5,8 @@ const actions = {
   GET_TICKETS_SUCCESS: 'GET_TICKETS_SUCCESS',
   GET_TICKETS_ERROR: 'GET_TICKETS_ERROR',
 
-  SAVE_INTO_FIRESTORE: DOCUMENT + 'SAVE_INTO_FIRESTORE',
-  SAVE_INTO_FIRESTORE_ERROR: DOCUMENT + 'SAVE_INTO_FIRESTORE_ERROR',
+  CREATE_TICKET:'CREATE_TICKET',
+  CREATE_TICKET_ERROR:'CREATE_TICKET_ERROR',
 
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
@@ -28,8 +28,8 @@ const actions = {
     payload: { error },
   }),
 
-  saveIntoFireStore: (data, actionName = 'insert') => ({
-    type: actions.SAVE_INTO_FIRESTORE,
+  createTicket: (data, actionName = 'insert') => ({
+    type: actions.CREATE_TICKET,
     payload: { data, actionName },
   }),
 
@@ -43,8 +43,8 @@ const actions = {
     payload: { data },
   }),
 
-  saveIntoFireStoreError: error => ({
-    type: actions.SAVE_INTO_FIRESTORE_ERROR,
+  createTicketError: error => ({
+    type: actions.CREATE_TICKET_ERROR,
     payload: { error },
   }),
 

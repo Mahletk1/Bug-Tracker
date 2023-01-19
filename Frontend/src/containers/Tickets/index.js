@@ -53,7 +53,7 @@ class Tickets extends Component {
   }
   handleRecord = (actionName, ticket) => {
     if (ticket.key && actionName !== 'delete') actionName = 'update';
-    this.props.saveIntoFireStore(ticket, actionName);
+    this.props.createTicket(ticket, actionName);
   };
   resetRecords = () => {
     this.props.resetFireStoreDocuments();
@@ -138,7 +138,7 @@ class Tickets extends Component {
         title: 'Assigned Person',
         dataIndex: 'assignedUser',
         key: 'assignedUser',
-        // width: '360px',
+        width: '300px',
         sorter: (a, b) => {
           if (a.assignedUser.name < b.assignedUser.name) return -1;
           if (a.assignedUser.name > b.assignedUser.name) return 1;
@@ -187,6 +187,11 @@ class Tickets extends Component {
         dataIndex: 'priority',
         key: 'priority',
         width: '100px',
+        sorter: (a, b) => {
+          if (a.priority < b.priority) return -1;
+          if (a.priority > b.priority) return 1;
+          return 0;
+        },
         render: (text, row) => {
           return (
             row.priority == "high" ? (
@@ -222,7 +227,7 @@ class Tickets extends Component {
       {
         title: 'Actions',
         key: 'action',
-        width: '60px',
+        width: '150px',
         className: 'noWrapCell',
         render: (text, row) => {
           return (
@@ -242,6 +247,7 @@ class Tickets extends Component {
                   <i className="ion-android-delete" />
                 </a>
               </Popconfirms>
+              <a>detail</a>
             </ActionWrapper>
           );
         },
