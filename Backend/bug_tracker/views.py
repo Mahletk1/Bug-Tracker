@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .models import User,Project
-from .serializers import UserSerializer,FirebaseUserSerializer,ProjectSerializer
+from .models import User,Project,Ticket
+from .serializers import UserSerializer,ProjectSerializer,TicketSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -115,3 +115,10 @@ def project(request):
         project = Project.objects.get(pk=request.query_params['id'])
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET','DELETE','PUT','POST'])
+def ticket(request):
+    if request.method == 'GET':
+        tickets= Ticket.objects.all()
+        serializer = TicketSerializer(tickets, many=True, context={'request': request})
+        return Response(serializer.data)
