@@ -23,21 +23,21 @@ export default function reducer(
   { type, payload, newRecord }
 ) {
   switch (type) {
-    case actions.LOAD_FROM_FIRESTORE:
+    case actions.GET_TICKETS:
       return {
         ...state,
         isLoading: true,
         errorMessage: false,
         modalActive: false,
       };
-    case actions.LOAD_FROM_FIRESTORE_SUCCESS:
+    case actions.GET_TICKETS_SUCCESS:
       return {
         ...state,
         isLoading: false,
         tickets: payload.data,
         errorMessage: false,
       };
-    case actions.LOAD_FROM_FIRESTORE_ERROR:
+    case actions.GET_TICKETS_ERROR:
       return {
         ...state,
         isLoading: false,

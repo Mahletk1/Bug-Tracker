@@ -3,6 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
+import {requestGetTickets} from '../../helpers/tickets/tickets';
 
 const {
   database,
@@ -22,18 +23,28 @@ const COLLECTION_NAME = 'articles'; // change your collection
 const ORDER_BY = 'id';
 const ORDER = 'desc';
 
-function* loadFromFirestore() {
+function* getTickets() {
   try {
-    const collections = database
-      .collection(COLLECTION_NAME)
-      .where('deleted_at', '==', null)
-      .orderBy(ORDER_BY, ORDER);
-    const snapshot = yield call(rsfFirestore.getCollection, collections);
-    let data = processFireStoreCollection(snapshot);
-    yield put(actions.loadFromFireStoreSuccess(data));
+    const response = yield call(requestGetTickets);
+    const data = [];
+    for (let index = 0; index < response.data.length; index++) {
+      data.push({
+        id: response.data[index].id,
+        title: response.data[index].title,
+        priority: response.data[index].priority,
+        description: response.data[index].description,
+        assignedUser: response.data[index].assignedUser,
+        status: response.data[index].status,
+        project: response.data[index].project,
+       
+        // uid: response.data[index].uid
+      });
+    }
+    console.log(data)
+    yield put(actions.getTicketsSuccess(data));
   } catch (error) {
     console.log(error);
-    yield put(actions.loadFromFireStoreError(error));
+    yield put(actions.getTicketsError(error));
   }
 }
 
@@ -55,7 +66,7 @@ function* storeIntoFirestore({ payload }) {
         yield call(rsfFirestore.addDocument, COLLECTION_NAME, data);
         break;
     }
-    yield put({ type: actions.LOAD_FROM_FIRESTORE });
+    yield put({ type: actions.GET_TICKETS });
   } catch (error) {
     console.log(error);
     yield put(actions.saveIntoFireStoreError(error));
@@ -94,7 +105,7 @@ function* resetFireStoreDocuments() {
     });
     batch.commit();
 
-    yield put({ type: actions.LOAD_FROM_FIRESTORE });
+    yield put({ type: actions.GET_TICKETS });
   } catch (error) {
     console.log(error);
   }
@@ -102,7 +113,7 @@ function* resetFireStoreDocuments() {
 
 export default function* rootSaga() {
   yield all([
-    takeEvery(actions.LOAD_FROM_FIRESTORE, loadFromFirestore),
+    takeEvery(actions.GET_TICKETS, getTickets),
     takeEvery(actions.SAVE_INTO_FIRESTORE, storeIntoFirestore),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);

@@ -23,10 +23,18 @@ import {
   StatusTag,
 } from './articles.style';
 import clone from 'clone';
+import Tags from '../../components/uielements/tag';
+import TagWrapper from './tag.style';
+
+const Tag = props => (
+  <TagWrapper>
+    <Tags {...props}>{props.children}</Tags>
+  </TagWrapper>
+);
 
 class Tickets extends Component {
-  componentDidMount() {
-    this.props.loadFromFireStore();
+  async componentDidMount() {
+    await this.props.getTickets();
   }
   handleRecord = (actionName, ticket) => {
     if (ticket.key && actionName !== 'delete') actionName = 'update';
@@ -72,7 +80,7 @@ class Tickets extends Component {
         title: 'Title',
         dataIndex: 'title',
         key: 'title',
-        // width: '200px',
+        width: '200px',
         sorter: (a, b) => {
           if (a.title < b.title) return -1;
           if (a.title > b.title) return 1;
@@ -88,18 +96,17 @@ class Tickets extends Component {
             }
             return result;
           };
-
           return trimByWord(row.title);
         },
       },
       {
         title: 'Assigned Person',
-        dataIndex: 'assignedPerson',
-        key: 'assignedPerson',
+        dataIndex: 'assignedUser',
+        key: 'assignedUser',
         // width: '360px',
         sorter: (a, b) => {
-          if (a.description < b.description) return -1;
-          if (a.description > b.description) return 1;
+          if (a.assignedUser.name < b.assignedUser.name) return -1;
+          if (a.assignedUser.name > b.assignedUser.name) return 1;
           return 0;
         },
         render: (text, row) => {
@@ -113,42 +120,47 @@ class Tickets extends Component {
             return result;
           };
 
-          return trimByWord(row.description);
+          return trimByWord(row.assignedUser.name);
         },
       },
-      {
-        title: 'Project',
-        dataIndex: 'project',
-        key: 'project',
-        // width: '220px',
-        sorter: (a, b) => {
-          if (a.excerpt < b.excerpt) return -1;
-          if (a.excerpt > b.excerpt) return 1;
-          return 0;
-        },
-        render: (text, row) => {
-          const trimByWord = sentence => {
-            let result = sentence;
-            let resultArray = result.split(' ');
-            if (resultArray.length > 8) {
-              resultArray = resultArray.slice(0, 8);
-              result = resultArray.join(' ') + '...';
-            }
-            return result;
-          };
+      // {
+      //   title: 'Project',
+      //   dataIndex: 'project',
+      //   key: 'project',
+      //   // width: '220px',
+      //   sorter: (a, b) => {
+      //     if (a.excerpt < b.excerpt) return -1;
+      //     if (a.excerpt > b.excerpt) return 1;
+      //     return 0;
+      //   },
+      //   render: (text, row) => {
+      //     const trimByWord = sentence => {
+      //       let result = sentence;
+      //       let resultArray = result.split(' ');
+      //       if (resultArray.length > 8) {
+      //         resultArray = resultArray.slice(0, 8);
+      //         result = resultArray.join(' ') + '...';
+      //       }
+      //       return result;
+      //     };
 
-          return trimByWord(row.excerpt);
-        },
-      },
+      //     return trimByWord(row.excerpt);
+      //   },
+      // },
       {
         title: 'Priority',
         dataIndex: 'priority',
-        // width: '170px',
         key: 'priority',
-        sorter: (a, b) => {
-          if (a.slug < b.slug) return -1;
-          if (a.slug > b.slug) return 1;
-          return 0;
+        width: '100px',
+        render: (text, row) => {
+          return (
+            row.priority == "high" ? (
+              <Tag className="mr-5" color="#f50">{row.priority}</Tag>
+            ) :row.priority == "medium" ? (
+              <Tag className="mr-5" color="#90EE90">{row.priority}</Tag>
+              ): (<Tag className="mr-5" color="#808080">{row.priority}</Tag>
+            )
+          );
         },
       },
       {
@@ -297,7 +309,7 @@ class Tickets extends Component {
               loading={this.props.isLoading}
               className="isoSimpleTable"
               pagination={{
-                defaultPageSize: 1,
+                // defaultPageSize: 1,
                 hideOnSinglePage: true,
                 total: dataSource.length,
                 showTotal: (total, range) => {

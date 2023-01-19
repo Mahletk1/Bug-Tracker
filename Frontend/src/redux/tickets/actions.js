@@ -1,9 +1,9 @@
 const DOCUMENT = 'ARTICLE_';
 
 const actions = {
-  LOAD_FROM_FIRESTORE: DOCUMENT + 'LOAD_FROM_FIRESTORE',
-  LOAD_FROM_FIRESTORE_SUCCESS: DOCUMENT + 'LOAD_FROM_FIRESTORE_SUCCESS',
-  LOAD_FROM_FIRESTORE_ERROR: DOCUMENT + 'LOAD_FROM_FIRESTORE_ERROR',
+  GET_TICKETS: 'GET_TICKETS',
+  GET_TICKETS_SUCCESS: 'GET_TICKETS_SUCCESS',
+  GET_TICKETS_ERROR: 'GET_TICKETS_ERROR',
 
   SAVE_INTO_FIRESTORE: DOCUMENT + 'SAVE_INTO_FIRESTORE',
   SAVE_INTO_FIRESTORE_ERROR: DOCUMENT + 'SAVE_INTO_FIRESTORE_ERROR',
@@ -14,17 +14,17 @@ const actions = {
   TOGGLE_FIRESTORE_HANDLE_MODAL: DOCUMENT + 'TOGGLE_FIRESTORE_HANDLE_MODAL',
   FIRESTORE_UPDATE: DOCUMENT + 'FIRESTORE_UPDATE',
 
-  loadFromFireStore: () => {
-    return { type: actions.LOAD_FROM_FIRESTORE };
+  getTickets: () => {
+    return { type: actions.GET_TICKETS };
   },
 
-  loadFromFireStoreSuccess: data => ({
-    type: actions.LOAD_FROM_FIRESTORE_SUCCESS,
+  getTicketsSuccess: data => ({
+    type: actions.GET_TICKETS_SUCCESS,
     payload: { data },
   }),
 
-  loadFromFireStoreError: error => ({
-    type: actions.LOAD_FROM_FIRESTORE_ERROR,
+  getTicketsError: error => ({
+    type: actions.GET_TICKETS_ERROR,
     payload: { error },
   }),
 
