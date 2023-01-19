@@ -123,30 +123,30 @@ class Tickets extends Component {
           return trimByWord(row.assignedUser.name);
         },
       },
-      // {
-      //   title: 'Project',
-      //   dataIndex: 'project',
-      //   key: 'project',
-      //   // width: '220px',
-      //   sorter: (a, b) => {
-      //     if (a.excerpt < b.excerpt) return -1;
-      //     if (a.excerpt > b.excerpt) return 1;
-      //     return 0;
-      //   },
-      //   render: (text, row) => {
-      //     const trimByWord = sentence => {
-      //       let result = sentence;
-      //       let resultArray = result.split(' ');
-      //       if (resultArray.length > 8) {
-      //         resultArray = resultArray.slice(0, 8);
-      //         result = resultArray.join(' ') + '...';
-      //       }
-      //       return result;
-      //     };
+      {
+        title: 'Project',
+        dataIndex: 'project',
+        key: 'project',
+        // width: '220px',
+        sorter: (a, b) => {
+          if (a.project < b.project) return -1;
+          if (a.project > b.project) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 8) {
+              resultArray = resultArray.slice(0, 8);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
 
-      //     return trimByWord(row.excerpt);
-      //   },
-      // },
+          return trimByWord(row.project.title);
+        },
+      },
       {
         title: 'Priority',
         dataIndex: 'priority',
@@ -176,12 +176,12 @@ class Tickets extends Component {
 
         render: (text, row) => {
           let className;
-          if (row.status === ('draft' || 'Draft' || 'DRAFT')) {
+          if (row.status === ('started' || 'Started' || 'STARTED')) {
             className = 'draft';
           } else if (row.status === ('publish' || 'Publish' || 'PUBLISH')) {
             className = 'publish';
           }
-          return <StatusTag className={className}>{row.status}</StatusTag>;
+          return <StatusTag className={"publish"}>{row.status}</StatusTag>;
         },
       },
       {
