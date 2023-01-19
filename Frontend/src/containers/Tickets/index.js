@@ -10,6 +10,7 @@ import LayoutContentWrapper from '../../components/utility/layoutWrapper.js';
 import Box from '../../components/utility/box';
 import ContentHolder from '../../components/utility/contentHolder';
 import Popconfirms from '../../components/feedback/popconfirm';
+import { Row, Col } from 'antd';
 import {
   ActionBtn,
   Fieldset,
@@ -25,6 +26,7 @@ import {
 import clone from 'clone';
 import Tags from '../../components/uielements/tag';
 import TagWrapper from './tag.style';
+import axios from 'axios';
 
 const Tag = props => (
   <TagWrapper>
@@ -33,8 +35,21 @@ const Tag = props => (
 );
 
 class Tickets extends Component {
+  state={
+    users:[],
+    projects:[],
+  }
   async componentDidMount() {
     await this.props.getTickets();
+
+    await axios.get("http://127.0.0.1:8000/users/").then((response) => {
+        this.setState({users: response.data})     
+    });
+
+    await axios.get("http://127.0.0.1:8000/projects/").then((response) => {
+        this.setState({projects: response.data})     
+    });
+
   }
   handleRecord = (actionName, ticket) => {
     if (ticket.key && actionName !== 'delete') actionName = 'update';
@@ -59,6 +74,26 @@ class Tickets extends Component {
     if (key) ticket[key] = value;
     this.props.update(ticket);
   };
+
+  checkValue = ()=>{
+    const { ticket } = clone(this.props);
+    if (ticket.assignedUser != null && ticket.assignedUser['name']){
+      return ticket.assignedUser['name']
+    }
+    else{
+      return ticket.assignedUser
+    }
+  }
+
+  checkValueProject = ()=>{
+    const { ticket } = clone(this.props);
+    if (ticket.project != null && ticket.project['title']){
+      return ticket.project['title']
+    }
+    else{
+      return ticket.project
+    }
+  }
 
   render() {
     const { modalActive, tickets } = this.props;
@@ -229,7 +264,7 @@ class Tickets extends Component {
                   type="primary"
                   onClick={this.handleModal.bind(this, null)}
                 >
-                  Add new record
+                  Add new ticket
                 </ActionBtn>
               </ButtonHolders>
             </TitleWrapper>
@@ -266,38 +301,80 @@ class Tickets extends Component {
 
                 <Fieldset>
                   <Label>Assigned Person</Label>
-                  <Textarea
-                    label="assignedPerson"
-                    rows={5}
-                    placeholder="Enter excerpt"
-                    value={ticket.excerpt}
-                    onChange={this.onRecordChange.bind(this, 'assignedPerson')}
-                  />
+                      <Select
+                      showSearch={true}
+                      placeholder="Assigned Person"
+                      onChange={this.onSelectChange.bind(this, 'assignedUser')}
+                      value={this.checkValue()}
+                      filterOption={(inputValue, option) =>
+                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
+                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
+                      }
+                      style={{ width: '100%' }}
+                    > 
+                    {
+                      this.state.users.map((user,i)=>{
+                        return <Option key={user.id} value={[user.name, user.id]} >{user.name}</Option>
+                      })
+                    } 
+  
+                    </Select>
                 </Fieldset>
 
                 <Fieldset>
-                  <Label>Slug</Label>
-
-                  <Input
-                    label="Slug"
-                    placeholder="Enter Slugs"
-                    value={ticket.slug}
-                    onChange={this.onRecordChange.bind(this, 'slug')}
-                  />
+                  <Label>Project</Label>
+                      <Select
+                      showSearch={true}
+                      placeholder="Project"
+                      onChange={this.onSelectChange.bind(this, 'project')}
+                      value={this.checkValueProject()}
+                      filterOption={(inputValue, option) =>
+                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
+                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
+                      }
+                      style={{ width: '100%' }}
+                    > 
+                    {
+                      this.state.projects.map((project,i)=>{
+                        return <Option key={project.id} value={[project.title, project.id]} >{project.title}</Option>
+                      })
+                    } 
+  
+                    </Select>
                 </Fieldset>
-
-                <Fieldset>
-                  <Label>Status</Label>
-                  <Select
-                    defaultValue={ticket.status}
-                    placeholder="Enter Status"
-                    onChange={this.onSelectChange.bind(this, 'status')}
-                    style={{ width: '170px' }}
-                  >
-                    <Option value="draft">Draft</Option>
-                    <Option value="publish">Publish</Option>
-                  </Select>
-                </Fieldset>
+                <Row>
+                  <Col xs={12}>
+                      <Fieldset>
+                        <Label>Priority</Label>
+                            <Select
+                            showSearch='true'
+                            searchValue=""
+                            placeholder="Priority"
+                            value={ticket.priority}
+                            onChange={this.onSelectChange.bind(this, 'priority')}
+                            // style={{ width: '50%' }}
+                          >  
+                            <Option value='low'  >Low</Option>
+                            <Option value='medium'>Meidum</Option>
+                            <Option value='high'>High</Option>
+                          </Select>
+                      </Fieldset>
+                  </Col>
+                  <Col xs={12}>
+                      <Fieldset>
+                      <Label>Status</Label>
+                      <Select
+                        defaultValue={ticket.status}
+                        placeholder="Enter Status"
+                        onChange={this.onSelectChange.bind(this, 'status')}
+                        // style={{ width: '50%' }}
+                      >
+                        <Option value="draft">Draft</Option>
+                        <Option value="publish">Publish</Option>
+                      </Select>
+                    </Fieldset>
+                  </Col>
+                </Row>
               </Form>
             </Modal>
             <TableWrapper
