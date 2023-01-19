@@ -122,3 +122,19 @@ def ticket(request):
         tickets= Ticket.objects.all()
         serializer = TicketSerializer(tickets, many=True, context={'request': request})
         return Response(serializer.data)
+
+    if request.method == 'POST':
+        new_ticket = Ticket.objects.create(
+            assignedUser= User.objects.get(pk=request.data['assignedUser'] ),
+            project= Project.objects.get(pk=request.data['project']),
+            title= request.data['title'],
+            description= request.data['description'],
+            priority = request.data['priority'],
+            status = request.data['status'] )
+        new_ticket.save()
+
+        serializer = TicketSerializer(new_ticket)    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # else:
+        #     print(serializer.errors)
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
