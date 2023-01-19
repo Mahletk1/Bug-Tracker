@@ -138,3 +138,27 @@ def ticket(request):
         # else:
         #     print(serializer.errors)
         #     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'PUT':
+        print(request.data)
+        ticket = Ticket.objects.get(id=request.data['id'])
+        project = Project.objects.get(pk=request.data['project'])
+        user = User.objects.get(pk=request.data['assignedUser'])
+        ticket.assignedUser=user
+        ticket.project=project
+        ticket.save()
+
+        ticketData={
+            'title':request.data['title'],
+            'description':request.data['description'],
+            'priority':request.data['priority'],
+            'assignedUser':request.data['assignedUser'],
+            'project': request.data['project'],
+            'status' : request.data['status'],
+        }
+        serializer = TicketSerializer(ticket, data=ticketData)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
