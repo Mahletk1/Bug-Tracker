@@ -58,13 +58,22 @@ function* createTicket({ payload }) {
       case 'update':
         console.log(data)
         let form_data1 = new FormData();
+        form_data1.append("id", data.id);
         form_data1.append("title", data.title);
         form_data1.append("description", data.description);
         form_data1.append("priority", data.priority);
-        form_data1.append("project", data.project[1]);
         form_data1.append("status", data.status)
-        if(data.assignedUser != null){
+        if(data.project[1] != null){
+          form_data1.append("project", data.project[1]);
+        }
+        else{
+          form_data1.append("project", data.project['id']);
+        }
+        if(data.assignedUser[1] != null){
           form_data1.append("assignedUser", data.assignedUser[1]);
+        }
+        else{
+          form_data1.append("assignedUser", data.assignedUser['id']);
         }
         const response1 = yield call(updateTicket, form_data1);
         break;
