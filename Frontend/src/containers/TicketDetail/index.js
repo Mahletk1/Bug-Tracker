@@ -31,7 +31,8 @@ export default class extends Component {
   render() {
     const { rowStyle, colStyle, gutter } = basicStyle;
     let dataSource=[{'title': 'hello','message':'firest message'}]
-    const columns = [
+    let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
+    const commentColumns = [
       {
         title: 'Commenter',
         dataIndex: 'title',
@@ -106,6 +107,101 @@ export default class extends Component {
         },
       },
     ];
+    const historyColumns = [
+      {
+        title: 'Property',
+        dataIndex: 'property',
+        key: 'property',
+        // width: '170px',
+        sorter: (a, b) => {
+          if (a.title < b.title) return -1;
+          if (a.title > b.title) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.property);
+        },
+      },
+      {
+        title: 'Old Value',
+        dataIndex: 'oldVal',
+        key: 'oldVal',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.title < b.title) return -1;
+          if (a.title > b.title) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.oldVal);
+        },
+      },
+      {
+        title: 'New Value',
+        dataIndex: 'newVal',
+        key: 'newVal',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.title < b.title) return -1;
+          if (a.title > b.title) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.newVal);
+        },
+      },
+      {
+        title: 'Date Changed',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.title < b.title) return -1;
+          if (a.title > b.title) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.updatedAt);
+        },
+      },
+      
+    ];
     return (
       <LayoutWrapper>
         {/* <PageHeader>{<IntlMessages id="uiElements.cards.cards" />}</PageHeader> */}
@@ -122,8 +218,46 @@ export default class extends Component {
                 //   }
                   style={{ width: '100%' }}
                 >
-                  <p>{<IntlMessages id="uiElements.cards.lorem" />}</p>
-                  <p>{<IntlMessages id="uiElements.cards.cardContent" />}</p>
+                  <Row style={rowStyle} gutter={gutter} justify="start">
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Ticket Title" />}</strong>
+                          <p>{<IntlMessages id="ticket 1" />}</p>
+                      </Col>
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Ticket Description" />}</strong>
+                          <p>{<IntlMessages id="uiElements.cards.lorem" />}</p>
+                      </Col>
+                  </Row>
+                  <Row style={rowStyle} gutter={gutter} justify="start">
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Assigned Person" />}</strong>
+                          <p>{<IntlMessages id="Abebe" />}</p>
+                      </Col>
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Project" />}</strong>
+                          <p>{<IntlMessages id="project 1" />}</p>
+                      </Col>
+                  </Row>
+                  <Row style={rowStyle} gutter={gutter} justify="start">
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Priority" />}</strong>
+                          <p>{<IntlMessages id="High" />}</p>
+                      </Col>
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Status" />}</strong>
+                          <p>{<IntlMessages id="New" />}</p>
+                      </Col>
+                  </Row>
+                  <Row style={rowStyle} gutter={gutter} justify="start">
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Created At" />}</strong>
+                          <p>{<IntlMessages id="22/25/22" />}</p>
+                      </Col>
+                      <Col md={12} sm={12} xs={24} style={colStyle}>
+                          <strong>{<IntlMessages id="Updated At" />}</strong>
+                          <p>{<IntlMessages id="23/88/89" />}</p>
+                      </Col>
+                  </Row>       
                 </Card>
               </ContentHolder>
           </Col>
@@ -163,7 +297,7 @@ export default class extends Component {
                   <TableWrapper
                     rowKey="key"
                     // rowSelection={rowSelection}
-                    columns={columns}
+                    columns={commentColumns}
                     bordered={true}
                     dataSource={dataSource}
                     loading={this.props.isLoading}
@@ -196,8 +330,24 @@ export default class extends Component {
                 //   }
                   style={{ width: '100%' }}
                 >
-                  <p>{<IntlMessages id="uiElements.cards.lorem" />}</p>
-                  <p>{<IntlMessages id="uiElements.cards.cardContent" />}</p>
+                  <TableWrapper
+                    rowKey="key"
+                    // rowSelection={rowSelection}
+                    columns={historyColumns}
+                    bordered={true}
+                    dataSource={dataSource2}
+                    loading={this.props.isLoading}
+                    className="isoSimpleTable"
+                    pagination={{
+                      defaultPageSize: 2,
+                      hideOnSinglePage: true,
+                      total: dataSource.length,
+                      showTotal: (total, range) => {
+                        return `Showing ${0} of ${1
+                          } Results`;
+                      },
+                    }}
+                  />
                 </Card>
               </ContentHolder>
           </Col>
