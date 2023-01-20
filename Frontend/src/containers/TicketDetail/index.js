@@ -309,11 +309,11 @@ export default class extends Component {
               <ContentHolder>
                 <Card
                   title={<IntlMessages id="Ticket Details" />}
-                //   extra={
-                //     <a href="# ">
-                //       {<IntlMessages id="uiElements.cards.more" />}
-                //     </a>
-                //   }
+                  extra={
+                    <a href="# ">
+                      {<IntlMessages id="edit" />}
+                    </a>
+                  }
                   style={{ width: '100%' }}
                 >
                   <Row style={rowStyle} gutter={gutter} justify="start">

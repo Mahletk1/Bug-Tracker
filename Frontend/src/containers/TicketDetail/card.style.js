@@ -17,7 +17,7 @@ const Card = styled(CardComp)`
 
   .ant-card-extra {
     a {
-      color: ${palette('primary', 0)};
+      color:#ffffff;
       text-decoration: none;
 
       &:focus {
