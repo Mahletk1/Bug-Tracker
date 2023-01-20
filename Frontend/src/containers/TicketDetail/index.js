@@ -9,6 +9,7 @@ import IntlMessages from '../../components/utility/intlMessages';
 import Card from './card.style';
 import Popconfirms from '../../components/feedback/popconfirm';
 import Input, { Textarea } from '../../components/uielements/input';
+import { Icon } from 'antd';
 import {
   ActionBtn,
   Fieldset,
@@ -21,6 +22,7 @@ import {
   TableWrapper,
   StatusTag,
 } from './articles.style';
+import Upload from '../../components/uielements/upload';
 // const Tag = props => (
 //   <TagWrapper>
 //     <Tags {...props}>{props.children}</Tags>
@@ -32,6 +34,7 @@ export default class extends Component {
     const { rowStyle, colStyle, gutter } = basicStyle;
     let dataSource=[{'title': 'hello','message':'firest message'}]
     let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
+    let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
     const commentColumns = [
       {
         title: 'Commenter',
@@ -202,6 +205,101 @@ export default class extends Component {
       },
       
     ];
+    const attachmentColumns = [
+      {
+        title: 'File',
+        dataIndex: 'file',
+        key: 'file',
+        // width: '170px',
+        sorter: (a, b) => {
+          if (a.file < b.file) return -1;
+          if (a.file > b.file) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.file);
+        },
+      },
+      {
+        title: 'Uploader',
+        dataIndex: 'uploader',
+        key: 'uploader',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.uploader < b.uploader) return -1;
+          if (a.uploader > b.uploader) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.uploader);
+        },
+      },
+      {
+        title: 'Notes',
+        dataIndex: 'notes',
+        key: 'notes',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.notes < b.notes) return -1;
+          if (a.notes > b.notes) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.notes);
+        },
+      },
+      {
+        title: 'Uploaded At',
+        dataIndex: 'uploadedAt',
+        key: 'uploadedAt',
+        // width: '230px',
+        sorter: (a, b) => {
+          if (a.uploadedAt < b.uploadedAt) return -1;
+          if (a.uploadedAt > b.uploadedAt) return 1;
+          return 0;
+        },
+        render: (text, row) => {
+          const trimByWord = sentence => {
+            let result = sentence;
+            let resultArray = result.split(' ');
+            if (resultArray.length > 7) {
+              resultArray = resultArray.slice(0, 7);
+              result = resultArray.join(' ') + '...';
+            }
+            return result;
+          };
+          return trimByWord(row.uploadedAt);
+        },
+      },
+      
+    ];
     return (
       <LayoutWrapper>
         {/* <PageHeader>{<IntlMessages id="uiElements.cards.cards" />}</PageHeader> */}
@@ -339,11 +437,11 @@ export default class extends Component {
                     loading={this.props.isLoading}
                     className="isoSimpleTable"
                     pagination={{
-                      defaultPageSize: 2,
+                      defaultPageSize: 1,
                       hideOnSinglePage: true,
                       total: dataSource.length,
                       showTotal: (total, range) => {
-                        return `Showing ${0} of ${1
+                        return `Showing ${range[0]}-${range[1]} of ${dataSource.length
                           } Results`;
                       },
                     }}
@@ -359,8 +457,54 @@ export default class extends Component {
                   bordered={false}
                   style={{ width: '100%' }}
                 >
-                  <p>{<IntlMessages id="uiElements.cards.lorem" />}</p>
-                  <p>{<IntlMessages id="uiElements.cards.cardContent" />}</p>
+                  <Row style={rowStyle} gutter={gutter} justify="start">
+                    <Col md={6} sm={6} xs={24} style={colStyle}>
+                    <Upload>
+                      <button>
+                          <Icon type="upload" className="avatar-uploader-trigger" /> Upload File
+                      </button>
+                    </Upload>
+                    </Col>
+                    <Col md={16} sm={15} xs={24} style={colStyle}>
+                        <Fieldset style={{'marginBottom':'5px'}}>
+                        <Input
+                            label="Note"
+                            placeholder="Enter Note"
+                            // value={project.title}
+                            // onChange={this.onRecordChange.bind(this, 'title')}
+                          />
+                        </Fieldset>
+                    </Col>
+                    <Col md={2} sm={6} xs={24} style={colStyle}>
+                        <ButtonHolders>
+                          <ActionBtn
+                            type="primary"
+                            // onClick={this.handleModal.bind(this, null)}
+                          >
+                              Add
+                          </ActionBtn>
+                        </ButtonHolders>
+                    </Col>
+                  </Row>
+                 
+                 <TableWrapper
+                    rowKey="key"
+                    // rowSelection={rowSelection}
+                    columns={attachmentColumns}
+                    bordered={true}
+                    dataSource={dataSource3}
+                    loading={this.props.isLoading}
+                    className="isoSimpleTable"
+                    pagination={{
+                      defaultPageSize: 1,
+                      hideOnSinglePage: true,
+                      total: dataSource.length,
+                      showTotal: (total, range) => {
+                        return `Showing ${range[0]}-${range[1]} of ${dataSource.length
+                          } Results`;
+                      },
+                    }}
+                  />
                 </Card>
               </ContentHolder>
 
