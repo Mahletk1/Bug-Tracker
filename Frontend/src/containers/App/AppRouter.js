@@ -25,7 +25,7 @@ const routes = [
     component: asyncComponent(() => import('../Tickets')),
   },
   {
-    path: 'ticket_detail',
+    path: 'ticket_detail/:id',
     component: asyncComponent(() => import('../TicketDetail'))
   }
   // {

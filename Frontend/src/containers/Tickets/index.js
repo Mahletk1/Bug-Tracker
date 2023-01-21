@@ -247,7 +247,7 @@ class Tickets extends Component {
                   <i className="ion-android-delete" />
                 </a>
               </Popconfirms>
-              <a href="ticket_detail">detail</a>
+              <a href={`ticket_detail/${row.id}`}>detail</a>
             </ActionWrapper>
           );
         },
