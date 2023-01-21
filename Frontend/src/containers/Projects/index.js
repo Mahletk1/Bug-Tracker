@@ -177,7 +177,7 @@ class Projects extends Component {
                   <i className="ion-android-delete" />
                 </a>
               </Popconfirms>
-              <a>detail</a>
+              <a href="project_detail">detail</a>
             </ActionWrapper>
           );
         },

@@ -32,18 +32,18 @@ import Upload from '../../components/uielements/upload';
 export default class extends Component {
   render() {
     const { rowStyle, colStyle, gutter } = basicStyle;
-    let dataSource=[{'title': 'hello','message':'firest message'}]
+    let dataSource=[{'commenter': 'hello','message':'firest message'}]
     let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
     let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
     const commentColumns = [
       {
         title: 'Commenter',
-        dataIndex: 'title',
-        key: 'title',
+        dataIndex: 'commenter',
+        key: 'commenter',
         width: '170px',
         sorter: (a, b) => {
-          if (a.title < b.title) return -1;
-          if (a.title > b.title) return 1;
+          if (a.commenter < b.commenter) return -1;
+          if (a.commenter > b.commenter) return 1;
           return 0;
         },
         render: (text, row) => {
@@ -56,7 +56,7 @@ export default class extends Component {
             }
             return result;
           };
-          return trimByWord(row.title);
+          return trimByWord(row.commenter);
         },
       },
       {
@@ -65,8 +65,8 @@ export default class extends Component {
         key: 'message',
         width: '230px',
         sorter: (a, b) => {
-          if (a.title < b.title) return -1;
-          if (a.title > b.title) return 1;
+          if (a.message < b.message) return -1;
+          if (a.message > b.message) return 1;
           return 0;
         },
         render: (text, row) => {
