@@ -26,23 +26,83 @@ import {
 } from './articles.style';
 import Upload from '../../components/uielements/upload';
 import { useParams } from 'react-router-dom';
+import Select, {
+  SelectOption as Option,
+} from '../../components/uielements/select';
+import Modal from '../../components/feedback/modal';
+import clone from 'clone';
+import axios from 'axios';
 // const Tag = props => (
 //   <TagWrapper>
 //     <Tags {...props}>{props.children}</Tags>
 //   </TagWrapper>
 // );
 class TicketDetail extends Component {
+  
+  state={
+    users:[],
+    projects:[],
+  }
  async componentDidMount(){
   await this.props.getTicket(this.props.match.params['id'])
     console.log(this.props)
+
+    await axios.get("http://127.0.0.1:8000/users/").then((response) => {
+      this.setState({users: response.data})     
+  });
+
+  await axios.get("http://127.0.0.1:8000/projects/").then((response) => {
+      this.setState({projects: response.data})     
+  });
   }
+  handleRecord = (actionName, ticket) => {
+    if (ticket.key && actionName !== 'delete') actionName = 'update';
+    this.props.createTicket(ticket, actionName);
+  };
+  handleModal = (ticket = null) => {
+    console.log(ticket[0])
+    this.props.toggleModal(ticket[0]);
+  };
+  onRecordChange = (key, event) => {
+    let { ticket_edit } = clone(this.props);
+    if (key) ticket_edit[key] = event.target.value;
+    this.props.update(ticket_edit);
+  };
+
+  onSelectChange = (key, value) => {
+    let { ticket_edit } = clone(this.props);
+    if (key) ticket_edit[key] = value;
+    this.props.update(ticket_edit);
+  };
+
+  checkValue = ()=>{
+    const { ticket_edit } = clone(this.props);
+    if (ticket_edit.assignedUser != null && ticket_edit.assignedUser['name']){
+      return ticket_edit.assignedUser['name']
+    }
+    else{
+      return ticket_edit.assignedUser
+    }
+  }
+
+  checkValueProject = ()=>{
+    const { ticket_edit } = clone(this.props);
+    if (ticket_edit.project != null && ticket_edit.project['title']){
+      return ticket_edit.project['title']
+    }
+    else{
+      return ticket_edit.project
+    }
+  }
+
+
   render() {
     if(this.props.isLoading){
       return <p>loading...</p>
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {ticket_detail} = this.props
+      const {ticket_detail,ticket_edit,modalActive} = this.props
       console.log(ticket_detail[0]['id'])
       let dataSource=[{'commenter': 'hello','message':'firest message'}]
       let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
@@ -317,12 +377,120 @@ class TicketDetail extends Component {
           {/* <PageHeader>{<IntlMessages id="uiElements.cards.cards" />}</PageHeader> */}
           <Row style={rowStyle} gutter={gutter} justify="start">
             <Col md={12} sm={12} xs={24} style={colStyle}>
+            <Modal
+              visible={modalActive}
+              onClose={this.props.toggleModal.bind(this, null)}
+              title={'Update Ticket'}
+              okText={'Update Ticket' }
+              onOk={this.handleRecord.bind(this, 'update', ticket_edit)}
+              onCancel={this.props.toggleModal.bind(this, null)}
+            >
+              <Form>
+                <Fieldset>
+                  <Label>Title</Label>
+                  <Input
+                    label="Title"
+                    placeholder="Enter Title"
+                    value={ticket_edit.title}
+                    onChange={this.onRecordChange.bind(this, 'title')}
+                  />
+                </Fieldset>
+
+                <Fieldset>
+                  <Label>Description</Label>
+                  <Textarea
+                    label="Description"
+                    placeholder="Enter Description"
+                    rows={5}
+                    value={ticket_edit.description}
+                    onChange={this.onRecordChange.bind(this, 'description')}
+                  />
+                </Fieldset>
+
+                <Fieldset>
+                  <Label>Assigned Person</Label>
+                      <Select
+                      showSearch={true}
+                      placeholder="Assigned Person"
+                      onChange={this.onSelectChange.bind(this, 'assignedUser')}
+                      value={this.checkValue()}
+                      filterOption={(inputValue, option) =>
+                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
+                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
+                      }
+                      style={{ width: '100%' }}
+                    > 
+                    {
+                      this.state.users.map((user,i)=>{
+                        return <Option key={user.id} value={[user.name, user.id]} >{user.name}</Option>
+                      })
+                    } 
+  
+                    </Select>
+                </Fieldset>
+
+                <Fieldset>
+                  <Label>Project</Label>
+                      <Select
+                      showSearch={true}
+                      placeholder="Project"
+                      onChange={this.onSelectChange.bind(this, 'project')}
+                      value={this.checkValueProject()}
+                      filterOption={(inputValue, option) =>
+                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
+                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
+                      }
+                      style={{ width: '100%' }}
+                    > 
+                    {
+                      this.state.projects.map((project,i)=>{
+                        return <Option key={project.id} value={[project.title, project.id]} >{project.title}</Option>
+                      })
+                    } 
+  
+                    </Select>
+                </Fieldset>
+                <Row>
+                  <Col xs={12}>
+                      <Fieldset>
+                        <Label>Priority</Label>
+                            <Select
+                            showSearch='true'
+                            searchValue=""
+                            placeholder="Priority"
+                            value={ticket_edit.priority}
+                            onChange={this.onSelectChange.bind(this, 'priority')}
+                            // style={{ width: '50%' }}
+                          >  
+                            <Option value='low'  >Low</Option>
+                            <Option value='medium'>Meidum</Option>
+                            <Option value='high'>High</Option>
+                          </Select>
+                      </Fieldset>
+                  </Col>
+                  <Col xs={12}>
+                      <Fieldset>
+                      <Label>Status</Label>
+                      <Select
+                        defaultValue={ticket_edit.status}
+                        placeholder="Enter Status"
+                        onChange={this.onSelectChange.bind(this, 'status')}
+                        // style={{ width: '50%' }}
+                      >
+                        <Option value="draft">Draft</Option>
+                        <Option value="publish">Publish</Option>
+                      </Select>
+                    </Fieldset>
+                  </Col>
+                </Row>
+              </Form>
+            </Modal>
   
                 <ContentHolder>
                   <Card
                     title={<IntlMessages id="Ticket Details" />}
                     extra={
-                      <a href="# ">
+                      <a onClick={this.handleModal.bind(this, ticket_detail)}  href="# ">
                         {<IntlMessages id="edit" />}
                       </a>
                     }
@@ -341,7 +509,7 @@ class TicketDetail extends Component {
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Assigned Person" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].assignedUser}`} />}</p>
+                            <p>{<IntlMessages id={`${ticket_detail[0].assignedUser['name']}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Project" />}</strong>

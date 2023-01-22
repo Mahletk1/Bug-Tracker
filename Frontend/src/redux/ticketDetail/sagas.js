@@ -33,7 +33,7 @@ function* getTicket({payload}) {
         title: response.data.title,
         priority: response.data.priority,
         description: response.data.description,
-        assignedUser: response.data.assignedUser['name'],
+        assignedUser: response.data.assignedUser,
         status: response.data.status,
         project: response.data.project,
         created_at: response.data.created_at,
@@ -50,54 +50,58 @@ function* getTicket({payload}) {
   }
 }
 
-// function* createTicket({ payload }) {
-//   const { data, actionName } = payload;
-//   try {
-//     switch (actionName) {
-//       case 'delete':
-//         yield call(deleteTicket, data.id);
-//         break;
-//       case 'update':
-//         console.log(data)
-//         let form_data1 = new FormData();
-//         form_data1.append("id", data.id);
-//         form_data1.append("title", data.title);
-//         form_data1.append("description", data.description);
-//         form_data1.append("priority", data.priority);
-//         form_data1.append("status", data.status)
-//         if(data.project[1] != null){
-//           form_data1.append("project", data.project[1]);
-//         }
-//         else{
-//           form_data1.append("project", data.project['id']);
-//         }
-//         if(data.assignedUser[1] != null){
-//           form_data1.append("assignedUser", data.assignedUser[1]);
-//         }
-//         else{
-//           form_data1.append("assignedUser", data.assignedUser['id']);
-//         }
-//         const response1 = yield call(updateTicket, form_data1);
-//         break;
-//       default:
-//         let form_data = new FormData();
-//         form_data.append("title", data.title);
-//         form_data.append("description", data.description);
-//         form_data.append("priority", data.priority);
-//         form_data.append("project", data.project[1]);
-//         form_data.append("status", data.status)
-//         if(data.assignedUser != null){
-//           form_data.append("assignedUser", data.assignedUser[1]);
-//         }
-//         const response = yield call(postTicket, form_data);
-//         break;
-//     }
-//     yield put({ type: actions.GET_TICKETS });
-//   } catch (error) {
-//     console.log(error);
-//     yield put(actions.createTicketError(error));
-//   }
-// }
+function* createTicket({ payload }) {
+  const { data, actionName } = payload;
+  console.log(data)
+  const id = data.id
+  try {
+    switch (actionName) {
+      // case 'delete':
+      //   yield call(deleteTicket, data.id);
+      //   break;
+      case 'update':
+        console.log(data)
+        let form_data1 = new FormData();
+        // form_data1.append("id", data.id);
+        form_data1.append("title", data.title);
+        form_data1.append("description", data.description);
+        form_data1.append("priority", data.priority);
+        form_data1.append("status", data.status)
+        if(data.project[1] != null){
+          form_data1.append("project", data.project[1]);
+        }
+        else{
+          form_data1.append("project", data.project['id']);
+        }
+        if(data.assignedUser[1] != null){
+          form_data1.append("assignedUser", data.assignedUser[1]);
+        }
+        else{
+          form_data1.append("assignedUser", data.assignedUser['id']);
+        }
+        const response1 = yield call(updateTicket,data.id, form_data1);
+        break;
+      // default:
+      //   let form_data = new FormData();
+      //   form_data.append("title", data.title);
+      //   form_data.append("description", data.description);
+      //   form_data.append("priority", data.priority);
+      //   form_data.append("project", data.project[1]);
+      //   form_data.append("status", data.status)
+      //   if(data.assignedUser != null){
+      //     form_data.append("assignedUser", data.assignedUser[1]);
+      //   }
+      //   const response = yield call(postTicket, form_data);
+      //   break;
+    }
+    yield put({ type: actions.GET_TICKET,
+                payload: {id} 
+              });
+  } catch (error) {
+    console.log(error);
+    yield put(actions.createTicketError(error));
+  }
+}
 
 const readAllFirestoreDocuments = async () =>
   await database
@@ -140,7 +144,7 @@ function* resetFireStoreDocuments() {
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.GET_TICKET, getTicket),
-    // takeEvery(actions.CREATE_TICKET, createTicket),
+    takeEvery(actions.CREATE_TICKET, createTicket),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }
