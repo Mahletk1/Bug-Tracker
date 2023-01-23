@@ -62,7 +62,7 @@ function* createTicket({ payload }) {
       case 'update':
         console.log(data)
         let form_data1 = new FormData();
-        // form_data1.append("id", data.id);
+        
         form_data1.append("title", data.title);
         form_data1.append("description", data.description);
         form_data1.append("priority", data.priority);
