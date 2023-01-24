@@ -8,6 +8,9 @@ const actions = {
   CREATE_TICKET:'CREATE_TICKET',
   CREATE_TICKET_ERROR:'CREATE_TICKET_ERROR',
 
+  CREATE_COMMENT:'CREATE_COMMENT',
+  CREATE_COMMENT_ERROR:'CREATE_COMMENT_ERROR',
+
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
 
@@ -19,9 +22,10 @@ const actions = {
     payload: {id}
   }),
 
-  getTicketSuccess: data => ({
+  getTicketSuccess: (data,comments) => ({
     type: actions.GET_TICKET_SUCCESS,
-    payload: { data },
+    payload: { data,
+                comments },
   }),
 
   getTicketError: error => ({
@@ -34,6 +38,10 @@ const actions = {
     payload: { data, actionName },
   }),
 
+  createComment: (data) => ({
+    type: actions.CREATE_COMMENT,
+    payload: { data,},
+  }),
   toggleModal: (data = null) => ({
     type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,
     payload: { data },
@@ -46,6 +54,11 @@ const actions = {
 
   createTicketError: error => ({
     type: actions.CREATE_TICKET_ERROR,
+    payload: { error },
+  }),
+
+  createCommentError: error => ({
+    type: actions.CREATE_COMMENT_ERROR,
     payload: { error },
   }),
 

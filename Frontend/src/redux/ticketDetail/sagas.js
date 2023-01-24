@@ -3,7 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetTicket,updateTicket} from '../../helpers/ticketsDetail/ticket';
+import {requestGetTicket,updateTicket,requestGetComment,requestCreateComment} from '../../helpers/ticketsDetail/ticket';
 
 const {
   database,
@@ -26,7 +26,18 @@ const ORDER = 'desc';
 function* getTicket({payload}) {
   try {
     const response = yield call(requestGetTicket, payload.id);
-    console.log(response)
+    const response2 = yield call(requestGetComment, payload.id);
+
+    const commentData=[];
+    for(let i=0 ; i<response2.data.length ; i++){
+      console.log(response2.data[i])
+      commentData.push({
+        created_at: response2.data[i].created_at,
+        message:response2.data[i].message,
+        commenter:response2.data[i].commenter
+      })
+    }
+    commentData.reverse();
     const data = [];
       data.push({
         id: response.data.id,
@@ -43,13 +54,33 @@ function* getTicket({payload}) {
       });
     
     console.log(data)
-    yield put(actions.getTicketSuccess(data));
+    yield put(actions.getTicketSuccess(data,commentData));
   } catch (error) {
     console.log(error);
     yield put(actions.getTicketError(error));
   }
 }
+function* createComment({ payload }) {
+  const { data } = payload;
+  console.log(data.message)
+  let id = data.ticketId;
+  try {
+        let form_data = new FormData();
+        // form_data1.append("id", data.id);
+        form_data.append("message", data.message);
+        form_data.append("ticket", data.ticketId);
+        form_data.append("commenter", 'TestUser');
 
+        const response1 = yield call(requestCreateComment, form_data);
+        console.log(response1)
+        yield put({ type: actions.GET_TICKET,
+                    payload: {id} });
+    }
+  catch (error) {
+        console.log(error);
+        yield put(actions.createCommentError(error));
+  }
+}
 function* createTicket({ payload }) {
   const { data, actionName } = payload;
   console.log(data)
@@ -145,6 +176,7 @@ export default function* rootSaga() {
   yield all([
     takeEvery(actions.GET_TICKET, getTicket),
     takeEvery(actions.CREATE_TICKET, createTicket),
+    takeEvery(actions.CREATE_COMMENT, createComment),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }

@@ -59,12 +59,16 @@ class TicketDetail extends Component {
     if (ticket.key && actionName !== 'delete') actionName = 'update';
     this.props.createTicket(ticket, actionName);
   };
+  handleComment = (comment) => {
+    this.props.createComment(comment);
+  };
   handleModal = (ticket = null) => {
     console.log(ticket[0])
     this.props.toggleModal(ticket[0]);
   };
   onRecordChange = (key, event) => {
-    let { ticket_edit } = clone(this.props);
+    let { ticket_edit,comment } = clone(this.props);
+    ticket_edit['ticketId'] = this.props.match.params['id'];
     if (key) ticket_edit[key] = event.target.value;
     this.props.update(ticket_edit);
   };
@@ -75,6 +79,31 @@ class TicketDetail extends Component {
     this.props.update(ticket_edit);
   };
 
+  onAttachment = (key,event) => {
+    let { attachments,update } = clone(this.props);
+    
+    let files=[]
+    for (let i=0 ; i< event.fileList.length;i++){
+      files.push(event.fileList[i].originFileObj);
+    }
+    let file;
+      var reader = new FileReader();
+      file=files[files.length-1]
+      reader.onload = (file) => {
+        attachments.push(reader.result);
+        update(attachments);
+        console.log(attachments)
+      }
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+      reader.readAsDataURL(file);
+      
+  
+   
+  //  if (key) ticket_edit[key] = event.fileList;
+  //  this.props.update(ticket_edit);
+  }
   checkValue = ()=>{
     const { ticket_edit } = clone(this.props);
     if (ticket_edit.assignedUser != null && ticket_edit.assignedUser['name']){
@@ -97,14 +126,25 @@ class TicketDetail extends Component {
 
 
   render() {
+    
     if(this.props.isLoading){
       return <p>loading...</p>
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {ticket_detail,ticket_edit,modalActive} = this.props
-      console.log(ticket_detail[0]['id'])
-      let dataSource=[{'commenter': 'hello','message':'firest message'}]
+      const {ticket_detail,ticket_edit,modalActive,comments,comment} = this.props
+      // console.log(ticket_edit)
+      const CommentDataSource = [];
+      // console.log(ticket_edit)
+      Object.keys(comments).map((comment, index) => {
+        return CommentDataSource.push({
+          ...comments[comment],
+          key: comment,
+        });
+      });
+      
+      // console.log(ticket_detail[0]['id'])
+      // let dataSource=[{'commenter': 'hello','message':'firest message'}]
       let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
       let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
       const commentColumns = [
@@ -155,32 +195,55 @@ class TicketDetail extends Component {
           },
         },
         {
-          title: 'Actions',
-          key: 'action',
-          width: '50px',
-          className: 'noWrapCell',
+          title: 'Created At',
+          dataIndex: 'created_at',
+          key: 'created_at',
+          width: '230px',
+          sorter: (a, b) => {
+            if (a.created_at < b.created_at) return -1;
+            if (a.created_at > b.created_at) return 1;
+            return 0;
+          },
           render: (text, row) => {
-            return (
-              <ActionWrapper>
-                <a  href="# ">
-                  <i className="ion-android-create" />
-                </a>
-  
-                <Popconfirms
-                  title="Are you sure to delete this project？"
-                  okText="Yes"
-                  cancelText="No"
-                  placement="topRight"
-            
-                >
-                  <a className="deleteBtn" href="# ">
-                    <i className="ion-android-delete" />
-                  </a>
-                </Popconfirms>
-              </ActionWrapper>
-            );
+            const trimByWord = sentence => {
+              let result = sentence;
+              let resultArray = result.split(' ');
+              if (resultArray.length > 7) {
+                resultArray = resultArray.slice(0, 7);
+                result = resultArray.join(' ') + '...';
+              }
+              return result;
+            };
+            return trimByWord(row.created_at);
           },
         },
+        // {
+        //   title: 'Actions',
+        //   key: 'action',
+        //   width: '50px',
+        //   className: 'noWrapCell',
+        //   render: (text, row) => {
+        //     return (
+        //       <ActionWrapper>
+        //         <a  href="# ">
+        //           <i className="ion-android-create" />
+        //         </a>
+  
+        //         <Popconfirms
+        //           title="Are you sure to delete this project？"
+        //           okText="Yes"
+        //           cancelText="No"
+        //           placement="topRight"
+            
+        //         >
+        //           <a className="deleteBtn" href="# ">
+        //             <i className="ion-android-delete" />
+        //           </a>
+        //         </Popconfirms>
+        //       </ActionWrapper>
+        //     );
+        //   },
+        // },
       ];
       const historyColumns = [
         {
@@ -552,11 +615,11 @@ class TicketDetail extends Component {
                       <Col md={21} sm={18} xs={24} style={colStyle}>
                           <Fieldset style={{'marginBottom':'5px'}}>
                           <Textarea
-                              label="Description"
-                              placeholder="Enter Description"
+                              label="Message"
+                              placeholder="Enter Message"
                               rows={3}
-                              // value={article.description}
-                              // onChange={this.onRecordChange.bind(this, 'description')}
+                              value={ticket_edit.message}
+                              onChange={this.onRecordChange.bind(this, 'message')}
                         />
                           </Fieldset>
                       </Col>
@@ -564,7 +627,7 @@ class TicketDetail extends Component {
                           <ButtonHolders>
                             <ActionBtn
                               type="primary"
-                              // onClick={this.handleModal.bind(this, null)}
+                              onClick={this.handleComment.bind(this, ticket_edit)}
                             >
                                 Comment
                             </ActionBtn>
@@ -577,15 +640,15 @@ class TicketDetail extends Component {
                       // rowSelection={rowSelection}
                       columns={commentColumns}
                       bordered={true}
-                      dataSource={dataSource}
+                      dataSource={CommentDataSource}
                       loading={this.props.isLoading}
                       className="isoSimpleTable"
                       pagination={{
                         // defaultPageSize: 1,
                         hideOnSinglePage: true,
-                        total: dataSource.length,
+                        total: CommentDataSource.length,
                         showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${dataSource.length
+                          return `Showing ${range[0]}-${range[1]} of ${CommentDataSource.length
                             } Results`;
                         },
                       }}
@@ -619,9 +682,9 @@ class TicketDetail extends Component {
                       pagination={{
                         defaultPageSize: 1,
                         hideOnSinglePage: true,
-                        total: dataSource.length,
+                        total: dataSource2.length,
                         showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${dataSource.length
+                          return `Showing ${range[0]}-${range[1]} of ${dataSource2.length
                             } Results`;
                         },
                       }}
@@ -639,7 +702,11 @@ class TicketDetail extends Component {
                   >
                     <Row style={rowStyle} gutter={gutter} justify="start">
                       <Col md={6} sm={6} xs={24} style={colStyle}>
-                      <Upload>
+                      <Upload
+                      beforeUpload={() => false}
+                      onChange={
+                        this.onAttachment.bind(this, 'profile_image')}
+                        >
                         <button>
                             <Icon type="upload" className="avatar-uploader-trigger" /> Upload File
                         </button>
@@ -678,9 +745,9 @@ class TicketDetail extends Component {
                       pagination={{
                         defaultPageSize: 1,
                         hideOnSinglePage: true,
-                        total: dataSource.length,
+                        total: dataSource3.length,
                         showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${dataSource.length
+                          return `Showing ${range[0]}-${range[1]} of ${dataSource3.length
                             } Results`;
                         },
                       }}

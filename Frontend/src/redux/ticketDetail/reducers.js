@@ -3,6 +3,9 @@ import actions from './actions';
 const initState = {
   isLoading: true,
   errorMessage: false,
+  comments:{},
+  comment:{key: null},
+  attachments:[],
   ticket_detail: {},
   modalActive: false,
   ticket_edit: {
@@ -29,6 +32,7 @@ export default function reducer(
         ...state,
         isLoading: false,
         ticket_detail: payload.data,
+        comments: payload.comments,
         errorMessage: false,
       };
     case actions.GET_TICKET_ERROR:
@@ -46,7 +50,8 @@ export default function reducer(
     case actions.FIRESTORE_UPDATE:
       return {
         ...state,
-        ticket_edit: payload.data,
+        attachments: payload.data,
+        
       };
     default:
       return state;
