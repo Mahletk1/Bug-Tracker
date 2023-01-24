@@ -11,7 +11,7 @@ class User(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.TextField()
     assignedUser= models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     priority= models.CharField(max_length=200, null=True)
     
@@ -19,8 +19,14 @@ class Ticket(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200, null=True)
+    description = models.TextField( null=True)
     assignedUser = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True)
     priority= models.CharField(max_length=200, null=True)
     status= models.CharField(max_length=200, null=True)
+
+class Comment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE, null=True)
+    message = models.CharField(max_length=200)
+    commenter = models.CharField(max_length=200)

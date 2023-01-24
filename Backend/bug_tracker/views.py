@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from firebase_admin import auth,credentials
 import firebase_admin
+from rest_framework import generics
 
 cred = credentials.Certificate("C:/Users/mahku/Bug-Tracker/Backend/privateKey.json")
 default_app = firebase_admin.initialize_app(cred)
@@ -167,3 +168,8 @@ def ticket(request):
         ticket = Ticket.objects.get(pk=request.query_params['id'])
         ticket.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ticket_detail(generics.RetrieveUpdateDestroyAPIView):
+     serializer_class = TicketSerializer
+     queryset = Ticket.objects.all()
