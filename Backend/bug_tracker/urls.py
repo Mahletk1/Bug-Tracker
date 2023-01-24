@@ -24,6 +24,7 @@ urlpatterns = [
     path('users/', views.get_users),
     path('projects/', views.project),
     path('tickets/', views.ticket),
+    path('comments/', views.comments),
     path('ticket/<int:pk>', views.ticket_detail.as_view()),
     # path('users/<int:id>', views.delete_user),
     # path('createUsers/', views.create_users)

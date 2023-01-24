@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .models import User,Project,Ticket
-from .serializers import UserSerializer,ProjectSerializer,TicketSerializer
+from .models import User,Project,Ticket,Comment
+from .serializers import UserSerializer,ProjectSerializer,TicketSerializer,CommentSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -168,6 +168,23 @@ def ticket(request):
         ticket = Ticket.objects.get(pk=request.query_params['id'])
         ticket.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET','DELETE','PUT','POST'])
+def comments(request):
+    if request.method == 'GET':
+        comments= Comment.objects.filter(ticket = request.query_params['id'])
+        serializer = CommentSerializer(comments, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        new_comment = Comment.objects.create(
+            message= request.data['message'],
+            commenter= request.data['commenter'],
+            ticket=Ticket.objects.get(pk=request.data['ticket']))
+        new_comment.save()
+
+        serializer = CommentSerializer(new_comment)    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ticket_detail(generics.RetrieveUpdateDestroyAPIView):

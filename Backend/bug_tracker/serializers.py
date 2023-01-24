@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Project,Ticket
+from .models import User,Project,Ticket,Comment
 
 class FirebaseUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,4 +52,9 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = ['created_at','updated_at','id','title','description','priority','status','assignedUser','project']
 
         depth = 1
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['created_at','message','commenter','ticket']
 
