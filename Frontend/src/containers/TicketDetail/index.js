@@ -62,6 +62,9 @@ class TicketDetail extends Component {
   handleComment = (comment) => {
     this.props.createComment(comment);
   };
+  handleAttachment = (attachment) => {
+    this.props.uploadAttachment(attachment);
+  };
   handleModal = (ticket = null) => {
     console.log(ticket[0])
     this.props.toggleModal(ticket[0]);
@@ -80,7 +83,7 @@ class TicketDetail extends Component {
   };
 
   onAttachment = (key,event) => {
-    let { attachments,update } = clone(this.props);
+    let { ticket_edit,update } = clone(this.props);
     
     let files=[]
     for (let i=0 ; i< event.fileList.length;i++){
@@ -90,9 +93,9 @@ class TicketDetail extends Component {
       var reader = new FileReader();
       file=files[files.length-1]
       reader.onload = (file) => {
-        attachments.push(reader.result);
-        update(attachments);
-        console.log(attachments)
+        ticket_edit.attachments.push(reader.result);
+        update(ticket_edit);
+        console.log(ticket_edit)
       }
       reader.onerror = function (error) {
         console.log('Error: ', error);
@@ -717,8 +720,8 @@ class TicketDetail extends Component {
                           <Input
                               label="Note"
                               placeholder="Enter Note"
-                              // value={project.title}
-                              // onChange={this.onRecordChange.bind(this, 'title')}
+                              value={ticket_edit.note}
+                              onChange={this.onRecordChange.bind(this, 'note')}
                             />
                           </Fieldset>
                       </Col>
@@ -726,7 +729,7 @@ class TicketDetail extends Component {
                           <ButtonHolders>
                             <ActionBtn
                               type="primary"
-                              // onClick={this.handleModal.bind(this, null)}
+                              onClick={this.handleAttachment.bind(this, ticket_edit)}
                             >
                                 Add
                             </ActionBtn>

@@ -3,7 +3,8 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetTicket,updateTicket,requestGetComment,requestCreateComment} from '../../helpers/ticketsDetail/ticket';
+import {requestGetTicket,updateTicket,requestGetComment,requestCreateComment,requestUploadAttachment} from '../../helpers/ticketsDetail/ticket';
+import { urlToObject } from '../../helpers/users/getUsers';
 
 const {
   database,
@@ -81,6 +82,38 @@ function* createComment({ payload }) {
         yield put(actions.createCommentError(error));
   }
 }
+function* uploadAttachment({ payload }) {
+  const { data } = payload;
+  console.log(data)
+  let id = data.ticketId;
+  try {
+        console.log("hello")
+        let file=[];
+        for (let i=0;i<data.attachments.length;i++){
+          file.push(yield call(urlToObject, data.attachments[i]));
+        }
+
+        let form_data = new FormData();
+        // form_data1.append("id", data.id);
+        for (let i =0;i<file.length;i++){
+          form_data.append("attachments", file[i])
+        }
+        form_data.append("ticketId", data.ticketId);
+        form_data.append("note", data.note);
+        form_data.append("ticket", data.ticketId);
+        form_data.append("uploader", 'TestUser');
+
+        const response1 = yield call(requestUploadAttachment, form_data);
+        console.log(response1)
+        yield put({ type: actions.GET_TICKET,
+                    payload: {id} });
+    }
+  catch (error) {
+        console.log(error);
+        yield put(actions.createCommentError(error));
+  }
+}
+
 function* createTicket({ payload }) {
   const { data, actionName } = payload;
   console.log(data)
@@ -177,6 +210,7 @@ export default function* rootSaga() {
     takeEvery(actions.GET_TICKET, getTicket),
     takeEvery(actions.CREATE_TICKET, createTicket),
     takeEvery(actions.CREATE_COMMENT, createComment),
+    takeEvery(actions.UPLOAD_ATTACHMENT, uploadAttachment),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }

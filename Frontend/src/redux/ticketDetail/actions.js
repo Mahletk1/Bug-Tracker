@@ -11,6 +11,9 @@ const actions = {
   CREATE_COMMENT:'CREATE_COMMENT',
   CREATE_COMMENT_ERROR:'CREATE_COMMENT_ERROR',
 
+  UPLOAD_ATTACHMENT:'UPLOAD_ATTACHMENT',
+  UPLOAD_ATTACHMENT_ERROR:'UPLOAD_ATTACHMENT_ERROR',
+
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
 
@@ -42,6 +45,10 @@ const actions = {
     type: actions.CREATE_COMMENT,
     payload: { data,},
   }),
+  uploadAttachment: (data) => ({
+    type: actions.UPLOAD_ATTACHMENT,
+    payload: { data,},
+  }),
   toggleModal: (data = null) => ({
     type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,
     payload: { data },
@@ -59,6 +66,11 @@ const actions = {
 
   createCommentError: error => ({
     type: actions.CREATE_COMMENT_ERROR,
+    payload: { error },
+  }),
+
+  uploadAttachmentError: error => ({
+    type: actions.UPLOAD_ATTACHMENT_ERROR,
     payload: { error },
   }),
 

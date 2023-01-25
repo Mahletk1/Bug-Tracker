@@ -5,11 +5,11 @@ const initState = {
   errorMessage: false,
   comments:{},
   comment:{key: null},
-  attachments:[],
   ticket_detail: {},
   modalActive: false,
   ticket_edit: {
     key: null,
+    attachments:[],
     status: 'draft', // publish
     description: '',
   },
@@ -50,7 +50,7 @@ export default function reducer(
     case actions.FIRESTORE_UPDATE:
       return {
         ...state,
-        attachments: payload.data,
+        ticket_edit: payload.data,
         
       };
     default:
