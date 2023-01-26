@@ -4,6 +4,7 @@ const initState = {
   isLoading: true,
   errorMessage: false,
   comments:{},
+  attachments:{},
   comment:{key: null},
   ticket_detail: {},
   modalActive: false,
@@ -33,6 +34,7 @@ export default function reducer(
         isLoading: false,
         ticket_detail: payload.data,
         comments: payload.comments,
+        attachments:payload.attachment,
         errorMessage: false,
       };
     case actions.GET_TICKET_ERROR:

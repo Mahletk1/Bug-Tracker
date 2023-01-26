@@ -25,10 +25,11 @@ const actions = {
     payload: {id}
   }),
 
-  getTicketSuccess: (data,comments) => ({
+  getTicketSuccess: (data,comments,attachment) => ({
     type: actions.GET_TICKET_SUCCESS,
-    payload: { data,
-                comments },
+    payload: {  data,
+                comments,
+                attachment },
   }),
 
   getTicketError: error => ({

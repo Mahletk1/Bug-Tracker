@@ -18,15 +18,10 @@ export function deleteUser(id,uid) {
 }
 
 export async function urlToObject(image) {
-    const response = await fetch(image.reader);
+    const response = await fetch(image);
     // here image is url/location of image
     const blob = await response.blob();
-    console.log(blob)
-    const type= blob.type.split('/')
-    const fileName=image.name.split('.')
-    console.log(blob.type.split('/'),fileName)
-    let i = type.length-1
-        const file = new File([blob],`${fileName[0]}.${type[1]}` ,{ type: blob.type });
-        return file
-    }
-      
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+    return file
+
+}

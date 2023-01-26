@@ -3,8 +3,7 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetTicket,updateTicket,requestGetComment,requestCreateComment,requestUploadAttachment} from '../../helpers/ticketsDetail/ticket';
-import { urlToObject } from '../../helpers/users/getUsers';
+import {requestGetTicket,updateTicket,requestGetComment,requestCreateComment,requestUploadAttachment,urlToObject,requestGetAttachments} from '../../helpers/ticketsDetail/ticket';
 
 const {
   database,
@@ -28,14 +27,23 @@ function* getTicket({payload}) {
   try {
     const response = yield call(requestGetTicket, payload.id);
     const response2 = yield call(requestGetComment, payload.id);
+    const response3 = yield call(requestGetAttachments, payload.id);
 
     const commentData=[];
     for(let i=0 ; i<response2.data.length ; i++){
-      console.log(response2.data[i])
       commentData.push({
         created_at: response2.data[i].created_at,
         message:response2.data[i].message,
         commenter:response2.data[i].commenter
+      })
+    }
+    const Attachments=[];
+    for(let i=0 ; i<response3.data.length ; i++){
+      Attachments.push({
+        created_at: response3.data[i].created_at,
+        note:response3.data[i].note,
+        uploader:response3.data[i].uploader,
+        attachment:response3.data[i].attachments
       })
     }
     commentData.reverse();
@@ -53,9 +61,9 @@ function* getTicket({payload}) {
        
         // uid: response.data[index].uid
       });
-    
-    console.log(data)
-    yield put(actions.getTicketSuccess(data,commentData));
+    // let date = new Date(`${data[0].created_at}`)
+    // console.log(date.toLocaleString())
+    yield put(actions.getTicketSuccess(data,commentData,Attachments));
   } catch (error) {
     console.log(error);
     yield put(actions.getTicketError(error));

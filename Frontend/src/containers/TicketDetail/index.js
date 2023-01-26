@@ -136,9 +136,12 @@ class TicketDetail extends Component {
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {ticket_detail,ticket_edit,modalActive,comments,comment} = this.props
-      // console.log(ticket_edit)
+      const {ticket_detail,ticket_edit,modalActive,comments,attachments} = this.props
+      // console.log(ticket_detail)
+      let createDate = new Date(`${ticket_detail[0].created_at}`)
+      let updateDate = new Date(`${ticket_detail[0].updated_at}`)
       const CommentDataSource = [];
+      const attachmentDataSource=[];
       // console.log(ticket_edit)
       Object.keys(comments).map((comment, index) => {
         return CommentDataSource.push({
@@ -146,11 +149,17 @@ class TicketDetail extends Component {
           key: comment,
         });
       });
+      Object.keys(attachments).map((attachment, index) => {
+        return attachmentDataSource.push({
+          ...attachments[attachment],
+          key: attachment,
+        });
+      });
       
       // console.log(ticket_detail[0]['id'])
       // let dataSource=[{'commenter': 'hello','message':'firest message'}]
       let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
-      let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
+      // let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
       const commentColumns = [
         {
           title: 'Commenter',
@@ -202,13 +211,14 @@ class TicketDetail extends Component {
           title: 'Created At',
           dataIndex: 'created_at',
           key: 'created_at',
-          width: '230px',
+          width: '170px',
           sorter: (a, b) => {
             if (a.created_at < b.created_at) return -1;
             if (a.created_at > b.created_at) return 1;
             return 0;
           },
           render: (text, row) => {
+            let date = new Date(`${row.created_at}`)
             const trimByWord = sentence => {
               let result = sentence;
               let resultArray = result.split(' ');
@@ -216,38 +226,38 @@ class TicketDetail extends Component {
                 resultArray = resultArray.slice(0, 7);
                 result = resultArray.join(' ') + '...';
               }
-              return result;
+              return date.toLocaleString();
             };
             return trimByWord(row.created_at);
           },
         },
-        // {
-        //   title: 'Actions',
-        //   key: 'action',
-        //   width: '50px',
-        //   className: 'noWrapCell',
-        //   render: (text, row) => {
-        //     return (
-        //       <ActionWrapper>
-        //         <a  href="# ">
-        //           <i className="ion-android-create" />
-        //         </a>
+        {
+          title: 'Actions',
+          key: 'action',
+          width: '10px',
+          className: 'noWrapCell',
+          render: (text, row) => {
+            return (
+              <ActionWrapper>
+                {/* <a  href="# ">
+                  <i className="ion-android-create" />
+                </a> */}
   
-        //         <Popconfirms
-        //           title="Are you sure to delete this project？"
-        //           okText="Yes"
-        //           cancelText="No"
-        //           placement="topRight"
+                <Popconfirms
+                  title="Are you sure to delete this project？"
+                  okText="Yes"
+                  cancelText="No"
+                  placement="topRight"
             
-        //         >
-        //           <a className="deleteBtn" href="# ">
-        //             <i className="ion-android-delete" />
-        //           </a>
-        //         </Popconfirms>
-        //       </ActionWrapper>
-        //     );
-        //   },
-        // },
+                >
+                  <a className="deleteBtn" href="# ">
+                    <i className="ion-android-delete" />
+                  </a>
+                </Popconfirms>
+              </ActionWrapper>
+            );
+          },
+        },
       ];
       const historyColumns = [
         {
@@ -347,12 +357,12 @@ class TicketDetail extends Component {
       const attachmentColumns = [
         {
           title: 'File',
-          dataIndex: 'file',
-          key: 'file',
+          dataIndex: 'attachment',
+          key: 'attachment',
           // width: '170px',
           sorter: (a, b) => {
-            if (a.file < b.file) return -1;
-            if (a.file > b.file) return 1;
+            if (a.attachment < b.attachment) return -1;
+            if (a.attachment > b.attachment) return 1;
             return 0;
           },
           render: (text, row) => {
@@ -363,9 +373,11 @@ class TicketDetail extends Component {
                 resultArray = resultArray.slice(0, 7);
                 result = resultArray.join(' ') + '...';
               }
-              return result;
+              return <a href={`${row.attachment}`} target="_blank">
+              <Icon type="paper-clip" className="avatar-uploader-trigger" /> Attachment
+          </a>;
             };
-            return trimByWord(row.file);
+            return trimByWord(row.attachment);
           },
         },
         {
@@ -393,12 +405,12 @@ class TicketDetail extends Component {
         },
         {
           title: 'Notes',
-          dataIndex: 'notes',
-          key: 'notes',
+          dataIndex: 'note',
+          key: 'note',
           // width: '230px',
           sorter: (a, b) => {
-            if (a.notes < b.notes) return -1;
-            if (a.notes > b.notes) return 1;
+            if (a.note < b.note) return -1;
+            if (a.note > b.note) return 1;
             return 0;
           },
           render: (text, row) => {
@@ -411,20 +423,21 @@ class TicketDetail extends Component {
               }
               return result;
             };
-            return trimByWord(row.notes);
+            return trimByWord(row.note);
           },
         },
         {
           title: 'Uploaded At',
-          dataIndex: 'uploadedAt',
-          key: 'uploadedAt',
+          dataIndex: 'created_at',
+          key: 'created_at',
           // width: '230px',
           sorter: (a, b) => {
-            if (a.uploadedAt < b.uploadedAt) return -1;
-            if (a.uploadedAt > b.uploadedAt) return 1;
+            if (a.created_at < b.created_at) return -1;
+            if (a.created_at > b.created_at) return 1;
             return 0;
           },
           render: (text, row) => {
+            let date = new Date(`${row.created_at}`)
             const trimByWord = sentence => {
               let result = sentence;
               let resultArray = result.split(' ');
@@ -432,9 +445,9 @@ class TicketDetail extends Component {
                 resultArray = resultArray.slice(0, 7);
                 result = resultArray.join(' ') + '...';
               }
-              return result;
+              return date.toLocaleString();
             };
-            return trimByWord(row.uploadedAt);
+            return trimByWord(row.created_at);
           },
         },
         
@@ -596,11 +609,11 @@ class TicketDetail extends Component {
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Created At" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].created_at}`} />}</p>
+                            <p>{<IntlMessages id={`${createDate.toLocaleString()}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Updated At" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].updated_at}`} />}</p>
+                            <p>{<IntlMessages id={`${updateDate.toLocaleString()}`} />}</p>
                         </Col>
                     </Row>       
                   </Card>
@@ -648,7 +661,7 @@ class TicketDetail extends Component {
                       loading={this.props.isLoading}
                       className="isoSimpleTable"
                       pagination={{
-                        // defaultPageSize: 1,
+                        defaultPageSize: 4,
                         hideOnSinglePage: true,
                         total: CommentDataSource.length,
                         showTotal: (total, range) => {
@@ -684,7 +697,7 @@ class TicketDetail extends Component {
                       loading={this.props.isLoading}
                       className="isoSimpleTable"
                       pagination={{
-                        defaultPageSize: 1,
+                        defaultPageSize: 4,
                         hideOnSinglePage: true,
                         total: dataSource2.length,
                         showTotal: (total, range) => {
@@ -743,15 +756,15 @@ class TicketDetail extends Component {
                       // rowSelection={rowSelection}
                       columns={attachmentColumns}
                       bordered={true}
-                      dataSource={dataSource3}
+                      dataSource={attachmentDataSource}
                       loading={this.props.isLoading}
                       className="isoSimpleTable"
                       pagination={{
-                        defaultPageSize: 1,
+                        defaultPageSize: 4,
                         hideOnSinglePage: true,
-                        total: dataSource3.length,
+                        total: attachmentDataSource.length,
                         showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${dataSource3.length
+                          return `Showing ${range[0]}-${range[1]} of ${attachmentDataSource.length
                             } Results`;
                         },
                       }}
