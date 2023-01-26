@@ -28,5 +28,12 @@ class Ticket(models.Model):
 class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE, null=True)
-    message = models.CharField(max_length=200)
+    message = models.TextField()
     commenter = models.CharField(max_length=200)
+
+class Attachment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE, null=True)
+    note = models.CharField(max_length=200)
+    attachments = models.FileField(upload_to='attachments/')
+    uploader = models.CharField(max_length=200)

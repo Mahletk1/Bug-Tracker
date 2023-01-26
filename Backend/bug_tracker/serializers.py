@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Project,Ticket,Comment
+from .models import User,Project,Ticket,Comment,Attachment
 
 class FirebaseUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,3 +58,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['created_at','message','commenter','ticket']
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = ['created_at','note','uploader','ticket','attachments']

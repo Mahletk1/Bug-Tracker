@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .models import User,Project,Ticket,Comment
-from .serializers import UserSerializer,ProjectSerializer,TicketSerializer,CommentSerializer
+from .models import User,Project,Ticket,Comment,Attachment
+from .serializers import UserSerializer,ProjectSerializer,TicketSerializer,CommentSerializer,AttachmentSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -186,6 +186,25 @@ def comments(request):
         serializer = CommentSerializer(new_comment)    
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+@api_view(['GET','DELETE','PUT','POST'])
+def attachments(request):
+    if request.method == 'GET':
+        attachments= Attachment.objects.filter(ticket = request.query_params['id'])
+        serializer = AttachmentSerializer(attachments, many=True, context={'request': request})
+        return Response(serializer.data)
+    if request.method == 'POST':
+        print(request.FILES.getlist('attachments'))
+        attachments = request.FILES.getlist('attachments')
+        for i in attachments:
+            new_attachment = Attachment.objects.create(
+                    attachments= i,
+                    uploader= request.data['uploader'],
+                    note= request.data['note'],
+                    ticket=Ticket.objects.get(pk=request.data['ticket']))
+            new_attachment.save()
+
+        serializer = AttachmentSerializer(new_attachment)    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ticket_detail(generics.RetrieveUpdateDestroyAPIView):
      serializer_class = TicketSerializer
