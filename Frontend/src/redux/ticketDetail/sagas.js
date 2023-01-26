@@ -84,7 +84,7 @@ function* createComment({ payload }) {
 }
 function* uploadAttachment({ payload }) {
   const { data } = payload;
-  console.log(data)
+  console.log(data.attachments[0])
   let id = data.ticketId;
   try {
         console.log("hello")
@@ -98,7 +98,6 @@ function* uploadAttachment({ payload }) {
         for (let i =0;i<file.length;i++){
           form_data.append("attachments", file[i])
         }
-        form_data.append("ticketId", data.ticketId);
         form_data.append("note", data.note);
         form_data.append("ticket", data.ticketId);
         form_data.append("uploader", 'TestUser');

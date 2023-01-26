@@ -84,23 +84,24 @@ class TicketDetail extends Component {
 
   onAttachment = (key,event) => {
     let { ticket_edit,update } = clone(this.props);
-    
+    console.log(event.fileList[0].originFileObj.name)
     let files=[]
     for (let i=0 ; i< event.fileList.length;i++){
-      files.push(event.fileList[i].originFileObj);
+      files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
     }
     let file;
       var reader = new FileReader();
       file=files[files.length-1]
-      reader.onload = (file) => {
-        ticket_edit.attachments.push(reader.result);
+      reader.onload = () => {
+        console.log(file)
+        ticket_edit.attachments.push({reader:reader.result,name:file.name});
         update(ticket_edit);
         console.log(ticket_edit)
       }
       reader.onerror = function (error) {
         console.log('Error: ', error);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file.file);
       
   
    
