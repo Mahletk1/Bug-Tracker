@@ -11,8 +11,8 @@ const initState = {
   ticket_edit: {
     key: null,
     attachments:[],
-    status: 'draft', // publish
-    description: '',
+    // status: 'draft', // publish
+    // description: '',
   },
 };
 

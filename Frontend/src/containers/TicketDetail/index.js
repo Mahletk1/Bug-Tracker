@@ -56,11 +56,14 @@ class TicketDetail extends Component {
   });
   }
   handleRecord = (actionName, ticket) => {
+    ticket['ticketId'] = this.props.match.params['id'];
     if (ticket.key && actionName !== 'delete') actionName = 'update';
     this.props.createTicket(ticket, actionName);
   };
-  handleComment = (comment) => {
-    this.props.createComment(comment);
+  handleComment = (actionName,comment) => {
+    comment['ticketId'] = this.props.match.params['id'];
+    if (comment.key && actionName !== 'delete') actionName = 'update';
+    this.props.createComment(comment,actionName);
   };
   handleAttachment = (attachment) => {
     this.props.uploadAttachment(attachment);
@@ -71,7 +74,6 @@ class TicketDetail extends Component {
   };
   onRecordChange = (key, event) => {
     let { ticket_edit,comment } = clone(this.props);
-    ticket_edit['ticketId'] = this.props.match.params['id'];
     if (key) ticket_edit[key] = event.target.value;
     this.props.update(ticket_edit);
   };
@@ -84,7 +86,6 @@ class TicketDetail extends Component {
 
   onAttachment = (key,event) => {
     let { ticket_edit,update } = clone(this.props);
-    console.log(event.fileList[0].originFileObj.name)
     let files=[]
     for (let i=0 ; i< event.fileList.length;i++){
       files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
@@ -248,7 +249,7 @@ class TicketDetail extends Component {
                   okText="Yes"
                   cancelText="No"
                   placement="topRight"
-            
+                  onConfirm={this.handleComment.bind(this, 'delete', row)}
                 >
                   <a className="deleteBtn" href="# ">
                     <i className="ion-android-delete" />
@@ -430,7 +431,7 @@ class TicketDetail extends Component {
           title: 'Uploaded At',
           dataIndex: 'created_at',
           key: 'created_at',
-          // width: '230px',
+          width: '165px',
           sorter: (a, b) => {
             if (a.created_at < b.created_at) return -1;
             if (a.created_at > b.created_at) return 1;
@@ -448,6 +449,33 @@ class TicketDetail extends Component {
               return date.toLocaleString();
             };
             return trimByWord(row.created_at);
+          },
+        },
+        {
+          title: 'Actions',
+          key: 'action',
+          width: '10px',
+          className: 'noWrapCell',
+          render: (text, row) => {
+            return (
+              <ActionWrapper>
+                {/* <a  href="# ">
+                  <i className="ion-android-create" />
+                </a> */}
+  
+                <Popconfirms
+                  title="Are you sure to delete this project？"
+                  okText="Yes"
+                  cancelText="No"
+                  placement="topRight"
+                  onConfirm={this.handleRecord.bind(this, 'delete', row)}
+                >
+                  <a className="deleteBtn" href="# ">
+                    <i className="ion-android-delete" />
+                  </a>
+                </Popconfirms>
+              </ActionWrapper>
+            );
           },
         },
         
@@ -644,7 +672,7 @@ class TicketDetail extends Component {
                           <ButtonHolders>
                             <ActionBtn
                               type="primary"
-                              onClick={this.handleComment.bind(this, ticket_edit)}
+                              onClick={this.handleComment.bind(this,'insert', ticket_edit)}
                             >
                                 Comment
                             </ActionBtn>

@@ -42,9 +42,9 @@ const actions = {
     payload: { data, actionName },
   }),
 
-  createComment: (data) => ({
+  createComment: (data,actionName = 'insert') => ({
     type: actions.CREATE_COMMENT,
-    payload: { data,},
+    payload: { data,actionName},
   }),
   uploadAttachment: (data) => ({
     type: actions.UPLOAD_ATTACHMENT,
