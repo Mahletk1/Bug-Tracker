@@ -141,7 +141,7 @@ def ticket(request):
         #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'PUT':
-        print(request.data)
+        # print(request.data)
         ticket = Ticket.objects.get(id=request.data['id'])
         project = Project.objects.get(pk=request.data['project'])
         user = User.objects.get(pk=request.data['assignedUser'])
@@ -177,6 +177,7 @@ def comments(request):
         return Response(serializer.data)
 
     if request.method == 'POST':
+        
         new_comment = Comment.objects.create(
             message= request.data['message'],
             commenter= request.data['commenter'],
@@ -185,6 +186,10 @@ def comments(request):
 
         serializer = CommentSerializer(new_comment)    
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    if request.method == 'DELETE':
+        comment = Comment.objects.get(pk=request.query_params['id'])
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET','DELETE','PUT','POST'])
 def attachments(request):
@@ -205,6 +210,22 @@ def attachments(request):
 
         serializer = AttachmentSerializer(new_attachment)    
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# @api_view(['GET','DELETE','PUT','PATCH'])
+# def ticket_detail(request):
+#     if request.method == 'GET':
+#         ticket= Ticket.objects.filter(pk = request.query_params['id'])
+#         serializer = TicketSerializer(ticket, many=True, context={'request': request})
+#         return Response(serializer.data)
+#     if request.method == 'PATCH':
+#         print('helloooo')
+#         print(request.data)
+#         ticket = Ticket.objects.getS(pk = request.query_params['id'])
+#         serializer = TicketSerializer(ticket, data=request.data, partial=True) # set partial=True to update a data partially
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(data="wrong parameters", status=status.HTTP_400_BAD_REQUEST)
 
 class ticket_detail(generics.RetrieveUpdateDestroyAPIView):
      serializer_class = TicketSerializer

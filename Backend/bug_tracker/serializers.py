@@ -56,9 +56,9 @@ class TicketSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['created_at','message','commenter','ticket']
+        fields = ['id','created_at','message','commenter','ticket']
 
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
-        fields = ['created_at','note','uploader','ticket','attachments']
+        fields = ['id','created_at','note','uploader','ticket','attachments']
