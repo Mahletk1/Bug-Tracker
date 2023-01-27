@@ -210,6 +210,11 @@ def attachments(request):
 
         serializer = AttachmentSerializer(new_attachment)    
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    if request.method == 'DELETE':
+        attachment = Attachment.objects.get(pk=request.query_params['id'])
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # @api_view(['GET','DELETE','PUT','PATCH'])
 # def ticket_detail(request):

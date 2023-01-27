@@ -2,4 +2,4 @@ django
 djangorestframework
 Pillow
 django-cors-headers
-# django-cleanup
+jango-cleanup
