@@ -27,6 +27,11 @@ export function requestCreateComment(form_data) {
 export function deleteComment(id) {
     return axios.delete(`http://127.0.0.1:8000/comments/?id=${id}`)
 }
+
+export function deleteAttachment(id) {
+    return axios.delete(`http://127.0.0.1:8000/attachments/?id=${id}`)
+}
+
 export function requestUploadAttachment(form_data) {
     return axios.post("http://127.0.0.1:8000/attachments/", form_data, {
         headers: {

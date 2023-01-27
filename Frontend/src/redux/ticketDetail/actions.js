@@ -46,9 +46,9 @@ const actions = {
     type: actions.CREATE_COMMENT,
     payload: { data,actionName},
   }),
-  uploadAttachment: (data) => ({
+  uploadAttachment: (data,actionName = 'insert') => ({
     type: actions.UPLOAD_ATTACHMENT,
-    payload: { data,},
+    payload: { data,actionName},
   }),
   toggleModal: (data = null) => ({
     type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,

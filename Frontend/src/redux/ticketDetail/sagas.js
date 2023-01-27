@@ -10,7 +10,8 @@ import {requestGetTicket,
   requestUploadAttachment,
   urlToObject,
   requestGetAttachments,
-  deleteComment} from '../../helpers/ticketsDetail/ticket';
+  deleteComment,
+  deleteAttachment} from '../../helpers/ticketsDetail/ticket';
 
 const {
   database,
@@ -56,6 +57,7 @@ function* getTicket({payload}) {
       })
     }
     commentData.reverse();
+    Attachments.reverse();
     const data = [];
       data.push({
         id: response.data.id,
@@ -106,12 +108,18 @@ function* createComment({ payload }) {
   }
 }
 function* uploadAttachment({ payload }) {
-  const { data } = payload;
-  console.log(data.attachments[0])
+  const { data,actionName } = payload;
+  // console.log(data.attachments[0])
   let id = data.ticketId;
   console.log(data)
   try {
-        console.log("hello")
+    switch (actionName) {
+      case 'delete':
+        console.log(data)
+        yield call(deleteAttachment, data.id);
+        break;
+      default:
+        console.log(data)
         let file=[];
         for (let i=0;i<data.attachments.length;i++){
           file.push(yield call(urlToObject, data.attachments[i]));
@@ -128,6 +136,7 @@ function* uploadAttachment({ payload }) {
 
         const response1 = yield call(requestUploadAttachment, form_data);
         console.log(response1)
+      }
         yield put({ type: actions.GET_TICKET,
                     payload: {id} });
     }

@@ -65,8 +65,11 @@ class TicketDetail extends Component {
     if (comment.key && actionName !== 'delete') actionName = 'update';
     this.props.createComment(comment,actionName);
   };
-  handleAttachment = (attachment) => {
-    this.props.uploadAttachment(attachment);
+  handleAttachment = (actionName,attachment) => {
+    console.log(attachment)
+    attachment['ticketId'] = this.props.match.params['id'];
+    if (attachment.key && actionName !== 'delete') actionName = 'update';
+    this.props.uploadAttachment(attachment,actionName);
   };
   handleModal = (ticket = null) => {
     console.log(ticket[0])
@@ -87,25 +90,25 @@ class TicketDetail extends Component {
   onAttachment = (key,event) => {
     let { ticket_edit,update } = clone(this.props);
     let files=[]
-    for (let i=0 ; i< event.fileList.length;i++){
-      files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
-    }
-    let file;
-      var reader = new FileReader();
-      file=files[files.length-1]
-      reader.onload = () => {
-        console.log(file)
-        ticket_edit.attachments.push({reader:reader.result,name:file.name});
-        update(ticket_edit);
-        console.log(ticket_edit)
+    if(event.fileList.length!=0){
+      for (let i=0 ; i< event.fileList.length;i++){
+        files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
       }
-      reader.onerror = function (error) {
-        console.log('Error: ', error);
-      };
-      reader.readAsDataURL(file.file);
-      
-  
-   
+      let file;
+        var reader = new FileReader();
+        file=files[files.length-1]
+        reader.onload = () => {
+          console.log(file)
+          ticket_edit.attachments.push({reader:reader.result,name:file.name});
+          update(ticket_edit);
+          console.log(ticket_edit)
+        }
+        reader.onerror = function (error) {
+          console.log('Error: ', error);
+        };
+        reader.readAsDataURL(file.file);
+        
+    }
   //  if (key) ticket_edit[key] = event.fileList;
   //  this.props.update(ticket_edit);
   }
@@ -468,7 +471,7 @@ class TicketDetail extends Component {
                   okText="Yes"
                   cancelText="No"
                   placement="topRight"
-                  onConfirm={this.handleRecord.bind(this, 'delete', row)}
+                  onConfirm={this.handleAttachment.bind(this, 'delete', row)}
                 >
                   <a className="deleteBtn" href="# ">
                     <i className="ion-android-delete" />
@@ -771,7 +774,7 @@ class TicketDetail extends Component {
                           <ButtonHolders>
                             <ActionBtn
                               type="primary"
-                              onClick={this.handleAttachment.bind(this, ticket_edit)}
+                              onClick={this.handleAttachment.bind(this,'insert', ticket_edit)}
                             >
                                 Add
                             </ActionBtn>
