@@ -12,6 +12,7 @@ import ContentHolder from '../../components/utility/contentHolder';
 import Popconfirms from '../../components/feedback/popconfirm';
 import Tags from '../../components/uielements/tag';
 import TagWrapper from './tag.style';
+import IntlMessages from '../../components/utility/intlMessages';
 import Progress from '../../components/uielements/progress';
 import {
   ActionBtn,
@@ -128,14 +129,35 @@ class Projects extends Component {
      
         key: 'progress_bar',
         render: (text, row) => {
-          return (
-            <Progress
-          percent={25}
-          strokeWidth={7}
-          status='active'
-          showInfo={true}
-        />
-          )
+          if(row.ticket.length!=0){
+            let completedTickets = 0
+            for(let i=0;i<row.ticket.length;i++){
+              if(row.ticket[i].status=="Resolved"){
+                completedTickets+=1;
+              }
+            }
+            const completedTicketPercentage=((completedTickets/row.ticket.length)*100).toFixed(2);
+            console.log(completedTicketPercentage)
+            return (
+              <Progress
+                  percent={completedTicketPercentage}
+                  strokeWidth={7}
+                  status='normal '
+                  showInfo={true}
+                  type='line'
+                  strokeLinecap='butt'
+                  strokeColor={{
+                    // "0%": "red",
+                    "0%": "orange",
+                    "100%": "green"
+                  }}
+          />)
+          }
+          else{
+            return (
+              <IntlMessages id="No tickets created for this project." />
+            )
+          }
         },
       },
       {

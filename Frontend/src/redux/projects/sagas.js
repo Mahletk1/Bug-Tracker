@@ -34,6 +34,7 @@ function* getProjects() {
         priority: response.data[index].priority,
         description: response.data[index].description,
         assignedUser: response.data[index].assignedUser,
+        ticket: response.data[index].tickets
         // uid: response.data[index].uid
       });
     }
