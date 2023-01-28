@@ -7,7 +7,7 @@ const initState = {
   modalActive: false,
   ticket: {
     key: null,
-    status: 'draft', // publish
+    status: 'New', // publish
     description: '',
   },
 };

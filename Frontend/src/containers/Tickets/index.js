@@ -375,8 +375,9 @@ class Tickets extends Component {
                         onChange={this.onSelectChange.bind(this, 'status')}
                         // style={{ width: '50%' }}
                       >
-                        <Option value="draft">Draft</Option>
-                        <Option value="publish">Publish</Option>
+                        <Option value="New">New</Option>
+                        <Option value="In_Progress">In Progress</Option>
+                        <Option value="Resolved">Resolved</Option>
                       </Select>
                     </Fieldset>
                   </Col>
