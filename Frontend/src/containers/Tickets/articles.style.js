@@ -29,12 +29,16 @@ const StatusTag = styled.span`
   color: #ffffff;
   text-transform: capitalize;
 
-  &.draft {
-    background-color: ${palette('warning', 0)};
+  &.new {
+    background-color:#4CAF50;
   }
 
-  &.publish {
-    background-color: ${palette('success', 0)};
+  &.inProgress {
+    background-color: #FF9800;
+  }
+
+  &.completed {
+    background-color: #2196F3;
   }
 `;
 

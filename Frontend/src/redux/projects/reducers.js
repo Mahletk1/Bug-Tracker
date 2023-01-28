@@ -4,7 +4,7 @@ const initState = {
   isLoading: false,
   errorMessage: false,
   projects: {},
-  modalActive: false,
+  modalActiveProject: false,
   project: {
     key: null,
  // soft delete
@@ -21,7 +21,7 @@ export default function reducer(
         ...state,
         isLoading: true,
         errorMessage: false,
-        modalActive: false,
+        modalActiveProject: false,
       };
     case actions.GET_PROJECTS_SUCCESS:
       return {
@@ -39,7 +39,7 @@ export default function reducer(
     case actions.TOGGLE_FIRESTORE_HANDLE_MODAL:
       return {
         ...state,
-        modalActive: !state.modalActive,
+        modalActiveProject: !state.modalActiveProject,
         project: payload.data == null ? initState.project : payload.data,
       };
     case actions.FIRESTORE_UPDATE:

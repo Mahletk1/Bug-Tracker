@@ -216,12 +216,15 @@ class Tickets extends Component {
 
         render: (text, row) => {
           let className;
-          if (row.status === ('started' || 'Started' || 'STARTED')) {
-            className = 'draft';
-          } else if (row.status === ('publish' || 'Publish' || 'PUBLISH')) {
-            className = 'publish';
+          if (row.status === ('New')) {
+            className = 'new';
+          } else if (row.status === ('In_Progress')) {
+            className = 'inProgress';
           }
-          return <StatusTag className={"publish"}>{row.status}</StatusTag>;
+          else{
+            className = 'completed'
+          }
+          return <StatusTag className={className}>{row.status}</StatusTag>;
         },
       },
       {

@@ -82,7 +82,7 @@ class Projects extends Component {
     }
   }
   render() {
-    const { modalActive, projects } = this.props;
+    const { modalActiveProject, projects } = this.props;
     const { project } = clone(this.props);
     console.log(project.assignedUser)
     if (project.assignedUser){console.log(project.assignedUser['name'])}
@@ -128,6 +128,11 @@ class Projects extends Component {
         dataIndex: 'progress_bar',
      
         key: 'progress_bar',
+        sorter: (a, b) => {
+          if (a.ticket < b.ticket) return -1;
+          if (a.ticket > b.ticket) return 1;
+          return 0;
+        },
         render: (text, row) => {
           if(row.ticket.length!=0){
             let completedTickets = 0
@@ -228,7 +233,7 @@ class Projects extends Component {
             </TitleWrapper>
 
             <Modal
-              visible={modalActive}
+              visible={modalActiveProject}
               onClose={this.props.toggleModal.bind(this, null)}
               title={project.key ? 'Update project' : 'Add New Project'}
               okText={project.key ? 'Update project' : 'Add Project'}
