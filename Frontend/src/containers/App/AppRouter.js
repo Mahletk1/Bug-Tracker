@@ -27,6 +27,10 @@ const routes = [
   {
     path: 'ticket_detail/:id',
     component: asyncComponent(() => import('../TicketDetail'))
+  },
+  {
+    path: 'project_detail/:id',
+    component: asyncComponent(() => import('../ProjectDetail'))
   }
   // {
   //   path: 'allFormComponent',

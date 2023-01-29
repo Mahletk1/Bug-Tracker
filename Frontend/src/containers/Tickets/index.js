@@ -60,7 +60,7 @@ class Tickets extends Component {
   };
 
   handleModal = (ticket = null) => {
-    this.props.toggleModal(ticket);
+    this.props.toggleModalTicket(ticket);
   };
 
   onRecordChange = (key, event) => {
@@ -96,7 +96,7 @@ class Tickets extends Component {
   }
 
   render() {
-    const { modalActive, tickets } = this.props;
+    const { modalActiveTicket, tickets } = this.props;
     const { ticket } = clone(this.props);
     const dataSource = [];
     Object.keys(tickets).map((ticket, index) => {
@@ -279,12 +279,12 @@ class Tickets extends Component {
             </TitleWrapper>
 
             <Modal
-              visible={modalActive}
-              onClose={this.props.toggleModal.bind(this, null)}
+              visible={modalActiveTicket}
+              onClose={this.handleModal.bind(this, null)}
               title={ticket.key ? 'Update Ticket' : 'Add New Ticket'}
               okText={ticket.key ? 'Update Ticket' : 'Add Ticket'}
               onOk={this.handleRecord.bind(this, 'insert', ticket)}
-              onCancel={this.props.toggleModal.bind(this, null)}
+              onCancel={this.handleModal.bind(this, null)}
             >
               <Form>
                 <Fieldset>
@@ -396,7 +396,7 @@ class Tickets extends Component {
               loading={this.props.isLoading}
               className="isoSimpleTable"
               pagination={{
-                // defaultPageSize: 1,
+                defaultPageSize: 10,
                 hideOnSinglePage: true,
                 total: dataSource.length,
                 showTotal: (total, range) => {

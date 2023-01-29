@@ -11,7 +11,7 @@ const actions = {
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
 
-  TOGGLE_FIRESTORE_HANDLE_MODAL: DOCUMENT + 'TOGGLE_FIRESTORE_HANDLE_MODAL',
+  TOGGLE_HANDLE_MODAL_TICKET: 'TOGGLE_HANDLE_MODAL_TICKET',
   FIRESTORE_UPDATE: DOCUMENT + 'FIRESTORE_UPDATE',
 
   getTickets: () => {
@@ -33,8 +33,8 @@ const actions = {
     payload: { data, actionName },
   }),
 
-  toggleModal: (data = null) => ({
-    type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,
+  toggleModalTicket: (data = null) => ({
+    type: actions.TOGGLE_HANDLE_MODAL_TICKET,
     payload: { data },
   }),
 

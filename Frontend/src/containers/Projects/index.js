@@ -38,7 +38,8 @@ const Tag = props => (
 
 class Projects extends Component {
   state={
-    users:[]
+    users:[],
+    modalState: false
   }
   async componentDidMount() {
     console.log(this.props)
@@ -57,7 +58,7 @@ class Projects extends Component {
   };
 
   handleModal = (project = null) => {
-    this.props.toggleModal(project);
+    this.props.toggleModalProject(project);
   };
 
   onRecordChange = (key, event) => {
@@ -204,7 +205,7 @@ class Projects extends Component {
                   <i className="ion-android-delete" />
                 </a>
               </Popconfirms>
-              <a href="project_detail">detail</a>
+              <a href={`project_detail/${row.id}`}>detail</a>
             </ActionWrapper>
           );
         },
@@ -227,18 +228,18 @@ class Projects extends Component {
                   type="primary"
                   onClick={this.handleModal.bind(this, null)}
                 >
-                  Add new record
+                  Add new project
                 </ActionBtn>
               </ButtonHolders>
             </TitleWrapper>
 
             <Modal
               visible={modalActiveProject}
-              onClose={this.props.toggleModal.bind(this, null)}
+              onClose={this.handleModal.bind(this, null)}
               title={project.key ? 'Update project' : 'Add New Project'}
               okText={project.key ? 'Update project' : 'Add Project'}
               onOk={this.handleRecord.bind(this, 'insert', project)}
-              onCancel={this.props.toggleModal.bind(this, null)}
+              onCancel={this.handleModal.bind(this, null)}
             >
               <Form>
                 <Fieldset>
@@ -311,7 +312,7 @@ class Projects extends Component {
               loading={this.props.isLoading}
               className="isoSimpleTable"
               pagination={{
-                // defaultPageSize: 1,
+                defaultPageSize: 10,
                 hideOnSinglePage: true,
                 total: dataSource.length,
                 showTotal: (total, range) => {

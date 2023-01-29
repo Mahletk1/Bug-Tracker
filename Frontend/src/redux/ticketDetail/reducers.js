@@ -7,7 +7,7 @@ const initState = {
   attachments:{},
   comment:{key: null},
   ticket_detail: {},
-  modalActive: false,
+  modalActiveTicketDetail: false,
   ticket_edit: {
     key: null,
     attachments:[],
@@ -26,7 +26,7 @@ export default function reducer(
         ...state,
         isLoading: true,
         errorMessage: false,
-        modalActive: false,
+        modalActiveTicketDetail: false,
       };
     case actions.GET_TICKET_SUCCESS:
       return {
@@ -43,10 +43,10 @@ export default function reducer(
         isLoading: false,
         errorMessage: 'There is a loading problem',
       };
-    case actions.TOGGLE_FIRESTORE_HANDLE_MODAL:
+    case actions.TOGGLE_HANDLE_MODAL_TICKET_DETAIL:
       return {
         ...state,
-        modalActive: !state.modalActive,
+        modalActiveTicketDetail: !state.modalActiveTicketDetail,
         ticket_edit: payload.data == null ? initState.ticket_edit : payload.data,
       };
     case actions.FIRESTORE_UPDATE:
