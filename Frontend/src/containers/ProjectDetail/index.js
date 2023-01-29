@@ -12,6 +12,8 @@ import Card from './card.style';
 import Popconfirms from '../../components/feedback/popconfirm';
 import Input, { Textarea } from '../../components/uielements/input';
 import { Icon } from 'antd';
+import IsoWidgetsWrapper from './widgets-wrapper';
+import StickerWidget from './sticker/sticker-widget';
 import {
   ActionBtn,
   Fieldset,
@@ -263,231 +265,10 @@ class TicketDetail extends Component {
           },
         },
       ];
-      const historyColumns = [
-        {
-          title: 'Property',
-          dataIndex: 'property',
-          key: 'property',
-          // width: '170px',
-          sorter: (a, b) => {
-            if (a.title < b.title) return -1;
-            if (a.title > b.title) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.property);
-          },
-        },
-        {
-          title: 'Old Value',
-          dataIndex: 'oldVal',
-          key: 'oldVal',
-          // width: '230px',
-          sorter: (a, b) => {
-            if (a.title < b.title) return -1;
-            if (a.title > b.title) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.oldVal);
-          },
-        },
-        {
-          title: 'New Value',
-          dataIndex: 'newVal',
-          key: 'newVal',
-          // width: '230px',
-          sorter: (a, b) => {
-            if (a.title < b.title) return -1;
-            if (a.title > b.title) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.newVal);
-          },
-        },
-        {
-          title: 'Date Changed',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt',
-          // width: '230px',
-          sorter: (a, b) => {
-            if (a.title < b.title) return -1;
-            if (a.title > b.title) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.updatedAt);
-          },
-        },
-        
-      ];
-      const attachmentColumns = [
-        {
-          title: 'File',
-          dataIndex: 'attachment',
-          key: 'attachment',
-          // width: '170px',
-          sorter: (a, b) => {
-            if (a.attachment < b.attachment) return -1;
-            if (a.attachment > b.attachment) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return <a href={`${row.attachment}`} target="_blank">
-              <Icon type="paper-clip" className="avatar-uploader-trigger" /> Attachment
-          </a>;
-            };
-            return trimByWord(row.attachment);
-          },
-        },
-        {
-          title: 'Uploader',
-          dataIndex: 'uploader',
-          key: 'uploader',
-          // width: '230px',
-          sorter: (a, b) => {
-            if (a.uploader < b.uploader) return -1;
-            if (a.uploader > b.uploader) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.uploader);
-          },
-        },
-        {
-          title: 'Notes',
-          dataIndex: 'note',
-          key: 'note',
-          // width: '230px',
-          sorter: (a, b) => {
-            if (a.note < b.note) return -1;
-            if (a.note > b.note) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return result;
-            };
-            return trimByWord(row.note);
-          },
-        },
-        {
-          title: 'Uploaded At',
-          dataIndex: 'created_at',
-          key: 'created_at',
-          width: '165px',
-          sorter: (a, b) => {
-            if (a.created_at < b.created_at) return -1;
-            if (a.created_at > b.created_at) return 1;
-            return 0;
-          },
-          render: (text, row) => {
-            let date = new Date(`${row.created_at}`)
-            const trimByWord = sentence => {
-              let result = sentence;
-              let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
-                result = resultArray.join(' ') + '...';
-              }
-              return date.toLocaleString();
-            };
-            return trimByWord(row.created_at);
-          },
-        },
-        {
-          title: 'Actions',
-          key: 'action',
-          width: '10px',
-          className: 'noWrapCell',
-          render: (text, row) => {
-            return (
-              <ActionWrapper>
-                {/* <a  href="# ">
-                  <i className="ion-android-create" />
-                </a> */}
-  
-                <Popconfirms
-                  title="Are you sure to delete this project？"
-                  okText="Yes"
-                  cancelText="No"
-                  placement="topRight"
-                  onConfirm={this.handleAttachment.bind(this, 'delete', row)}
-                >
-                  <a className="deleteBtn" href="# ">
-                    <i className="ion-android-delete" />
-                  </a>
-                </Popconfirms>
-              </ActionWrapper>
-            );
-          },
-        },
-        
-      ];
+      
       return (
         <LayoutWrapper>
-          {/* <PageHeader>{<IntlMessages id="uiElements.cards.cards" />}</PageHeader> */}
-          <Row style={rowStyle} gutter={gutter} justify="start">
-            <Col md={12} sm={12} xs={24} style={colStyle}>
+        
             <Modal
               visible={modalActiveTicketDetail}
               onClose={this.handleModal.bind(this, null)}
@@ -598,6 +379,46 @@ class TicketDetail extends Component {
             </Modal>
   
                 <ContentHolder>
+                <Row style={rowStyle} gutter={0} justify="start">
+                  <Col lg={8} md={12} sm={12} xs={24} style={colStyle}>
+                    <IsoWidgetsWrapper>
+                      {/* Sticker Widget */}
+                      <StickerWidget
+                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        text={<IntlMessages id="New Tickets" />}
+                        icon="plus"
+                        fontColor="#ffffff"
+                        bgColor="#7266BA"
+                      />
+                    </IsoWidgetsWrapper>
+                  </Col>
+
+                  <Col lg={8} md={12} sm={12} xs={24} style={colStyle}>
+                    <IsoWidgetsWrapper>
+                      {/* Sticker Widget */}
+                      <StickerWidget
+                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        text={<IntlMessages id="Tickets In Progress" />}
+                        icon="reload"
+                        fontColor="#ffffff"
+                        bgColor="#42A5F6"
+                      />
+                    </IsoWidgetsWrapper>
+                  </Col>
+
+                  <Col lg={8} md={12} sm={12} xs={24} style={colStyle}>
+                    <IsoWidgetsWrapper>
+                      {/* Sticker Widget */}
+                      <StickerWidget
+                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        text={<IntlMessages id="Resolved Tickets" />}
+                        icon="check-square"
+                        fontColor="#ffffff"
+                        bgColor="#7ED320"
+                      />
+                    </IsoWidgetsWrapper>
+                  </Col>
+                </Row>
                   <Card
                     title={<IntlMessages id="Ticket Details" />}
                     extra={
@@ -646,43 +467,7 @@ class TicketDetail extends Component {
                             <strong>{<IntlMessages id="Updated At" />}</strong>
                             <p>{<IntlMessages id={`${updateDate.toLocaleString()}`} />}</p>
                         </Col>
-                    </Row>       
-                  </Card>
-                </ContentHolder>
-            </Col>
-            <Col md={12} sm={12} xs={24} style={colStyle}>
-  
-                <ContentHolder>
-                  <Card
-                    title={<IntlMessages id="Comments" />}
-                    bordered={false}
-                    style={{ width: '100%' }}
-                  >
-                    <Form>
-                    <Row style={rowStyle} gutter={gutter} justify="start">
-                      <Col md={21} sm={18} xs={24} style={colStyle}>
-                          <Fieldset style={{'marginBottom':'5px'}}>
-                          <Textarea
-                              label="Message"
-                              placeholder="Enter Message"
-                              rows={3}
-                              value={ticket_edit.message}
-                              onChange={this.onRecordChange.bind(this, 'message')}
-                        />
-                          </Fieldset>
-                      </Col>
-                      <Col md={3} sm={6} xs={24} style={colStyle}>
-                          <ButtonHolders>
-                            <ActionBtn
-                              type="primary"
-                              onClick={this.handleComment.bind(this,'insert', ticket_edit)}
-                            >
-                                Comment
-                            </ActionBtn>
-                          </ButtonHolders>
-                      </Col>
-                    </Row>
-                    </Form>
+                    </Row>  
                     <TableWrapper
                       rowKey="key"
                       // rowSelection={rowSelection}
@@ -700,111 +485,11 @@ class TicketDetail extends Component {
                             } Results`;
                         },
                       }}
-                    />
+                    />     
                   </Card>
+                  
                 </ContentHolder>
-  
-            </Col>
-          </Row>
-          <Row style={rowStyle} gutter={gutter} justify="start">
-            <Col md={12} sm={12} xs={24} style={colStyle}>
-  
-                <ContentHolder>
-                  <Card
-                    title={<IntlMessages id="History" />}
-                  //   extra={
-                  //     <a href="# ">
-                  //       {<IntlMessages id="uiElements.cards.more" />}
-                  //     </a>
-                  //   }
-                    style={{ width: '100%' }}
-                  >
-                    <TableWrapper
-                      rowKey="key"
-                      // rowSelection={rowSelection}
-                      columns={historyColumns}
-                      bordered={true}
-                      dataSource={dataSource2}
-                      loading={this.props.isLoading}
-                      className="isoSimpleTable"
-                      pagination={{
-                        defaultPageSize: 4,
-                        hideOnSinglePage: true,
-                        total: dataSource2.length,
-                        showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${dataSource2.length
-                            } Results`;
-                        },
-                      }}
-                    />
-                  </Card>
-                </ContentHolder>
-            </Col>
-            <Col md={12} sm={12} xs={24} style={colStyle}>
-  
-                <ContentHolder>
-                  <Card
-                    title={<IntlMessages id="Attachments" />}
-                    bordered={false}
-                    style={{ width: '100%' }}
-                  >
-                    <Row style={rowStyle} gutter={gutter} justify="start">
-                      <Col md={6} sm={6} xs={24} style={colStyle}>
-                      <Upload
-                      beforeUpload={() => false}
-                      onChange={
-                        this.onAttachment.bind(this, 'profile_image')}
-                        >
-                        <button>
-                            <Icon type="upload" className="avatar-uploader-trigger" /> Upload File
-                        </button>
-                      </Upload>
-                      </Col>
-                      <Col md={16} sm={15} xs={24} style={colStyle}>
-                          <Fieldset style={{'marginBottom':'5px'}}>
-                          <Input
-                              label="Note"
-                              placeholder="Enter Note"
-                              value={ticket_edit.note}
-                              onChange={this.onRecordChange.bind(this, 'note')}
-                            />
-                          </Fieldset>
-                      </Col>
-                      <Col md={2} sm={6} xs={24} style={colStyle}>
-                          <ButtonHolders>
-                            <ActionBtn
-                              type="primary"
-                              onClick={this.handleAttachment.bind(this,'insert', ticket_edit)}
-                            >
-                                Add
-                            </ActionBtn>
-                          </ButtonHolders>
-                      </Col>
-                    </Row>
-                   
-                   <TableWrapper
-                      rowKey="key"
-                      // rowSelection={rowSelection}
-                      columns={attachmentColumns}
-                      bordered={true}
-                      dataSource={attachmentDataSource}
-                      loading={this.props.isLoading}
-                      className="isoSimpleTable"
-                      pagination={{
-                        defaultPageSize: 4,
-                        hideOnSinglePage: true,
-                        total: attachmentDataSource.length,
-                        showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${attachmentDataSource.length
-                            } Results`;
-                        },
-                      }}
-                    />
-                  </Card>
-                </ContentHolder>
-  
-            </Col>
-          </Row>
+           
           </LayoutWrapper>
       );
     }
