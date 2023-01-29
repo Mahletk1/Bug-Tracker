@@ -73,7 +73,7 @@ class TicketDetail extends Component {
   };
   handleModal = (ticket = null) => {
     console.log(ticket[0])
-    this.props.toggleModal(ticket[0]);
+    this.props.toggleModalTicketDetail(ticket[0]);
   };
   onRecordChange = (key, event) => {
     let { ticket_edit,comment } = clone(this.props);
@@ -140,7 +140,7 @@ class TicketDetail extends Component {
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {ticket_detail,ticket_edit,modalActive,comments,attachments} = this.props
+      const {ticket_detail,ticket_edit,modalActiveTicketDetail,comments,attachments} = this.props
       // console.log(ticket_detail)
       let createDate = new Date(`${ticket_detail[0].created_at}`)
       let updateDate = new Date(`${ticket_detail[0].updated_at}`)
@@ -489,12 +489,12 @@ class TicketDetail extends Component {
           <Row style={rowStyle} gutter={gutter} justify="start">
             <Col md={12} sm={12} xs={24} style={colStyle}>
             <Modal
-              visible={modalActive}
-              onClose={this.props.toggleModal.bind(this, null)}
+              visible={modalActiveTicketDetail}
+              onClose={this.handleModal.bind(this, null)}
               title={'Update Ticket'}
               okText={'Update Ticket' }
               onOk={this.handleRecord.bind(this, 'update', ticket_edit)}
-              onCancel={this.props.toggleModal.bind(this, null)}
+              onCancel={this.handleModal.bind(this, null)}
             >
               <Form>
                 <Fieldset>

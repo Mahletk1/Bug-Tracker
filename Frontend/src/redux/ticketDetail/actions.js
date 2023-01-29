@@ -17,7 +17,7 @@ const actions = {
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
 
-  TOGGLE_FIRESTORE_HANDLE_MODAL: DOCUMENT + 'TOGGLE_FIRESTORE_HANDLE_MODAL',
+  TOGGLE_HANDLE_MODAL_TICKET_DETAIL:'TOGGLE_HANDLE_MODAL_TICKET_DETAIL',
   FIRESTORE_UPDATE: DOCUMENT + 'FIRESTORE_UPDATE',
 
   getTicket: (id) => ({
@@ -50,8 +50,8 @@ const actions = {
     type: actions.UPLOAD_ATTACHMENT,
     payload: { data,actionName},
   }),
-  toggleModal: (data = null) => ({
-    type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,
+  toggleModalTicketDetail: (data = null) => ({
+    type: actions.TOGGLE_HANDLE_MODAL_TICKET_DETAIL,
     payload: { data },
   }),
 

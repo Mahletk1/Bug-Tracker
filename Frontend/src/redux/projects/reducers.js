@@ -36,7 +36,7 @@ export default function reducer(
         isLoading: false,
         errorMessage: 'There is a loading problem',
       };
-    case actions.TOGGLE_FIRESTORE_HANDLE_MODAL:
+    case actions.TOGGLE_HANDLE_MODAL_PROJECT:
       return {
         ...state,
         modalActiveProject: !state.modalActiveProject,

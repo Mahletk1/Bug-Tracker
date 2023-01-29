@@ -4,7 +4,7 @@ const initState = {
   isLoading: false,
   errorMessage: false,
   tickets: {},
-  modalActive: false,
+  modalActiveTicket: false,
   ticket: {
     key: null,
     status: 'New', // publish
@@ -22,7 +22,7 @@ export default function reducer(
         ...state,
         isLoading: true,
         errorMessage: false,
-        modalActive: false,
+        modalActiveTicket: false,
       };
     case actions.GET_TICKETS_SUCCESS:
       return {
@@ -37,10 +37,10 @@ export default function reducer(
         isLoading: false,
         errorMessage: 'There is a loading problem',
       };
-    case actions.TOGGLE_FIRESTORE_HANDLE_MODAL:
+    case actions.TOGGLE_HANDLE_MODAL_TICKET:
       return {
         ...state,
-        modalActive: !state.modalActive,
+        modalActiveTicket: !state.modalActiveTicket,
         ticket: payload.data == null ? initState.ticket : payload.data,
       };
     case actions.FIRESTORE_UPDATE:

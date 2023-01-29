@@ -33,7 +33,7 @@ function* getProjects() {
         title: response.data[index].title,
         priority: response.data[index].priority,
         description: response.data[index].description,
-        assignedUser: response.data[index].assignedUser,
+        assignedUser:[ response.data[index].assignedUser['name'], response.data[index].assignedUser['id']],
         ticket: response.data[index].tickets
         // uid: response.data[index].uid
       });
