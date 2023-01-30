@@ -31,7 +31,7 @@ const COLLECTION_NAME = 'articles'; // change your collection
 const ORDER_BY = 'id';
 const ORDER = 'desc';
 
-function* getTicket({payload}) {
+function* getProject({payload}) {
   try {
     const response = yield call(requestGetTicket, payload.id);
     const response2 = yield call(requestGetComment, payload.id);
@@ -74,10 +74,10 @@ function* getTicket({payload}) {
       });
     // let date = new Date(`${data[0].created_at}`)
     // console.log(date.toLocaleString())
-    yield put(actions.getTicketSuccess(data,commentData,Attachments));
+    yield put(actions.getProjectSuccess(data,commentData,Attachments));
   } catch (error) {
     console.log(error);
-    yield put(actions.getTicketError(error));
+    yield put(actions.getProjectError(error));
   }
 }
 function* createComment({ payload }) {
@@ -99,7 +99,7 @@ function* createComment({ payload }) {
         const response1 = yield call(requestCreateComment, form_data);
         console.log(response1)
     }
-        yield put({ type: actions.GET_TICKET,
+        yield put({ type: actions.GET_PROJECT,
                     payload: {id} });
     }
   catch (error) {
@@ -137,7 +137,7 @@ function* uploadAttachment({ payload }) {
         const response1 = yield call(requestUploadAttachment, form_data);
         console.log(response1)
       }
-        yield put({ type: actions.GET_TICKET,
+        yield put({ type: actions.GET_PROJECT,
                     payload: {id} });
     }
   catch (error) {
@@ -189,7 +189,7 @@ function* createTicket({ payload }) {
       //   const response = yield call(postTicket, form_data);
       //   break;
     }
-    yield put({ type: actions.GET_TICKET,
+    yield put({ type: actions.GET_PROJECT,
                 payload: {id} 
               });
   } catch (error) {
@@ -302,7 +302,7 @@ function* resetFireStoreDocuments() {
     });
     batch.commit();
 
-    yield put({ type: actions.GET_TICKET });
+    yield put({ type: actions.GET_PROJECT });
   } catch (error) {
     console.log(error);
   }
@@ -310,7 +310,7 @@ function* resetFireStoreDocuments() {
 
 export default function* rootSaga() {
   yield all([
-    takeEvery(actions.GET_TICKET, getTicket),
+    takeEvery(actions.GET_PROJECT, getProject),
     takeEvery(actions.CREATE_TICKET, createTicket),
     takeEvery(actions.CREATE_COMMENT, createComment),
     takeEvery(actions.UPLOAD_ATTACHMENT, uploadAttachment),

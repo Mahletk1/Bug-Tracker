@@ -3,7 +3,7 @@ import { Row, Col } from 'antd';
 import PageHeader from '../../components/utility/pageHeader';
 import Box from '../../components/utility/box';
 import { connect } from 'react-redux';
-import actions from '../../redux/ticketDetail/actions';
+import actions from '../../redux/projectDetail/actions';
 import LayoutWrapper from '../../components/utility/layoutWrapper.js';
 import ContentHolder from '../../components/utility/contentHolder';
 import basicStyle from '../../settings/basicStyle';
@@ -39,14 +39,14 @@ import axios from 'axios';
 //     <Tags {...props}>{props.children}</Tags>
 //   </TagWrapper>
 // );
-class TicketDetail extends Component {
+class ProjectDetail extends Component {
   
   state={
     users:[],
     projects:[],
   }
  async componentDidMount(){
-  await this.props.getTicket(this.props.match.params['id'])
+  await this.props.getProject(this.props.match.params['id'])
     console.log(this.props)
 
     await axios.get("http://127.0.0.1:8000/users/").then((response) => {
@@ -62,78 +62,76 @@ class TicketDetail extends Component {
     if (ticket.key && actionName !== 'delete') actionName = 'update';
     this.props.createTicket(ticket, actionName);
   };
-  handleComment = (actionName,comment) => {
-    comment['ticketId'] = this.props.match.params['id'];
-    if (comment.key && actionName !== 'delete') actionName = 'update';
-    this.props.createComment(comment,actionName);
-  };
-  handleAttachment = (actionName,attachment) => {
-    console.log(attachment)
-    attachment['ticketId'] = this.props.match.params['id'];
-    if (attachment.key && actionName !== 'delete') actionName = 'update';
-    this.props.uploadAttachment(attachment,actionName);
-  };
+  // handleComment = (actionName,comment) => {
+  //   comment['ticketId'] = this.props.match.params['id'];
+  //   if (comment.key && actionName !== 'delete') actionName = 'update';
+  //   this.props.createComment(comment,actionName);
+  // };
+  // handleAttachment = (actionName,attachment) => {
+  //   console.log(attachment)
+  //   attachment['ticketId'] = this.props.match.params['id'];
+  //   if (attachment.key && actionName !== 'delete') actionName = 'update';
+  //   this.props.uploadAttachment(attachment,actionName);
+  // };
   handleModal = (ticket = null) => {
     console.log(ticket[0])
     this.props.toggleModalTicketDetail(ticket[0]);
   };
   onRecordChange = (key, event) => {
-    let { ticket_edit,comment } = clone(this.props);
-    if (key) ticket_edit[key] = event.target.value;
-    this.props.update(ticket_edit);
+    let { project_edit,comment } = clone(this.props);
+    if (key) project_edit[key] = event.target.value;
+    this.props.update(project_edit);
   };
 
   onSelectChange = (key, value) => {
-    let { ticket_edit } = clone(this.props);
-    if (key) ticket_edit[key] = value;
-    this.props.update(ticket_edit);
+    let { project_edit } = clone(this.props);
+    if (key) project_edit[key] = value;
+    this.props.update(project_edit);
   };
-
-  onAttachment = (key,event) => {
-    let { ticket_edit,update } = clone(this.props);
-    let files=[]
-    if(event.fileList.length!=0){
-      for (let i=0 ; i< event.fileList.length;i++){
-        files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
-      }
-      let file;
-        var reader = new FileReader();
-        file=files[files.length-1]
-        reader.onload = () => {
-          console.log(file)
-          ticket_edit.attachments.push({reader:reader.result,name:file.name});
-          update(ticket_edit);
-          console.log(ticket_edit)
-        }
-        reader.onerror = function (error) {
-          console.log('Error: ', error);
-        };
-        reader.readAsDataURL(file.file);
+  // onAttachment = (key,event) => {
+  //   let { project_edit,update } = clone(this.props);
+  //   let files=[]
+  //   if(event.fileList.length!=0){
+  //     for (let i=0 ; i< event.fileList.length;i++){
+  //       files.push({file:event.fileList[i].originFileObj,name:event.fileList[i].originFileObj.name});
+  //     }
+  //     let file;
+  //       var reader = new FileReader();
+  //       file=files[files.length-1]
+  //       reader.onload = () => {
+  //         console.log(file)
+  //         project_edit.attachments.push({reader:reader.result,name:file.name});
+  //         update(project_edit);
+  //         console.log(project_edit)
+  //       }
+  //       reader.onerror = function (error) {
+  //         console.log('Error: ', error);
+  //       };
+  //       reader.readAsDataURL(file.file);
         
-    }
-  //  if (key) ticket_edit[key] = event.fileList;
-  //  this.props.update(ticket_edit);
-  }
+  //   }
+  // //  if (key) project_edit[key] = event.fileList;
+  // //  this.props.update(project_edit);
+  // }
   checkValue = ()=>{
-    const { ticket_edit } = clone(this.props);
-    if (ticket_edit.assignedUser != null && ticket_edit.assignedUser['name']){
-      return ticket_edit.assignedUser['name']
+    const { project_edit } = clone(this.props);
+    if (project_edit.assignedUser != null && project_edit.assignedUser['name']){
+      return project_edit.assignedUser['name']
     }
     else{
-      return ticket_edit.assignedUser
+      return project_edit.assignedUser
     }
   }
 
-  checkValueProject = ()=>{
-    const { ticket_edit } = clone(this.props);
-    if (ticket_edit.project != null && ticket_edit.project['title']){
-      return ticket_edit.project['title']
-    }
-    else{
-      return ticket_edit.project
-    }
-  }
-
+  // checkValueProject = ()=>{
+  //   const { project_edit } = clone(this.props);
+  //   if (project_edit.project != null && project_edit.project['title']){
+  //     return project_edit.project['title']
+  //   }
+  //   else{
+  //     return project_edit.project
+  //   }
+  // }
 
   render() {
     
@@ -142,13 +140,13 @@ class TicketDetail extends Component {
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {ticket_detail,ticket_edit,modalActiveTicketDetail,comments,attachments} = this.props
-      // console.log(ticket_detail)
-      let createDate = new Date(`${ticket_detail[0].created_at}`)
-      let updateDate = new Date(`${ticket_detail[0].updated_at}`)
+      const {project_detail,project_edit,modalActiveTicketDetail,comments,attachments} = this.props
+      // console.log(project_detail)
+      let createDate = new Date(`${project_detail[0].created_at}`)
+      let updateDate = new Date(`${project_detail[0].updated_at}`)
       const CommentDataSource = [];
       const attachmentDataSource=[];
-      // console.log(ticket_edit)
+      // console.log(project_edit)
       Object.keys(comments).map((comment, index) => {
         return CommentDataSource.push({
           ...comments[comment],
@@ -162,7 +160,7 @@ class TicketDetail extends Component {
         });
       });
       
-      // console.log(ticket_detail[0]['id'])
+      // console.log(project_detail[0]['id'])
       // let dataSource=[{'commenter': 'hello','message':'firest message'}]
       let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
       // let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
@@ -254,7 +252,7 @@ class TicketDetail extends Component {
                   okText="Yes"
                   cancelText="No"
                   placement="topRight"
-                  onConfirm={this.handleComment.bind(this, 'delete', row)}
+                  // onConfirm={this.handleComment.bind(this, 'delete', row)}
                 >
                   <a className="deleteBtn" href="# ">
                     <i className="ion-android-delete" />
@@ -274,7 +272,7 @@ class TicketDetail extends Component {
               onClose={this.handleModal.bind(this, null)}
               title={'Update Ticket'}
               okText={'Update Ticket' }
-              onOk={this.handleRecord.bind(this, 'update', ticket_edit)}
+              onOk={this.handleRecord.bind(this, 'update', project_edit)}
               onCancel={this.handleModal.bind(this, null)}
             >
               <Form>
@@ -283,7 +281,7 @@ class TicketDetail extends Component {
                   <Input
                     label="Title"
                     placeholder="Enter Title"
-                    value={ticket_edit.title}
+                    value={project_edit.title}
                     onChange={this.onRecordChange.bind(this, 'title')}
                   />
                 </Fieldset>
@@ -294,7 +292,7 @@ class TicketDetail extends Component {
                     label="Description"
                     placeholder="Enter Description"
                     rows={5}
-                    value={ticket_edit.description}
+                    value={project_edit.description}
                     onChange={this.onRecordChange.bind(this, 'description')}
                   />
                 </Fieldset>
@@ -320,28 +318,6 @@ class TicketDetail extends Component {
   
                     </Select>
                 </Fieldset>
-
-                <Fieldset>
-                  <Label>Project</Label>
-                      <Select
-                      showSearch={true}
-                      placeholder="Project"
-                      onChange={this.onSelectChange.bind(this, 'project')}
-                      value={this.checkValueProject()}
-                      filterOption={(inputValue, option) =>
-                        // console.log(option.props.children.toLowerCase().includes(inputValue.toLowerCase()),inputValue)
-                        option.props.children.toLowerCase().includes(inputValue.toLowerCase())
-                      }
-                      style={{ width: '100%' }}
-                    > 
-                    {
-                      this.state.projects.map((project,i)=>{
-                        return <Option key={project.id} value={[project.title, project.id]} >{project.title}</Option>
-                      })
-                    } 
-  
-                    </Select>
-                </Fieldset>
                 <Row>
                   <Col xs={12}>
                       <Fieldset>
@@ -350,7 +326,7 @@ class TicketDetail extends Component {
                             showSearch='true'
                             searchValue=""
                             placeholder="Priority"
-                            value={ticket_edit.priority}
+                            value={project_edit.priority}
                             onChange={this.onSelectChange.bind(this, 'priority')}
                             // style={{ width: '50%' }}
                           >  
@@ -364,7 +340,7 @@ class TicketDetail extends Component {
                       <Fieldset>
                       <Label>Status</Label>
                       <Select
-                        defaultValue={ticket_edit.status}
+                        defaultValue={project_edit.status}
                         placeholder="Enter Status"
                         onChange={this.onSelectChange.bind(this, 'status')}
                         // style={{ width: '50%' }}
@@ -422,7 +398,7 @@ class TicketDetail extends Component {
                   <Card
                     title={<IntlMessages id="Ticket Details" />}
                     extra={
-                      <a onClick={this.handleModal.bind(this, ticket_detail)}  href="# ">
+                      <a onClick={this.handleModal.bind(this, project_detail)}  href="# ">
                         {<IntlMessages id="edit" />}
                       </a>
                     }
@@ -431,31 +407,31 @@ class TicketDetail extends Component {
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Ticket Title" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].title}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].title}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Ticket Description" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].description}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].description}`} />}</p>
                         </Col>
                     </Row>
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Assigned Person" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].assignedUser['name']}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].assignedUser['name']}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Project" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].project.title}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].project.title}`} />}</p>
                         </Col>
                     </Row>
-                    <Row style={rowStyle} gutter={gutter} justify="start">
+                    {/* <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Priority" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].priority}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].priority}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Status" />}</strong>
-                            <p>{<IntlMessages id={`${ticket_detail[0].status}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].status}`} />}</p>
                         </Col>
                     </Row>
                     <Row style={rowStyle} gutter={gutter} justify="start">
@@ -467,7 +443,7 @@ class TicketDetail extends Component {
                             <strong>{<IntlMessages id="Updated At" />}</strong>
                             <p>{<IntlMessages id={`${updateDate.toLocaleString()}`} />}</p>
                         </Col>
-                    </Row>  
+                    </Row>   */}
                     <TableWrapper
                       rowKey="key"
                       // rowSelection={rowSelection}
@@ -498,7 +474,7 @@ class TicketDetail extends Component {
 
 export default connect(
   state => ({
-    ...state.TicketDetail,
+    ...state.ProjectDetail,
   }),
   actions
-)(TicketDetail);
+)(ProjectDetail);

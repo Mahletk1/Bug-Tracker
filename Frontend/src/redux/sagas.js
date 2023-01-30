@@ -13,6 +13,7 @@ import devSagas from '../customApp/redux/sagas';
 import articles from './articles/sagas';
 import tickets from './tickets/sagas';
 import ticketDetail from './ticketDetail/sagas';
+import projectDetail from './projectDetail/sagas';
 import projects from './projects/sagas';
 import investors from './investors/sagas';
 
@@ -34,5 +35,6 @@ export default function* rootSaga(getState) {
     projects(),
     tickets(),
     ticketDetail(),
+    projectDetail(),
   ]);
 }

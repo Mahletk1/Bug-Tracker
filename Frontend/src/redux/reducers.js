@@ -18,6 +18,7 @@ import DevReducers from '../customApp/redux/reducers';
 import Articles from './articles/reducers';
 import Tickets from './tickets/reducers';
 import TicketDetail from './ticketDetail/reducers';
+import ProjectDetail from './projectDetail/reducers'
 import Projects from './projects/reducers';
 import Investors from './investors/reducers';
 
@@ -43,5 +44,6 @@ export default {
   Projects,
   Tickets,
   TicketDetail,
+  ProjectDetail,
   ...DevReducers,
 };

@@ -1,9 +1,9 @@
 const DOCUMENT = 'ARTICLE_';
 
 const actions = {
-  GET_TICKET: 'GET_TICKET',
-  GET_TICKET_SUCCESS: 'GET_TICKET_SUCCESS',
-  GET_TICKET_ERROR: 'GET_TICKET_ERROR',
+  GET_PROJECT: 'GET_PROJECT',
+  GET_PROJECT_SUCCESS: 'GET_PROJECT_SUCCESS',
+  GET_PROJECT_ERROR: 'GET_PROJECT_ERROR',
 
   CREATE_TICKET:'CREATE_TICKET',
   CREATE_TICKET_ERROR:'CREATE_TICKET_ERROR',
@@ -20,20 +20,20 @@ const actions = {
   TOGGLE_FIRESTORE_HANDLE_MODAL: DOCUMENT + 'TOGGLE_FIRESTORE_HANDLE_MODAL',
   FIRESTORE_UPDATE: DOCUMENT + 'FIRESTORE_UPDATE',
 
-  getTicket: (id) => ({
-    type: actions.GET_TICKET,
+  getProject: (id) => ({
+    type: actions.GET_PROJECT,
     payload: {id}
   }),
 
-  getTicketSuccess: (data,comments,attachment) => ({
-    type: actions.GET_TICKET_SUCCESS,
+  getProjectSuccess: (data,comments,attachment) => ({
+    type: actions.GET_PROJECT_SUCCESS,
     payload: {  data,
                 comments,
                 attachment },
   }),
 
-  getTicketError: error => ({
-    type: actions.GET_TICKET_ERROR,
+  getProjectError: error => ({
+    type: actions.GET_PROJECT_ERROR,
     payload: { error },
   }),
 
