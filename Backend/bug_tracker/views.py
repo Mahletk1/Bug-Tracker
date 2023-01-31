@@ -235,3 +235,7 @@ def attachments(request):
 class ticket_detail(generics.RetrieveUpdateDestroyAPIView):
      serializer_class = TicketSerializer
      queryset = Ticket.objects.all()
+
+class project_detail(generics.RetrieveUpdateDestroyAPIView):
+     serializer_class = ProjectSerializer
+     queryset = Project.objects.all()

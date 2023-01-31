@@ -28,6 +28,7 @@ urlpatterns = [
     path('attachments/', views.attachments),
     # path('ticket/', views.ticket_detail),
     path('ticket/<int:pk>', views.ticket_detail.as_view()),
+    path('project/<int:pk>', views.project_detail.as_view()),
     # path('users/<int:id>', views.delete_user),
     # path('createUsers/', views.create_users)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
