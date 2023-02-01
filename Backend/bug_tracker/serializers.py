@@ -31,7 +31,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         return serializer.data
     class Meta:
         model = Project
-        fields = ['id','title','description', 'assignedUser','priority','tickets']
+        fields = ['id','title','description', 'assignedUser','priority','tickets','created_at','updated_at']
 
         depth = 1
 

@@ -10,6 +10,8 @@ class User(models.Model):
     uid =  models.CharField(max_length=200,blank=True, null=True)
 
 class Project(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
     assignedUser= models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
