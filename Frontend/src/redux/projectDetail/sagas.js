@@ -3,15 +3,8 @@ import actions from './actions';
 import FirebaseHelper from '../../helpers/firebase';
 import omit from 'lodash/omit';
 import fakeData from './fakeData';
-import {requestGetTicket,
-  updateTicket,
-  requestGetComment,
-  requestCreateComment,
-  requestUploadAttachment,
-  urlToObject,
-  requestGetAttachments,
-  deleteComment,
-  deleteAttachment} from '../../helpers/ticketsDetail/ticket';
+import {requestGetProject,updateProject} from '../../helpers/projectsDetail/projects';
+
 
 const {
   database,
@@ -32,41 +25,18 @@ const ORDER_BY = 'id';
 const ORDER = 'desc';
 
 function* getProject({payload}) {
+  console.log(payload)
   try {
-    const response = yield call(requestGetTicket, payload.id);
-    const response2 = yield call(requestGetComment, payload.id);
-    const response3 = yield call(requestGetAttachments, payload.id);
-    console.log(response)
-    const commentData=[];
-    for(let i=0 ; i<response2.data.length ; i++){
-      commentData.push({
-        id:response2.data[i].id,
-        created_at: response2.data[i].created_at,
-        message:response2.data[i].message,
-        commenter:response2.data[i].commenter
-      })
-    }
-    const Attachments=[];
-    for(let i=0 ; i<response3.data.length ; i++){
-      Attachments.push({
-        id:response3.data[i].id,
-        created_at: response3.data[i].created_at,
-        note:response3.data[i].note,
-        uploader:response3.data[i].uploader,
-        attachment:response3.data[i].attachments
-      })
-    }
-    commentData.reverse();
-    Attachments.reverse();
+    const response = yield call(requestGetProject, payload.id);
+    console.log(response);
     const data = [];
       data.push({
         id: response.data.id,
-        title: response.data.title,
+        assignedUser:[response.data.assignedUser['name'],response.data.assignedUser['id']],
         priority: response.data.priority,
         description: response.data.description,
-        assignedUser: response.data.assignedUser,
-        status: response.data.status,
-        project: response.data.project,
+        tickets: response.data.tickets,
+        title: response.data.title,
         created_at: response.data.created_at,
         updated_at: response.data.updated_at,
        
@@ -74,78 +44,13 @@ function* getProject({payload}) {
       });
     // let date = new Date(`${data[0].created_at}`)
     // console.log(date.toLocaleString())
-    yield put(actions.getProjectSuccess(data,commentData,Attachments));
+    yield put(actions.getProjectSuccess(data));
   } catch (error) {
     console.log(error);
     yield put(actions.getProjectError(error));
   }
 }
-function* createComment({ payload }) {
-  const { data, actionName } = payload;
-  
-  let id = data.ticketId;
-  try {
-    switch (actionName) {
-      case 'delete':
-        yield call(deleteComment, data.id);
-        break;
-      default:
-        let form_data = new FormData();
-        // form_data1.append("id", data.id);
-        form_data.append("message", data.message);
-        form_data.append("ticket", data.ticketId);
-        form_data.append("commenter", 'TestUser');
-
-        const response1 = yield call(requestCreateComment, form_data);
-        console.log(response1)
-    }
-        yield put({ type: actions.GET_PROJECT,
-                    payload: {id} });
-    }
-  catch (error) {
-        console.log(error);
-        yield put(actions.createCommentError(error));
-  }
-}
-function* uploadAttachment({ payload }) {
-  const { data,actionName } = payload;
-  // console.log(data.attachments[0])
-  let id = data.ticketId;
-  console.log(data)
-  try {
-    switch (actionName) {
-      case 'delete':
-        console.log(data)
-        yield call(deleteAttachment, data.id);
-        break;
-      default:
-        console.log(data)
-        let file=[];
-        for (let i=0;i<data.attachments.length;i++){
-          file.push(yield call(urlToObject, data.attachments[i]));
-        }
-
-        let form_data = new FormData();
-        // form_data1.append("id", data.id);
-        for (let i =0;i<file.length;i++){
-          form_data.append("attachments", file[i])
-        }
-        form_data.append("note", data.note);
-        form_data.append("ticket", data.ticketId);
-        form_data.append("uploader", 'TestUser');
-
-        const response1 = yield call(requestUploadAttachment, form_data);
-        console.log(response1)
-      }
-        yield put({ type: actions.GET_PROJECT,
-                    payload: {id} });
-    }
-  catch (error) {
-        console.log(error);
-        yield put(actions.createCommentError(error));
-  }
-}
-function* createTicket({ payload }) {
+function* createProject({ payload }) {
   const { data, actionName } = payload;
   console.log(data)
   const id = data.id
@@ -161,20 +66,8 @@ function* createTicket({ payload }) {
         form_data1.append("title", data.title);
         form_data1.append("description", data.description);
         form_data1.append("priority", data.priority);
-        form_data1.append("status", data.status)
-        if(data.project[1] != null){
-          form_data1.append("project", data.project[1]);
-        }
-        else{
-          form_data1.append("project", data.project['id']);
-        }
-        if(data.assignedUser[1] != null){
-          form_data1.append("assignedUser", data.assignedUser[1]);
-        }
-        else{
-          form_data1.append("assignedUser", data.assignedUser['id']);
-        }
-        const response1 = yield call(updateTicket,data.id, form_data1);
+        form_data1.append("assignedUser", data.assignedUser[1]);
+        const response1 = yield call(updateProject,data.id, form_data1);
         break;
       // default:
       //   let form_data = new FormData();
@@ -194,11 +87,11 @@ function* createTicket({ payload }) {
               });
   } catch (error) {
     console.log(error);
-    yield put(actions.createTicketError(error));
+    yield put(actions.createProjectError(error));
   }
 }
 
-// function* createTicket({ payload }) {
+// function* createProject({ payload }) {
 //   const { data, actionName } = payload;
 //   console.log(data)
 //   const id = data.ticketId
@@ -266,7 +159,7 @@ function* createTicket({ payload }) {
 //               });
 //   } catch (error) {
 //     console.log(error);
-//     yield put(actions.createTicketError(error));
+//     yield put(actions.createProjectError(error));
 //   }
 // }
 
@@ -311,9 +204,7 @@ function* resetFireStoreDocuments() {
 export default function* rootSaga() {
   yield all([
     takeEvery(actions.GET_PROJECT, getProject),
-    takeEvery(actions.CREATE_TICKET, createTicket),
-    takeEvery(actions.CREATE_COMMENT, createComment),
-    takeEvery(actions.UPLOAD_ATTACHMENT, uploadAttachment),
+    takeEvery(actions.CREATE_PROJECT, createProject),
     takeEvery(actions.RESET_FIRESTORE_DOCUMENTS, resetFireStoreDocuments),
   ]);
 }

@@ -30,8 +30,8 @@ export default function reducer(
         ...state,
         isLoading: false,
         project_detail: payload.data,
-        comments: payload.comments,
-        attachments:payload.attachment,
+        // comments: payload.comments,
+        // attachments:payload.attachment,
         errorMessage: false,
       };
     case actions.GET_PROJECT_ERROR:
@@ -40,7 +40,7 @@ export default function reducer(
         isLoading: false,
         errorMessage: 'There is a loading problem',
       };
-    case actions.TOGGLE_FIRESTORE_HANDLE_MODAL:
+    case actions.TOGGLE_HANDLE_MODAL_PROJECT_DETAIL:
       return {
         ...state,
         modalActive: !state.modalActive,

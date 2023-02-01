@@ -5,8 +5,8 @@ const actions = {
   GET_PROJECT_SUCCESS: 'GET_PROJECT_SUCCESS',
   GET_PROJECT_ERROR: 'GET_PROJECT_ERROR',
 
-  CREATE_TICKET:'CREATE_TICKET',
-  CREATE_TICKET_ERROR:'CREATE_TICKET_ERROR',
+  CREATE_PROJECT:'CREATE_PROJECT',
+  CREATE_PROJECT_ERROR:'CREATE_PROJECT_ERROR',
 
   CREATE_COMMENT:'CREATE_COMMENT',
   CREATE_COMMENT_ERROR:'CREATE_COMMENT_ERROR',
@@ -17,7 +17,7 @@ const actions = {
   RESET_FIRESTORE_DOCUMENTS: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS',
   RESET_FIRESTORE_DOCUMENTS_ERROR: DOCUMENT + 'RESET_FIRESTORE_DOCUMENTS_ERROR',
 
-  TOGGLE_FIRESTORE_HANDLE_MODAL: DOCUMENT + 'TOGGLE_FIRESTORE_HANDLE_MODAL',
+  TOGGLE_HANDLE_MODAL_PROJECT_DETAIL: DOCUMENT + 'TOGGLE_HANDLE_MODAL_PROJECT_DETAIL',
   FIRESTORE_UPDATE: DOCUMENT + 'FIRESTORE_UPDATE',
 
   getProject: (id) => ({
@@ -25,11 +25,9 @@ const actions = {
     payload: {id}
   }),
 
-  getProjectSuccess: (data,comments,attachment) => ({
+  getProjectSuccess: (data) => ({
     type: actions.GET_PROJECT_SUCCESS,
-    payload: {  data,
-                comments,
-                attachment },
+    payload: {  data},
   }),
 
   getProjectError: error => ({
@@ -37,8 +35,8 @@ const actions = {
     payload: { error },
   }),
 
-  createTicket: (data, actionName = 'insert') => ({
-    type: actions.CREATE_TICKET,
+  createProject: (data, actionName = 'insert') => ({
+    type: actions.CREATE_PROJECT,
     payload: { data, actionName },
   }),
 
@@ -51,7 +49,7 @@ const actions = {
     payload: { data,actionName},
   }),
   toggleModal: (data = null) => ({
-    type: actions.TOGGLE_FIRESTORE_HANDLE_MODAL,
+    type: actions.TOGGLE_HANDLE_MODAL_PROJECT_DETAIL,
     payload: { data },
   }),
 
@@ -60,8 +58,8 @@ const actions = {
     payload: { data },
   }),
 
-  createTicketError: error => ({
-    type: actions.CREATE_TICKET_ERROR,
+  createProjectError: error => ({
+    type: actions.CREATE_PROJECT_ERROR,
     payload: { error },
   }),
 

@@ -14,6 +14,7 @@ import Input, { Textarea } from '../../components/uielements/input';
 import { Icon } from 'antd';
 import IsoWidgetsWrapper from './widgets-wrapper';
 import StickerWidget from './sticker/sticker-widget';
+import Tags from '../../components/uielements/tag';
 import {
   ActionBtn,
   Fieldset,
@@ -27,23 +28,23 @@ import {
   StatusTag,
 } from './articles.style';
 import Upload from '../../components/uielements/upload';
-import { useParams } from 'react-router-dom';
+import { Link, Redirect, useParams } from 'react-router-dom';
 import Select, {
   SelectOption as Option,
 } from '../../components/uielements/select';
 import Modal from '../../components/feedback/modal';
 import clone from 'clone';
+import TagWrapper from './tag.style';
 import axios from 'axios';
-// const Tag = props => (
-//   <TagWrapper>
-//     <Tags {...props}>{props.children}</Tags>
-//   </TagWrapper>
-// );
+const Tag = props => (
+  <TagWrapper>
+    <Tags {...props}>{props.children}</Tags>
+  </TagWrapper>
+);
 class ProjectDetail extends Component {
   
   state={
     users:[],
-    projects:[],
   }
  async componentDidMount(){
   await this.props.getProject(this.props.match.params['id'])
@@ -53,14 +54,11 @@ class ProjectDetail extends Component {
       this.setState({users: response.data})     
   });
 
-  await axios.get("http://127.0.0.1:8000/projects/").then((response) => {
-      this.setState({projects: response.data})     
-  });
   }
-  handleRecord = (actionName, ticket) => {
-    ticket['ticketId'] = this.props.match.params['id'];
-    if (ticket.key && actionName !== 'delete') actionName = 'update';
-    this.props.createTicket(ticket, actionName);
+  handleRecord = (actionName, project) => {
+    project['projectId'] = this.props.match.params['id'];
+    if (project.key && actionName !== 'delete') actionName = 'update';
+    this.props.createProject(project, actionName);
   };
   // handleComment = (actionName,comment) => {
   //   comment['ticketId'] = this.props.match.params['id'];
@@ -73,20 +71,27 @@ class ProjectDetail extends Component {
   //   if (attachment.key && actionName !== 'delete') actionName = 'update';
   //   this.props.uploadAttachment(attachment,actionName);
   // };
-  handleModal = (ticket = null) => {
-    console.log(ticket[0])
-    this.props.toggleModalTicketDetail(ticket[0]);
+  handleModal = (project = null) => {
+    if(project!=null){
+      this.props.toggleModal(project[0]);
+    }
+    else{
+      this.props.toggleModal(project);
+    }
+
   };
   onRecordChange = (key, event) => {
     let { project_edit,comment } = clone(this.props);
     if (key) project_edit[key] = event.target.value;
     this.props.update(project_edit);
+    // console.log(project_edit)
   };
 
   onSelectChange = (key, value) => {
     let { project_edit } = clone(this.props);
     if (key) project_edit[key] = value;
     this.props.update(project_edit);
+    // console.log(project_edit)
   };
   // onAttachment = (key,event) => {
   //   let { project_edit,update } = clone(this.props);
@@ -140,39 +145,51 @@ class ProjectDetail extends Component {
     }
     else {
       const { rowStyle, colStyle, gutter } = basicStyle;
-      const {project_detail,project_edit,modalActiveTicketDetail,comments,attachments} = this.props
-      // console.log(project_detail)
+      const {project_detail,project_edit,modalActive,comments,attachments} = this.props
+      // console.log(project_detail[0].tickets)
       let createDate = new Date(`${project_detail[0].created_at}`)
       let updateDate = new Date(`${project_detail[0].updated_at}`)
-      const CommentDataSource = [];
-      const attachmentDataSource=[];
+      const DataSource = [];
+      let newTicketCount=0;
+      let resolvedTicketCount=0;
+      let inProgressTicket=0;
       // console.log(project_edit)
-      Object.keys(comments).map((comment, index) => {
-        return CommentDataSource.push({
-          ...comments[comment],
-          key: comment,
+      Object.keys(project_detail[0].tickets).map((ticket, index) => {
+        if(project_detail[0].tickets[ticket].status=='New'){
+          newTicketCount+=1;
+        }
+        else if(project_detail[0].tickets[ticket].status==='Resolved'){
+          resolvedTicketCount+=1;
+        }
+        else{
+          inProgressTicket+=1;
+        }
+        // console.log(newTicketCount,resolvedTicketCount,inProgressTicket)
+        return DataSource.push({
+          ...project_detail[0].tickets[ticket],
+          key: ticket,
         });
       });
-      Object.keys(attachments).map((attachment, index) => {
-        return attachmentDataSource.push({
-          ...attachments[attachment],
-          key: attachment,
-        });
-      });
+      // Object.keys(attachments).map((attachment, index) => {
+      //   return attachmentDataSource.push({
+      //     ...attachments[attachment],
+      //     key: attachment,
+      //   });
+      // });
       
       // console.log(project_detail[0]['id'])
       // let dataSource=[{'commenter': 'hello','message':'firest message'}]
       let dataSource2=[{'property': 'user assigned','oldVal':'Abebe','newVal':'Kebede','updatedAt':'25/25/22'}]
       // let dataSource3=[{'file': 'link to file','notes':'thie is a screenshot the first screenshot','uploader':'Kebede','uploadedAt':'25/25/22'}]
-      const commentColumns = [
+      const columns = [
         {
-          title: 'Commenter',
-          dataIndex: 'commenter',
-          key: 'commenter',
-          width: '170px',
+          title: 'Title',
+          dataIndex: 'title',
+          key: 'title',
+          width: '200px',
           sorter: (a, b) => {
-            if (a.commenter < b.commenter) return -1;
-            if (a.commenter > b.commenter) return 1;
+            if (a.title < b.title) return -1;
+            if (a.title > b.title) return 1;
             return 0;
           },
           render: (text, row) => {
@@ -185,79 +202,128 @@ class ProjectDetail extends Component {
               }
               return result;
             };
-            return trimByWord(row.commenter);
+            return trimByWord(row.title);
           },
         },
         {
-          title: 'Message',
-          dataIndex: 'message',
-          key: 'message',
-          width: '230px',
+          title: 'Assigned Person',
+          dataIndex: 'assignedUser',
+          key: 'assignedUser',
+          width: '300px',
           sorter: (a, b) => {
-            if (a.message < b.message) return -1;
-            if (a.message > b.message) return 1;
+            if (a.assignedUser.name < b.assignedUser.name) return -1;
+            if (a.assignedUser.name > b.assignedUser.name) return 1;
             return 0;
           },
           render: (text, row) => {
             const trimByWord = sentence => {
               let result = sentence;
               let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
+              if (resultArray.length > 20) {
+                resultArray = resultArray.slice(0, 20);
                 result = resultArray.join(' ') + '...';
               }
               return result;
             };
-            return trimByWord(row.message);
+  
+            return trimByWord(row.assignedUser.name);
           },
         },
         {
-          title: 'Created At',
-          dataIndex: 'created_at',
-          key: 'created_at',
-          width: '170px',
+          title: 'Project',
+          dataIndex: 'project',
+          key: 'project',
+          // width: '220px',
           sorter: (a, b) => {
-            if (a.created_at < b.created_at) return -1;
-            if (a.created_at > b.created_at) return 1;
+            if (a.project < b.project) return -1;
+            if (a.project > b.project) return 1;
             return 0;
           },
           render: (text, row) => {
-            let date = new Date(`${row.created_at}`)
             const trimByWord = sentence => {
               let result = sentence;
               let resultArray = result.split(' ');
-              if (resultArray.length > 7) {
-                resultArray = resultArray.slice(0, 7);
+              if (resultArray.length > 8) {
+                resultArray = resultArray.slice(0, 8);
                 result = resultArray.join(' ') + '...';
               }
-              return date.toLocaleString();
+              return result;
             };
-            return trimByWord(row.created_at);
+  
+            return trimByWord(row.project.title);
+          },
+        },
+        {
+          title: 'Priority',
+          dataIndex: 'priority',
+          key: 'priority',
+          width: '100px',
+          sorter: (a, b) => {
+            if (a.priority < b.priority) return -1;
+            if (a.priority > b.priority) return 1;
+            return 0;
+          },
+          render: (text, row) => {
+            return (
+              row.priority == "high" ? (
+                <Tag className="mr-5" color="#f50">{row.priority}</Tag>
+              ) :row.priority == "medium" ? (
+                <Tag className="mr-5" color="#90EE90">{row.priority}</Tag>
+                ): (<Tag className="mr-5" color="#808080">{row.priority}</Tag>
+              )
+            );
+          },
+        },
+        {
+          title: 'Status',
+          dataIndex: 'status',
+          className: 'noWrapCell',
+          key: 'status',
+          sorter: (a, b) => {
+            if (a.status < b.status) return -1;
+            if (a.status > b.status) return 1;
+            return 0;
+          },
+  
+          render: (text, row) => {
+            let className;
+            if (row.status === ('New')) {
+              className = 'new';
+            } else if (row.status === ('In_Progress')) {
+              className = 'inProgress';
+            }
+            else{
+              className = 'completed'
+            }
+            return <StatusTag className={className}>{row.status}</StatusTag>;
           },
         },
         {
           title: 'Actions',
           key: 'action',
-          width: '10px',
+          width: '150px',
           className: 'noWrapCell',
           render: (text, row) => {
             return (
               <ActionWrapper>
-                {/* <a  href="# ">
+                {/* <a onClick={this.handleModal.bind(this, row)} href="# ">
                   <i className="ion-android-create" />
-                </a> */}
+                </a>
   
                 <Popconfirms
-                  title="Are you sure to delete this project？"
+                  title="Are you sure to delete this ticket？"
                   okText="Yes"
                   cancelText="No"
                   placement="topRight"
-                  // onConfirm={this.handleComment.bind(this, 'delete', row)}
+                  onConfirm={this.handleRecord.bind(this, 'delete', row)}
                 >
                   <a className="deleteBtn" href="# ">
                     <i className="ion-android-delete" />
                   </a>
-                </Popconfirms>
+                </Popconfirms> */}
+                {/* <Redirect to={`ticket_detail/${row.id}`}>detail</Redirect> */}
+                <Link to={`/bug_tracker/ticket_detail/${row.id}`}>detail</Link>
+                {/* <a href={`ticket_detail/${row.id}`}>detail</a> */}
               </ActionWrapper>
             );
           },
@@ -268,7 +334,7 @@ class ProjectDetail extends Component {
         <LayoutWrapper>
         
             <Modal
-              visible={modalActiveTicketDetail}
+              visible={modalActive}
               onClose={this.handleModal.bind(this, null)}
               title={'Update Ticket'}
               okText={'Update Ticket' }
@@ -318,8 +384,7 @@ class ProjectDetail extends Component {
   
                     </Select>
                 </Fieldset>
-                <Row>
-                  <Col xs={12}>
+        
                       <Fieldset>
                         <Label>Priority</Label>
                             <Select
@@ -335,32 +400,16 @@ class ProjectDetail extends Component {
                             <Option value='high'>High</Option>
                           </Select>
                       </Fieldset>
-                  </Col>
-                  <Col xs={12}>
-                      <Fieldset>
-                      <Label>Status</Label>
-                      <Select
-                        defaultValue={project_edit.status}
-                        placeholder="Enter Status"
-                        onChange={this.onSelectChange.bind(this, 'status')}
-                        // style={{ width: '50%' }}
-                      >
-                        <Option value="draft">Draft</Option>
-                        <Option value="publish">Publish</Option>
-                      </Select>
-                    </Fieldset>
-                  </Col>
-                </Row>
+               
               </Form>
             </Modal>
   
-                <ContentHolder>
                 <Row style={rowStyle} gutter={0} justify="start">
                   <Col lg={8} md={12} sm={12} xs={24} style={colStyle}>
                     <IsoWidgetsWrapper>
                       {/* Sticker Widget */}
                       <StickerWidget
-                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        number={<IntlMessages id={`${newTicketCount}`} />}
                         text={<IntlMessages id="New Tickets" />}
                         icon="plus"
                         fontColor="#ffffff"
@@ -373,7 +422,7 @@ class ProjectDetail extends Component {
                     <IsoWidgetsWrapper>
                       {/* Sticker Widget */}
                       <StickerWidget
-                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        number={<IntlMessages id={`${inProgressTicket}`} />}
                         text={<IntlMessages id="Tickets In Progress" />}
                         icon="reload"
                         fontColor="#ffffff"
@@ -386,7 +435,7 @@ class ProjectDetail extends Component {
                     <IsoWidgetsWrapper>
                       {/* Sticker Widget */}
                       <StickerWidget
-                        number={<IntlMessages id="widget.stickerwidget1.number" />}
+                        number={<IntlMessages id={`${resolvedTicketCount}`} />}
                         text={<IntlMessages id="Resolved Tickets" />}
                         icon="check-square"
                         fontColor="#ffffff"
@@ -406,22 +455,22 @@ class ProjectDetail extends Component {
                   >
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
-                            <strong>{<IntlMessages id="Ticket Title" />}</strong>
+                            <strong>{<IntlMessages id="Project Title" />}</strong>
                             <p>{<IntlMessages id={`${project_detail[0].title}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
-                            <strong>{<IntlMessages id="Ticket Description" />}</strong>
+                            <strong>{<IntlMessages id="Project Description" />}</strong>
                             <p>{<IntlMessages id={`${project_detail[0].description}`} />}</p>
                         </Col>
                     </Row>
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Assigned Person" />}</strong>
-                            <p>{<IntlMessages id={`${project_detail[0].assignedUser['name']}`} />}</p>
+                            <p>{<IntlMessages id={`${project_detail[0].assignedUser[0]}`} />}</p>
                         </Col>
                         <Col md={12} sm={12} xs={24} style={colStyle}>
-                            <strong>{<IntlMessages id="Project" />}</strong>
-                            <p>{<IntlMessages id={`${project_detail[0].project.title}`} />}</p>
+                            <strong>{<IntlMessages id="Priority" />}</strong>
+                            <p>{<IntlMessages id={`${project_detail[0].priority}`} />}</p>
                         </Col>
                     </Row>
                     {/* <Row style={rowStyle} gutter={gutter} justify="start">
@@ -433,7 +482,7 @@ class ProjectDetail extends Component {
                             <strong>{<IntlMessages id="Status" />}</strong>
                             <p>{<IntlMessages id={`${project_detail[0].status}`} />}</p>
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row style={rowStyle} gutter={gutter} justify="start">
                         <Col md={12} sm={12} xs={24} style={colStyle}>
                             <strong>{<IntlMessages id="Created At" />}</strong>
@@ -443,28 +492,27 @@ class ProjectDetail extends Component {
                             <strong>{<IntlMessages id="Updated At" />}</strong>
                             <p>{<IntlMessages id={`${updateDate.toLocaleString()}`} />}</p>
                         </Col>
-                    </Row>   */}
+                    </Row>  
                     <TableWrapper
                       rowKey="key"
                       // rowSelection={rowSelection}
-                      columns={commentColumns}
+                      columns={columns}
                       bordered={true}
-                      dataSource={CommentDataSource}
+                      dataSource={DataSource}
                       loading={this.props.isLoading}
                       className="isoSimpleTable"
                       pagination={{
                         defaultPageSize: 4,
                         hideOnSinglePage: true,
-                        total: CommentDataSource.length,
+                        total: DataSource.length,
                         showTotal: (total, range) => {
-                          return `Showing ${range[0]}-${range[1]} of ${CommentDataSource.length
+                          return `Showing ${range[0]}-${range[1]} of ${DataSource.length
                             } Results`;
                         },
                       }}
                     />     
                   </Card>
-                  
-                </ContentHolder>
+
            
           </LayoutWrapper>
       );
